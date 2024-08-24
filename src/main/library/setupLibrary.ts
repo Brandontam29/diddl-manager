@@ -1,6 +1,6 @@
 import { readFile, rename, writeFile } from 'fs/promises';
 import { libraryEntrySchema } from '../../shared/library-models';
-import { appPath, defaultLibraryPath, diddlImagesDirectory, libraryPath } from '../pathing';
+import { appPath, defaultLibraryPath, relativeDiddlImagesDirectory, libraryPath } from '../pathing';
 import isExists from '../utils/isExists';
 import path from 'path';
 import { logging } from '../logging';
@@ -14,7 +14,7 @@ const createDefaultLibrary = async () => {
 
   const wellPathedLibrary = library.map((entry) => ({
     ...entry,
-    imagePath: path.join(diddlImagesDirectory(), entry.imagePath)
+    imagePath: path.join(relativeDiddlImagesDirectory(), entry.imagePath)
   }));
 
   writeFile(libraryPath(), JSON.stringify(wellPathedLibrary));

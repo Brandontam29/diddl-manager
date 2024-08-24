@@ -11,7 +11,7 @@ const DEV_DIRECTORY = 'diddl-manager-solid-dev';
 export const appPath = () =>
   isDev() ? path.join(app.getPath('appData'), DEV_DIRECTORY) : app.getPath('userData');
 
-export const diddlImagesDirectory = () => path.join(app.getAppPath(), 'resources', 'diddl-images');
+export const relativeDiddlImagesDirectory = () => path.join('assets', 'diddl-images');
 
 export const libraryPath = () => path.join(appPath(), 'library.json');
 

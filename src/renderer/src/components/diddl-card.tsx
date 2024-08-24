@@ -4,7 +4,7 @@ const DiddlCard = ({ diddl }: { diddl: LibraryEntry }) => {
   return (
     <div>
       Content over background image
-      <img src={'../../../resources/diddl-images/001_RARETES/BPFische.jpg'} loading="lazy" />
+      <img src={diddl.imagePath + '?asset'} loading="lazy" />
       <div>{diddl.name}</div>
     </div>
   );

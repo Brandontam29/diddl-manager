@@ -4,7 +4,7 @@ import { LibraryEntry } from '@shared';
 const DiddlCard = ({ diddl, className }: { diddl: LibraryEntry; className?: string }) => {
   return (
     <div class={cn(className)}>
-      <img src={'file://' + diddl.imagePath} loading="lazy" />
+      <img src={diddl.imagePath} loading="lazy" />
       <div>{diddl.name}</div>
     </div>
   );

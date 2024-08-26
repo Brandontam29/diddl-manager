@@ -5,7 +5,8 @@ import {
   defaultLibraryPath,
   libraryPath,
   libraryMapPath,
-  diddlImagesDirectory
+  diddlImagesDirectory,
+  relativeDiddlImagesDirectory
 } from '../pathing';
 import isExists from '../utils/isExists';
 import path from 'path';
@@ -20,7 +21,7 @@ const createDefaultLibrary = async () => {
 
   const libraryWithFullImagePaths = library.map((entry) => ({
     ...entry,
-    imagePath: path.join(diddlImagesDirectory(), entry.imagePath)
+    imagePath: path.join(relativeDiddlImagesDirectory(), entry.imagePath)
   }));
 
   writeFile(libraryPath(), JSON.stringify(libraryWithFullImagePaths));

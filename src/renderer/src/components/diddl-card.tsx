@@ -1,13 +1,12 @@
+import { cn } from '@renderer/libs/cn';
 import { LibraryEntry } from '@shared';
 
-const DiddlCard = ({ diddl }: { diddl: LibraryEntry }) => {
+const DiddlCard = ({ diddl, className }: { diddl: LibraryEntry; className?: string }) => {
   return (
-    <div>
-      Content over background image
-      <img src={diddl.imagePath} loading="lazy" />
+    <div class={cn(className)}>
+      <img src={'file://' + diddl.imagePath} loading="lazy" />
       <div>{diddl.name}</div>
     </div>
   );
 };
-
 export default DiddlCard;

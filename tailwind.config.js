@@ -5,6 +5,14 @@ module.exports = {
   content: ['./src/renderer/index.html', './src/renderer/**/*.{js,ts,jsx,tsx}'],
 
   prefix: '',
+  safelist: [
+    'bg-red-500',
+    'text-center',
+    'md:bg-blue-500',
+    'lg:text-right',
+    'hidden'
+    // Add any other classes you want to ensure are included
+  ],
   theme: {
     container: {
       center: true,

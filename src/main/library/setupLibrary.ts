@@ -1,6 +1,12 @@
 import { readFile, rename, writeFile } from 'fs/promises';
 import { libraryEntrySchema } from '../../shared/library-models';
-import { appPath, defaultLibraryPath, relativeDiddlImagesDirectory, libraryPath } from '../pathing';
+import {
+  appPath,
+  defaultLibraryPath,
+  libraryPath,
+  libraryMapPath,
+  diddlImagesDirectory
+} from '../pathing';
 import isExists from '../utils/isExists';
 import path from 'path';
 import { logging } from '../logging';
@@ -12,12 +18,13 @@ const createDefaultLibrary = async () => {
 
   const library = JSON.parse(rawLibrary);
 
-  const wellPathedLibrary = library.map((entry) => ({
+  const libraryWithFullImagePaths = library.map((entry) => ({
     ...entry,
-    imagePath: path.join(relativeDiddlImagesDirectory(), entry.imagePath)
+    imagePath: path.join(diddlImagesDirectory(), entry.imagePath)
   }));
 
-  writeFile(libraryPath(), JSON.stringify(wellPathedLibrary));
+  writeFile(libraryPath(), JSON.stringify(libraryWithFullImagePaths));
+  setupLibraryMap(libraryWithFullImagePaths);
 };
 
 const setupLibrary = async () => {
@@ -40,6 +47,18 @@ const setupLibrary = async () => {
     await rename(libraryPath(), libraryBackupPath());
     createDefaultLibrary();
   }
+};
+
+const setupLibraryMap = (library: { id: string }[]) => {
+  // id to index map
+
+  const idToIndexmap = library.reduce((accumulator, diddl, index) => {
+    accumulator[diddl.id] = index;
+
+    return accumulator;
+  }, {});
+
+  writeFile(libraryMapPath(), JSON.stringify(idToIndexmap));
 };
 
 export default setupLibrary;

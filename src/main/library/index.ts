@@ -1,4 +1,5 @@
-import { libraryEntrySchema } from '../../shared/library-models'
-import setupLibrary from './setupLibrary'
+import libraryMainHandlers from './libraryMainHandlers';
+import libraryPreloadApi from './libraryPreloadApi';
+import setupLibrary from './setupLibrary';
 
-export { libraryEntrySchema, setupLibrary }
+export { setupLibrary, libraryPreloadApi, libraryMainHandlers };

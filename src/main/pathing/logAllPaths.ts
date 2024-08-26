@@ -1,9 +1,13 @@
 import {
   appPath,
-  logDirectory,
+  relativeDiddlImagesDirectory,
+  diddlImagesDirectory,
   libraryPath,
+  libraryMapPath,
   defaultLibraryPath,
-  relativeDiddlImagesDirectory
+  wishlistPath,
+  acquiredListPath,
+  logDirectory
 } from '.';
 
 function logFunctionResult(func: (...args: any) => string, ...args: any) {
@@ -15,10 +19,14 @@ function logFunctionResult(func: (...args: any) => string, ...args: any) {
 const logAllPaths = () => {
   const pathFunctions = [
     appPath,
-    logDirectory,
+    relativeDiddlImagesDirectory,
+    diddlImagesDirectory,
     libraryPath,
+    libraryMapPath,
     defaultLibraryPath,
-    relativeDiddlImagesDirectory
+    wishlistPath,
+    acquiredListPath,
+    logDirectory
   ];
 
   pathFunctions.forEach((func) => logFunctionResult(func));

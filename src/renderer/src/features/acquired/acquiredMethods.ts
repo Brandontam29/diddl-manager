@@ -1,21 +1,24 @@
 import { AcquiredItem } from '@shared/acquired-list-models';
 import { acquiredStore, setAcquiredStore } from './createAcquiredStore';
 
-export const addAcquiredItems = (diddlIds: string[], state?: Partial<Omit<AcquiredItem, 'id'>>) => {
+export const addAcquiredItems = async (
+  diddlIds: string[],
+  state?: Partial<Omit<AcquiredItem, 'id'>>
+) => {
   const defaultState = { isDamaged: false, isCompleteSet: true } satisfies Omit<AcquiredItem, 'id'>;
 
   const acquiredItems = diddlIds.map((id) => ({ id: id, ...defaultState, ...state }));
 
-  setAcquiredStore('acquiredState', acquiredStore.acquiredState.concat(acquiredItems));
+  setAcquiredStore('acquiredItems', acquiredStore.acquiredItems.concat(acquiredItems));
   window.api.setAcquiredList(acquiredItems);
 };
 
-export const removeAcquiredItems = (diddlIds: string[]) => {
+export const removeAcquiredItems = async (diddlIds: string[]) => {
   const setToRemove = new Set(diddlIds);
 
-  const newAcquiredState = acquiredStore.acquiredState.filter((item) => !setToRemove.has(item.id));
+  const newAcquiredState = acquiredStore.acquiredItems.filter((item) => !setToRemove.has(item.id));
 
-  setAcquiredStore('acquiredState', newAcquiredState);
+  setAcquiredStore('acquiredItems', newAcquiredState);
   window.api.setAcquiredList(newAcquiredState);
 };
 

@@ -1,32 +1,25 @@
 import DiddlCard from '@renderer/components/diddl-card';
 import { addAcquiredItems, removeAcquiredItems } from '@renderer/features/acquired';
-import { libraryStore } from '@renderer/features/library';
-import { setLibraryStore } from '@renderer/features/library/createLibraryStore';
+import { libraryStore, setLibraryStore } from '@renderer/features/library';
 import {
   addSelectedIndices,
   removeSelectedIndices
 } from '@renderer/features/library/selectedIndicesMethods';
+import useScreenWidth from '@renderer/hooks/useScreenWidth';
 import BsCheckCircleFill from '@renderer/icons/BsCheckCircleFill';
 import { cn } from '@renderer/libs/cn';
 import { useSearchParams } from '@solidjs/router';
 import { createEffect, createMemo, For, Show } from 'solid-js';
 
 const HomePage = () => {
+  const screenWidth = useScreenWidth();
   const [searchParams] = useSearchParams();
 
   const filteredDiddls = createMemo(() => {
     let diddls = libraryStore.libraryState;
 
-    if (searchParams.type !== undefined || searchParams.owned !== undefined) {
-      diddls = diddls.filter((diddl) => {
-        return searchParams.type !== undefined
-          ? searchParams.owned !== undefined
-            ? searchParams.type === diddl.type && searchParams.owned === `${diddl.owned}` // has type and has owned
-            : searchParams.type === diddl.type // has type and not owned
-          : searchParams.owned !== undefined
-            ? searchParams.owned === `${diddl.owned}` // not type and has owned
-            : false; // not type and not owned => impossible
-      });
+    if (searchParams.type !== undefined) {
+      diddls = diddls.filter((diddl) => searchParams.type === diddl.type);
     }
 
     if (searchParams.from || searchParams.to) {
@@ -50,23 +43,25 @@ const HomePage = () => {
   const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
 
   return (
-    <div class="grow p-4 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+    <div class="relative grow px-4 pt-10 pb-4 flex flex-wrap gap-1">
       <Show when={isSelectMode()}>
-        <div class="flex gap-4">
+        <div class="w-full absolute top-0 inset-x flex gap-4">
           <button
-            onClick={() => {
-              addAcquiredItems(
-                libraryStore.selectedIndices.map((index) => filteredDiddls[index]?.id || '')
+            onClick={async () => {
+              await addAcquiredItems(
+                libraryStore.selectedIndices.map((index) => filteredDiddls()[index]?.id || '')
               );
+              setLibraryStore('selectedIndices', []);
             }}
           >
             Set to Owned
           </button>
           <button
-            onClick={() => {
-              removeAcquiredItems(
-                libraryStore.selectedIndices.map((index) => filteredDiddls[index]?.id || '')
+            onClick={async () => {
+              await removeAcquiredItems(
+                libraryStore.selectedIndices.map((index) => filteredDiddls()[index]?.id || '')
               );
+              setLibraryStore('selectedIndices', []);
             }}
           >
             Set to Unowned
@@ -75,26 +70,38 @@ const HomePage = () => {
         </div>
       </Show>
 
-      <Show when={Array.isArray(filteredDiddls())} fallback={<div>...loading</div>}>
-        <Show when={filteredDiddls().length > 0} fallback={<div>No Diddl are marked as owned</div>}>
-          <For each={filteredDiddls()}>
-            {(diddl, index) => (
-              <div class="relative group">
-                <DiddlCard diddl={diddl} />
-                <button
+      <For each={filteredDiddls()} fallback={<div>...loading</div>}>
+        {(diddl, index) => {
+          const ratio =
+            diddl.imageWidth && diddl.imageHeight ? diddl.imageWidth / diddl.imageHeight : null;
+          return (
+            <div
+              class={cn('relative h-[240px]')}
+              style={{ width: ratio ? `${240 * ratio}px` : undefined }}
+            >
+              <DiddlCard className={cn('w-full h-full')} diddl={diddl} />
+
+              <div
+                class={cn(
+                  'h-[calc(100%-20px)] w-full absolute top-0 inset-x',
+                  libraryStore.selectedIndices.includes(index()) && 'border-4 border-blue-300',
+                  'bg-gradient-to-t from-black/25 to-[48px]'
+                )}
+              >
+                <div class="absolute top-0 inset-x bg-gradient-to-b from-black/25 w-full h-12">
+                  <div class="absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400" />
+                </div>
+                <div
                   class={cn(
-                    'absolute top-0 right-0 h-4 w-4 hidden group-hover:block',
-                    isSelectMode() && 'block'
+                    isSelectMode() ? 'h-full w-full' : 'top-1.5 left-1.5 h-7 w-7 rounded-full'
                   )}
-                  onClick={[handleClick, index]}
-                >
-                  <BsCheckCircleFill />
-                </button>
+                  onClick={[handleClick, index()]}
+                />
               </div>
-            )}
-          </For>
-        </Show>
-      </Show>
+            </div>
+          );
+        }}
+      </For>
     </div>
   );
 };
@@ -102,22 +109,28 @@ const HomePage = () => {
 const handleClick = (index: number, event: MouseEvent) => {
   if (event.shiftKey) {
     const lastClicked = libraryStore.selectedIndices[libraryStore.selectedIndices.length - 1];
-
     const numbersBetween = getNumbersBetween(lastClicked, index);
-
     const isAdding = isAdd(libraryStore.selectedIndices, index);
-
     if (isAdding) {
       addSelectedIndices(numbersBetween);
       return;
     }
     if (!isAdding) {
       removeSelectedIndices(numbersBetween);
+      return;
     }
   }
 
-  addSelectedIndices(index);
-  return;
+  const isAdding = !libraryStore.selectedIndices.includes(index);
+  console.log('isAdding', isAdding);
+  if (isAdding) {
+    addSelectedIndices(index);
+    return;
+  }
+  if (!isAdding) {
+    removeSelectedIndices(index);
+    return;
+  }
 };
 
 const isAdd = (arr: number[], shiftClickIndex: number) => {
@@ -162,3 +175,25 @@ function getNumbersBetween(a: number, b: number) {
 }
 
 export default HomePage;
+
+/**
+ *  <div
+              class={cn('relative h-[240px]')}
+              style={{ width: ratio ? `${240 * ratio}px` : undefined }}
+            >
+              <DiddlCard className={cn('w-full h-full')} diddl={diddl} />
+
+              <div
+                class={cn(
+                  'h-[calc(100%-20px)] w-full absolute top-0 inset-x',
+                  libraryStore.selectedIndices.includes(index()) && 'border-4 border-blue-300',
+                  'bg-gradient-to-t from-black/25 to-[48px]'
+                )}
+              >
+                <div class="absolute top-0 inset-x bg-gradient-to-b from-black/25 w-full h-12">
+                  <div class="top-1.5 left-1.5 h-8 w-8 rounded-full bg-gray-400" />
+                </div>
+                <div />
+              </div>
+            </div>
+ */

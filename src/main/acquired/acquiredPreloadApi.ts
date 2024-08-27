@@ -5,7 +5,7 @@ import { AcquiredItem } from '../../shared/';
 
 const acquiredPreloadApi = {
   setAcquiredList: (content: AcquiredItem[]) => ipcRenderer.invoke(SET_ACQUIRED_LIST, content),
-  getAcquiredList: (): Promise<AcquiredItem[] | Error> => ipcRenderer.invoke(GET_ACQUIRED_LIST)
+  getAcquiredList: (): Promise<AcquiredItem[]> => ipcRenderer.invoke(GET_ACQUIRED_LIST)
 };
 
 export default acquiredPreloadApi;

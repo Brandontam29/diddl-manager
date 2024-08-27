@@ -5,6 +5,8 @@ import icon from '../../resources/icon.png?asset';
 import registerMainHandlers from './registerMainHandlers';
 import { logAllPaths } from './pathing';
 import { setupLibrary } from './library';
+import { setupAcquiredList } from './acquired';
+import { setupWishlist } from './wishlist';
 
 function createWindow() {
   // Create the browser window.
@@ -43,7 +45,7 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron');
 
@@ -59,7 +61,7 @@ app.whenReady().then(() => {
    */
 
   logAllPaths();
-  setupLibrary();
+  await Promise.all([setupAcquiredList(), setupWishlist(), setupLibrary()]);
 
   const window = createWindow();
   registerMainHandlers(window);

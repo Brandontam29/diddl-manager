@@ -1,6 +1,12 @@
 import updateLibraryState from './updateLibraryState';
 import fetchLibraryState from './fetchLibraryState';
-import { libraryStore } from './createLibraryStore';
+import { libraryStore, setLibraryStore } from './createLibraryStore';
 import getIndexFromLibraryItemIds from './getIndexFromLibraryItemIds';
 
-export { libraryStore, updateLibraryState, fetchLibraryState, getIndexFromLibraryItemIds };
+export {
+  libraryStore,
+  setLibraryStore,
+  updateLibraryState,
+  fetchLibraryState,
+  getIndexFromLibraryItemIds
+};

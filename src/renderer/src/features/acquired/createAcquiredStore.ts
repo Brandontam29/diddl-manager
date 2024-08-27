@@ -1,14 +1,14 @@
 import { AcquiredItem } from '@shared';
 
 type Store = {
-  acquiredState: AcquiredItem[];
+  acquiredItems: AcquiredItem[];
 };
 
 import { createStore } from 'solid-js/store';
 
 // Initialize store
 const [acquiredStore, setAcquiredStore] = createStore<Store>({
-  acquiredState: []
+  acquiredItems: []
 });
 
 // Export the store for direct access if needed

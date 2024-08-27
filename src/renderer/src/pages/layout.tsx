@@ -1,6 +1,6 @@
 import { fetchAcquiredState } from '@renderer/features/acquired';
 import { fetchLibraryState } from '@renderer/features/library';
-import { A, useLocation, useSearchParams } from '@solidjs/router';
+import { A, useLocation } from '@solidjs/router';
 import { createEffect, For, Show } from 'solid-js';
 
 const getParams = (params: { type?: string; from?: number; to?: number; owned?: boolean }) => {
@@ -16,7 +16,7 @@ const getParams = (params: { type?: string; from?: number; to?: number; owned?: 
 const LINKS = [
   {
     title: undefined,
-    links: [{ label: 'Owned', href: getParams({ owned: true }) }]
+    links: [{ label: 'My Collection', href: '/collection' }]
   },
   {
     title: 'A7',

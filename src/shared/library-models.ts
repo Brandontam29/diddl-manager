@@ -34,7 +34,9 @@ export const libraryEntrySchema = z.object({
   id: z.string(),
   name: z.string(),
   type: libraryEntryType,
-  imagePath: z.string()
+  imagePath: z.string(),
+  imageWidth: z.number().nullable(),
+  imageHeight: z.number().nullable()
 });
 
 export type LibraryEntry = z.infer<typeof libraryEntrySchema>;

@@ -1,5 +1,5 @@
 import { readFile, rename, writeFile } from 'fs/promises';
-import { wishlistItemSchema } from '../../shared/';
+import { wishlistItemSchema } from '../../shared';
 import { appPath, wishlistPath } from '../pathing';
 import isExists from '../utils/isExists';
 import path from 'path';

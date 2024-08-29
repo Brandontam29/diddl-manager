@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import { readFile, writeFile } from 'fs/promises';
-import { WishlistItem, wishlistItemSchema } from '../../shared/';
+import { WishlistItem, wishlistItemSchema } from '../../shared';
 import { wishlistPath } from '../pathing';
 
 export const SET_WISHLIST = 'set-wishlist';

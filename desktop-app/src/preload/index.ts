@@ -1,7 +1,7 @@
 import { contextBridge } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
 import { fileSystemPreloadApi } from '../main/file-system';
-import { libraryPreloadApi } from '../main/library/';
+import { libraryPreloadApi } from '../main/library';
 import { wishlistPreloadApi } from '../main/wishlist';
 import { acquiredPreloadApi } from '../main/acquired';
 

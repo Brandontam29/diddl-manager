@@ -85,14 +85,27 @@ const HomePage = () => {
                 class={cn(
                   'h-[calc(100%-20px)] w-full absolute top-0 inset-x',
                   libraryStore.selectedIndices.includes(index()) && 'border-4 border-blue-300',
-                  'bg-gradient-to-t from-black/25 to-[48px]'
+                  isSelectMode() && 'group hover:bg-gradient-to-t from-black/25 to-[48px]'
                 )}
               >
-                <div class="absolute top-0 inset-x bg-gradient-to-b from-black/25 w-full h-12">
-                  <div class="absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400" />
-                </div>
                 <div
                   class={cn(
+                    'absolute top-0 inset-x bg-gradient-to-b from-black/25 w-full h-12 opacity-0 hover:opacity-100',
+                    isSelectMode() && 'opacity-100'
+                  )}
+                >
+                  <div
+                    class={cn(
+                      'absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400',
+                      !isSelectMode() && 'hover:bg-gray-100',
+                      isSelectMode() && 'group-hover:bg-gray-100',
+                      libraryStore.selectedIndices.includes(index()) && 'bg-gray-100'
+                    )}
+                  />
+                </div>
+                <button
+                  class={cn(
+                    'absolute',
                     isSelectMode() ? 'h-full w-full' : 'top-1.5 left-1.5 h-7 w-7 rounded-full'
                   )}
                   onClick={[handleClick, index()]}

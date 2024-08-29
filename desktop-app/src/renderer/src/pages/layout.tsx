@@ -35,15 +35,16 @@ const LINKS = [
     links: [
       { label: '1-99', href: getParams({ type: 'A5', from: 0, to: 98 }) },
       { label: '100-199', href: getParams({ type: 'A5', from: 99, to: 198 }) },
-      { label: '200-299', href: getParams({ type: 'A5', from: 199, to: 298 }) }
+      { label: '200-299', href: getParams({ type: 'A5', from: 199, to: 298 }) },
+      { label: '300-399', href: getParams({ type: 'A5', from: 299, to: 398 }) },
+      { label: '400-499', href: getParams({ type: 'A5', from: 399, to: 498 }) }
     ]
   },
   {
     title: 'A4',
     links: [
       { label: '1-99', href: getParams({ type: 'A4', from: 0, to: 98 }) },
-      { label: '100-199', href: getParams({ type: 'A4', from: 99, to: 198 }) },
-      { label: '200-299', href: getParams({ type: 'A4', from: 199, to: 298 }) }
+      { label: '100-199', href: getParams({ type: 'A4', from: 99, to: 198 }) }
     ]
   },
   {
@@ -52,6 +53,14 @@ const LINKS = [
       { label: '1-99', href: getParams({ type: 'postal-card', from: 0, to: 98 }) },
       { label: '100-199', href: getParams({ type: 'postal-card', from: 99, to: 198 }) },
       { label: '200-299', href: getParams({ type: 'postal-card', from: 199, to: 298 }) }
+    ]
+  },
+  {
+    title: 'Gift Paper',
+    links: [
+      { label: '1-99', href: getParams({ type: 'gift-paper', from: 0, to: 98 }) },
+      { label: '100-199', href: getParams({ type: 'gift-paper', from: 99, to: 198 }) },
+      { label: '200-299', href: getParams({ type: 'gift-paper', from: 199, to: 298 }) }
     ]
   }
 ] as const satisfies {

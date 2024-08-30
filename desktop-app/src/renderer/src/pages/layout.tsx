@@ -3,7 +3,7 @@ import { fetchLibraryState } from '@renderer/features/library';
 import { A, useLocation } from '@solidjs/router';
 import { createEffect, For, JSX, Show } from 'solid-js';
 import { BsJournalBookmark } from 'solid-icons/bs';
-
+import { BiRegularHomeHeart } from 'solid-icons/bi';
 const BaseLayout = (props) => {
   const location = useLocation();
   createEffect(() => {
@@ -15,7 +15,12 @@ const BaseLayout = (props) => {
     <>
       <nav class="p-4 flex flex-col gap-2 border-r border-gray-200 h-screen sticky top-0 overflow-y-auto min-w-64 w-64">
         <div>pathname: {location.pathname}</div>
-        <A href="/">Home</A>
+        <A href="/" class="flex items-center gap-2">
+          <div class="pb-0.5">
+            <BiRegularHomeHeart class="h-8 w-8 " />
+          </div>
+          <span>Home</span>
+        </A>
         <span class="mgc_delete_2_line" />
         <For each={LINKS}>
           {(group) => (
@@ -24,7 +29,13 @@ const BaseLayout = (props) => {
                 {(title) => <div>{title}</div>}
               </Show>
               <div class="flex flex-col">
-                <For each={group.links}>{(link) => <A href={link.href}>{link.label}</A>}</For>
+                <For each={group.links}>
+                  {(link) => (
+                    <A href={link.href} class="flex items-center gap-2">
+                      {link.label}
+                    </A>
+                  )}
+                </For>
               </div>
             </div>
           )}
@@ -52,8 +63,26 @@ const LINKS = [
       {
         label: (
           <>
-            <BsJournalBookmark />
-            My Collection
+            <div class="pb-0.5">
+              <svg
+                fill="currentColor"
+                stroke-width="0"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                height="1em"
+                width="1em"
+                style="overflow: visible; color: currentcolor;"
+                class="h-8 w-8 "
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M6 8V1h1v6.117L8.743 6.07a.5.5 0 0 1 .514 0L11 7.117V1h1v7a.5.5 0 0 1-.757.429L9 7.083 6.757 8.43A.5.5 0 0 1 6 8z"
+                ></path>
+                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"></path>
+                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"></path>
+              </svg>
+            </div>
+            <span>My Collection </span>
           </>
         ),
         href: '/collection'

@@ -15,12 +15,7 @@ export const ImageRoot = <T extends ValidComponent = 'span'>(
 ) => {
   const [local, rest] = splitProps(props as imageRootProps, ['class']);
 
-  return (
-    <ImagePrimitive
-      class={cn('relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full', local.class)}
-      {...rest}
-    />
-  );
+  return <ImagePrimitive class={cn('relative flex shrink-0', local.class)} {...rest} />;
 };
 
 type imageProps<T extends ValidComponent = 'img'> = ImageImgProps<T> & {
@@ -32,7 +27,7 @@ export const Image = <T extends ValidComponent = 'img'>(
 ) => {
   const [local, rest] = splitProps(props as imageProps, ['class']);
 
-  return <ImagePrimitive.Img class={cn('aspect-square h-full w-full', local.class)} {...rest} />;
+  return <ImagePrimitive.Img class={cn('h-full w-full', local.class)} {...rest} />;
 };
 
 type imageFallbackProps<T extends ValidComponent = 'span'> = ImageFallbackProps<T> & {

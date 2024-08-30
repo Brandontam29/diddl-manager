@@ -14,7 +14,7 @@ const createDefaultWishlist = async () => {
 const setupWishlist = async () => {
   if (!(await isExists(wishlistPath()))) {
     logging.info('wishlist.json not found. Creating new wishlist.json.');
-    createDefaultWishlist();
+    await createDefaultWishlist();
 
     return;
   }
@@ -29,7 +29,7 @@ const setupWishlist = async () => {
   } catch (err) {
     logging.error(`Wishlist corrupted. Backing up Wishlist to ${wishlistBackupPath()}`);
     await rename(wishlistPath(), wishlistBackupPath());
-    createDefaultWishlist();
+    await createDefaultWishlist();
   }
 };
 

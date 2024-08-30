@@ -9,8 +9,7 @@ import useScreenWidth from '@renderer/hooks/useScreenWidth';
 import { cn } from '@renderer/libs/cn';
 import { useSearchParams } from '@solidjs/router';
 import { createEffect, createMemo, For, Show } from 'solid-js';
-import { RiSystemDeleteBinLine } from 'solid-icons/ri';
-import { BsJournalBookmark, BsBookmarkDash, BsBookmarkPlus } from 'solid-icons/bs';
+import { BsBookmarkDash, BsBookmarkPlus } from 'solid-icons/bs';
 const HomePage = () => {
   const screenWidth = useScreenWidth();
   const [searchParams] = useSearchParams();
@@ -44,8 +43,8 @@ const HomePage = () => {
 
   return (
     <div
-      class="relative grow px-4 pt-10 pb-4 flex flex-wrap gap-1"
-      style={{ width: `${screenWidth() - 256} ` }}
+      class="relative grow mx-auto pt-10 pb-4 flex flex-wrap gap-1"
+      style={{ width: `${screenWidth() - 256 - 16}px` }}
     >
       <Show when={isSelectMode()}>
         <div class="w-full absolute top-0 inset-x flex gap-4">

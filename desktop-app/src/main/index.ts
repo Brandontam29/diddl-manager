@@ -61,7 +61,7 @@ app.whenReady().then(async () => {
    */
 
   logAllPaths();
-  await Promise.all([setupAcquiredList(), setupWishlist(), setupLibrary()]);
+  await Promise.all([setupAcquiredList(), setupLibrary()]);
 
   const window = createWindow();
   registerMainHandlers(window);

@@ -8,6 +8,8 @@ import {
 import BsCheckCircleFill from '@renderer/icons/BsCheckCircleFill';
 import { cn } from '@renderer/libs/cn';
 import { createEffect, createMemo, For, Show } from 'solid-js';
+import FallbackNoDiddl from './components/FallbackNoDiddl';
+import { BsBookmarkDash } from 'solid-icons/bs';
 
 const CollectionPage = () => {
   const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
@@ -20,11 +22,6 @@ const CollectionPage = () => {
         return libraryStore.libraryState[index];
       })
       .filter((item) => item !== undefined)
-  );
-
-  createEffect(() => console.log(diddls()));
-  createEffect(() =>
-    console.log('libraryStore.libraryIndexMap', Object.keys(libraryStore.libraryIndexMap))
   );
 
   return (
@@ -41,17 +38,14 @@ const CollectionPage = () => {
               setLibraryStore('selectedIndices', []);
             }}
           >
-            Set to Unowned
+            <BsBookmarkDash />
+            Remove
           </button>
-          <button onClick={() => {}}>Add to Wishlist</button>
         </div>
       </Show>
 
       <Show when={Array.isArray(acquiredStore.acquiredItems)} fallback={<div>...loading</div>}>
-        <Show
-          when={acquiredStore.acquiredItems.length > 0}
-          fallback={<div>No Diddl are marked as owned</div>}
-        >
+        <Show when={acquiredStore.acquiredItems.length > 0} fallback={<FallbackNoDiddl />}>
           <For each={diddls()}>
             {(diddl, index) => {
               const selected = libraryStore.selectedIndices.includes(index());

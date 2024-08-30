@@ -13,9 +13,11 @@ const createDefaultAcquiredList = async () => {
 };
 
 const setupAcquiredList = async () => {
-  if (!(await isExists(acquiredListPath()))) {
+  const fileExists = await isExists(acquiredListPath());
+
+  if (!fileExists) {
     logging.info('acquiredList.json not found. Creating new acquiredList.json.');
-    createDefaultAcquiredList();
+    await createDefaultAcquiredList();
 
     return;
   }
@@ -32,7 +34,7 @@ const setupAcquiredList = async () => {
       `Acquired List corrupted. Backing up Acquired List to ${acquiredListBackupPath()}`
     );
     await rename(acquiredListPath(), acquiredListBackupPath());
-    createDefaultAcquiredList();
+    await createDefaultAcquiredList();
   }
 };
 

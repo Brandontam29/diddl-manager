@@ -14,7 +14,8 @@
     "paths": {
       "@renderer/*": ["src/renderer/src/*"],
       "@shared": ["src/shared/"],
-      "@shared/*": ["src/shared/*"]
+      "@shared/*": ["src/shared/*"],
+      "@assets/*": ["src/renderer/assets/*"]
     }
   }
 }

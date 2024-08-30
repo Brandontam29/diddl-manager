@@ -1,17 +1,8 @@
 import { fetchAcquiredState } from '@renderer/features/acquired';
 import { fetchLibraryState } from '@renderer/features/library';
 import { A, useLocation } from '@solidjs/router';
-import { createEffect, For, Show } from 'solid-js';
-
-const getParams = (params: { type?: string; from?: number; to?: number; owned?: boolean }) => {
-  const paramsStrings = Object.fromEntries(
-    Object.entries(params).map(([key, value]) => [key, `${value}`])
-  );
-
-  const searchParams = new URLSearchParams(paramsStrings);
-
-  return `/?${searchParams.toString()}`;
-};
+import { createEffect, For, JSX, Show } from 'solid-js';
+import { BsJournalBookmark } from 'solid-icons/bs';
 
 const BaseLayout = (props) => {
   const location = useLocation();
@@ -24,7 +15,6 @@ const BaseLayout = (props) => {
     <>
       <nav class="p-4 flex flex-col gap-2 border-r border-gray-200 h-screen sticky top-0 overflow-y-auto min-w-64 w-64">
         <div>pathname: {location.pathname}</div>
-        <div>search: {location.search}</div>
         <A href="/">Home</A>
         <span class="mgc_delete_2_line" />
         <For each={LINKS}>
@@ -45,10 +35,30 @@ const BaseLayout = (props) => {
   );
 };
 
+const getParams = (params: { type?: string; from?: number; to?: number }) => {
+  const paramsStrings = Object.fromEntries(
+    Object.entries(params).map(([key, value]) => [key, `${value}`])
+  );
+
+  const searchParams = new URLSearchParams(paramsStrings);
+
+  return `/?${searchParams.toString()}`;
+};
+
 const LINKS = [
   {
     title: undefined,
-    links: [{ label: 'My Collection', href: '/collection' }]
+    links: [
+      {
+        label: (
+          <>
+            <BsJournalBookmark />
+            My Collection
+          </>
+        ),
+        href: '/collection'
+      }
+    ]
   },
   {
     title: 'A7',
@@ -191,8 +201,8 @@ const LINKS = [
     links: [{ label: '1-99', href: getParams({ type: 'towel', from: 0, to: 98 }) }]
   }
 ] as const satisfies {
-  title?: string;
-  links: { label: string; href: string }[];
+  title?: string | JSX.Element;
+  links: { label: string | JSX.Element; href: string }[];
 }[];
 
 export default BaseLayout;

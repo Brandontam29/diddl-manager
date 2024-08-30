@@ -1,5 +1,4 @@
 import DiddlCard from '@renderer/components/diddl-card';
-import { Menubar, MenubarItem } from '@renderer/components/ui/menubar';
 import { addAcquiredItems, removeAcquiredItems } from '@renderer/features/acquired';
 import { libraryStore, setLibraryStore } from '@renderer/features/library';
 import {
@@ -7,11 +6,11 @@ import {
   removeSelectedIndices
 } from '@renderer/features/library/selectedIndicesMethods';
 import useScreenWidth from '@renderer/hooks/useScreenWidth';
-import BsCheckCircleFill from '@renderer/icons/BsCheckCircleFill';
 import { cn } from '@renderer/libs/cn';
 import { useSearchParams } from '@solidjs/router';
 import { createEffect, createMemo, For, Show } from 'solid-js';
-
+import { RiSystemDeleteBinLine } from 'solid-icons/ri';
+import { BsJournalBookmark, BsBookmarkDash, BsBookmarkPlus } from 'solid-icons/bs';
 const HomePage = () => {
   const screenWidth = useScreenWidth();
   const [searchParams] = useSearchParams();
@@ -44,10 +43,13 @@ const HomePage = () => {
   const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
 
   return (
-    <div class="relative grow px-4 pt-10 pb-4 flex flex-wrap gap-1">
+    <div
+      class="relative grow px-4 pt-10 pb-4 flex flex-wrap gap-1"
+      style={{ width: `${screenWidth() - 256} ` }}
+    >
       <Show when={isSelectMode()}>
-        <Menubar class="w-full absolute top-0 inset-x flex gap-4">
-          <MenubarItem
+        <div class="w-full absolute top-0 inset-x flex gap-4">
+          <button
             onClick={async () => {
               await addAcquiredItems(
                 libraryStore.selectedIndices.map((index) => filteredDiddls()[index]?.id || '')
@@ -55,9 +57,10 @@ const HomePage = () => {
               setLibraryStore('selectedIndices', []);
             }}
           >
-            Set to Owned
-          </MenubarItem>
-          <MenubarItem
+            <BsBookmarkPlus />
+            Add to Collection
+          </button>
+          <button
             onClick={async () => {
               await removeAcquiredItems(
                 libraryStore.selectedIndices.map((index) => filteredDiddls()[index]?.id || '')
@@ -65,10 +68,10 @@ const HomePage = () => {
               setLibraryStore('selectedIndices', []);
             }}
           >
-            Set to Unowned
-          </MenubarItem>
-          <button onClick={() => {}}>Add to Wishlist</button>
-        </Menubar>
+            <BsBookmarkDash />
+            Remove from Collection
+          </button>
+        </div>
       </Show>
 
       <For each={filteredDiddls()} fallback={<div>...loading</div>}>
@@ -84,7 +87,6 @@ const HomePage = () => {
 
               <div // full overlay
                 class={cn(
-                  // full
                   'h-[calc(100%-20px)] w-full absolute top-0 inset-x',
                   libraryStore.selectedIndices.includes(index()) && 'border-4 border-blue-300',
                   isSelectMode() &&
@@ -97,33 +99,24 @@ const HomePage = () => {
                     isSelectMode() && 'opacity-100'
                   )}
                 >
-                  <div // white circle
+                  <button // button
                     class={cn(
-                      'absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400 pointer-events-none',
+                      'absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400',
                       !isSelectMode() && 'hover:bg-gray-100',
                       isSelectMode() && 'group-hover:bg-gray-100',
                       libraryStore.selectedIndices.includes(index()) && 'bg-gray-100'
                     )}
-                  />
-                  <button // invisible button
-                    class={cn(
-                      'absolute',
-                      !isSelectMode() && 'top-1.5 left-1.5 h-7 w-7 rounded-full',
-                      isSelectMode() && 'inset-0 h-full w-full'
-                    )}
                     onClick={[handleClick, index()]}
                   />
                 </div>
-                <button
-                  class={cn(
-                    'absolute pointer-events-auto',
-
-                    isSelectMode()
-                      ? 'inset-0 h-full w-full'
-                      : 'top-1.5 left-1.5 h-7 w-7 rounded-full'
-                  )}
-                  onClick={[handleClick, index()]}
-                />
+                <Show // full card button
+                  when={isSelectMode()}
+                >
+                  <button
+                    class={cn('absolute inset-0 w-full h-full')}
+                    onClick={[handleClick, index()]}
+                  />
+                </Show>
               </div>
             </div>
           );
@@ -134,6 +127,7 @@ const HomePage = () => {
 };
 
 const handleClick = (index: number, event: MouseEvent) => {
+  console.log('click');
   if (event.shiftKey) {
     const lastClicked = libraryStore.selectedIndices[libraryStore.selectedIndices.length - 1];
     const numbersBetween = getNumbersBetween(lastClicked, index);

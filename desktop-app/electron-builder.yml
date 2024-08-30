@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: diddl-manager-solid
+productName: diddl-manager
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: diddl-manager-solid
+  executableName: diddl-manager
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

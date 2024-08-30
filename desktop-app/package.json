@@ -1,5 +1,5 @@
 {
-  "name": "diddl-manager-solid",
+  "name": "diddl-manager",
   "version": "1.0.0",
   "description": "An Electron application with Solid and TypeScript",
   "main": "./out/main/index.js",

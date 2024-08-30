@@ -4,7 +4,7 @@ import path from 'path';
 import isDev from '../utils/isDev';
 import logAllPaths from './logAllPaths';
 
-const DEV_DIRECTORY = 'diddl-manager-solid-dev';
+const DEV_DIRECTORY = 'diddl-manager-dev';
 /**
  * BASE
  */

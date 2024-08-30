@@ -1,1 +1,16 @@
-{ "dependencies": { "image-size": "^1.1.1", "nanoid": "^5.0.7" } }
+{
+  "dependencies": {
+    "image-size": "^1.1.1",
+    "nanoid": "^5.0.7",
+    "puppeteer": "^23.2.1"
+  },
+  "name": "scrape-diddl",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

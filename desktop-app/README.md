@@ -1,4 +1,4 @@
-# diddl-manager-solid
+# diddl-manager
 
 An Electron application with Solid and TypeScript
 

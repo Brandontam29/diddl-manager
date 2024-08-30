@@ -9,7 +9,7 @@ import BsCheckCircleFill from '@renderer/icons/BsCheckCircleFill';
 import { cn } from '@renderer/libs/cn';
 import { createEffect, createMemo, For, Show } from 'solid-js';
 
-const AcquiredPage = () => {
+const CollectionPage = () => {
   const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
 
   const diddls = createMemo(() =>
@@ -147,4 +147,4 @@ function getNumbersBetween(a: number, b: number) {
   return numbers;
 }
 
-export default AcquiredPage;
+export default CollectionPage;

@@ -6,13 +6,13 @@ import { lazy } from 'solid-js';
 import BaseLayout from './pages/layout';
 const HomePage = lazy(() => import('./pages/page'));
 const NotFoundPage = lazy(() => import('./pages/not-found'));
-const AcquiredPage = lazy(() => import('./pages/acquired/page'));
+const CollectionPage = lazy(() => import('./pages/collection/page'));
 
 render(
   () => (
     <Router root={BaseLayout}>
       <Route path="/" component={HomePage} />
-      <Route path="/collection" component={AcquiredPage} />
+      <Route path="/collection" component={CollectionPage} />
       <Route path="*paramName" component={NotFoundPage} />
     </Router>
   ),

@@ -1,4 +1,5 @@
 import DiddlCard from '@renderer/components/diddl-card';
+import { Menubar, MenubarItem } from '@renderer/components/ui/menubar';
 import { addAcquiredItems, removeAcquiredItems } from '@renderer/features/acquired';
 import { libraryStore, setLibraryStore } from '@renderer/features/library';
 import {
@@ -45,8 +46,8 @@ const HomePage = () => {
   return (
     <div class="relative grow px-4 pt-10 pb-4 flex flex-wrap gap-1">
       <Show when={isSelectMode()}>
-        <div class="w-full absolute top-0 inset-x flex gap-4">
-          <button
+        <Menubar class="w-full absolute top-0 inset-x flex gap-4">
+          <MenubarItem
             onClick={async () => {
               await addAcquiredItems(
                 libraryStore.selectedIndices.map((index) => filteredDiddls()[index]?.id || '')
@@ -55,8 +56,8 @@ const HomePage = () => {
             }}
           >
             Set to Owned
-          </button>
-          <button
+          </MenubarItem>
+          <MenubarItem
             onClick={async () => {
               await removeAcquiredItems(
                 libraryStore.selectedIndices.map((index) => filteredDiddls()[index]?.id || '')
@@ -65,9 +66,9 @@ const HomePage = () => {
             }}
           >
             Set to Unowned
-          </button>
+          </MenubarItem>
           <button onClick={() => {}}>Add to Wishlist</button>
-        </div>
+        </Menubar>
       </Show>
 
       <For each={filteredDiddls()} fallback={<div>...loading</div>}>
@@ -81,32 +82,45 @@ const HomePage = () => {
             >
               <DiddlCard className={cn('w-full h-full')} diddl={diddl} />
 
-              <div
+              <div // full overlay
                 class={cn(
+                  // full
                   'h-[calc(100%-20px)] w-full absolute top-0 inset-x',
                   libraryStore.selectedIndices.includes(index()) && 'border-4 border-blue-300',
-                  isSelectMode() && 'group hover:bg-gradient-to-t from-black/25 to-[48px]'
+                  isSelectMode() &&
+                    'group hover:bg-gradient-to-t from-black/25 to-[48px] bg-gradient-to-t'
                 )}
               >
-                <div
+                <div // top black
                   class={cn(
-                    'absolute top-0 inset-x bg-gradient-to-b from-black/25 w-full h-12 opacity-0 hover:opacity-100',
+                    'absolute inset-0 bg-gradient-to-b from-black/25 to-[48px] w-full h-full opacity-0 hover:opacity-100',
                     isSelectMode() && 'opacity-100'
                   )}
                 >
-                  <div
+                  <div // white circle
                     class={cn(
-                      'absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400',
+                      'absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400 pointer-events-none',
                       !isSelectMode() && 'hover:bg-gray-100',
                       isSelectMode() && 'group-hover:bg-gray-100',
                       libraryStore.selectedIndices.includes(index()) && 'bg-gray-100'
                     )}
                   />
+                  <button // invisible button
+                    class={cn(
+                      'absolute',
+                      !isSelectMode() && 'top-1.5 left-1.5 h-7 w-7 rounded-full',
+                      isSelectMode() && 'inset-0 h-full w-full'
+                    )}
+                    onClick={[handleClick, index()]}
+                  />
                 </div>
                 <button
                   class={cn(
-                    'absolute',
-                    isSelectMode() ? 'h-full w-full' : 'top-1.5 left-1.5 h-7 w-7 rounded-full'
+                    'absolute pointer-events-auto',
+
+                    isSelectMode()
+                      ? 'inset-0 h-full w-full'
+                      : 'top-1.5 left-1.5 h-7 w-7 rounded-full'
                   )}
                   onClick={[handleClick, index()]}
                 />

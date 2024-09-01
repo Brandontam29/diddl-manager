@@ -1,3 +1,5 @@
+import { TbDownload } from 'solid-icons/tb';
+import { RiMediaPlayListAddFill } from 'solid-icons/ri';
 import DiddlCard from '@renderer/components/diddl-card';
 import { addAcquiredItems, removeAcquiredItems } from '@renderer/features/acquired';
 import { libraryStore, setLibraryStore } from '@renderer/features/library';
@@ -10,6 +12,7 @@ import { cn } from '@renderer/libs/cn';
 import { useSearchParams } from '@solidjs/router';
 import { createEffect, createMemo, For, Show } from 'solid-js';
 import { BsBookmarkDash, BsBookmarkPlus } from 'solid-icons/bs';
+
 const HomePage = () => {
   const screenWidth = useScreenWidth();
   const [searchParams] = useSearchParams();
@@ -42,13 +45,77 @@ const HomePage = () => {
   const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
 
   return (
-    <div
-      class="relative grow mx-auto pt-10 pb-4 flex flex-wrap gap-1"
-      style={{ width: `${screenWidth() - 256 - 16}px` }}
-    >
-      <Show when={isSelectMode()}>
-        <div class="w-full absolute top-0 inset-x flex gap-4">
+    <>
+      <div
+        class={cn('relative grow px-4 pt-10 pb-4 flex flex-wrap gap-1')}
+        style={{ width: `${screenWidth() - 256 - 32}px` }}
+      >
+        <For each={filteredDiddls()} fallback={<div>...loading</div>}>
+          {(diddl, index) => {
+            const ratio =
+              diddl.imageWidth && diddl.imageHeight ? diddl.imageWidth / diddl.imageHeight : null;
+            return (
+              <div
+                class={cn('relative h-[240px] rounded overflow-hidden')}
+                style={{ width: ratio ? `${240 * ratio}px` : undefined }}
+              >
+                <DiddlCard className={cn('w-full h-full')} diddl={diddl} />
+
+                <div // full overlay
+                  class={cn(
+                    'h-[calc(100%-20px)] w-full absolute top-0 inset-x',
+                    libraryStore.selectedIndices.includes(index()) && 'border-4 border-blue-300',
+                    isSelectMode() &&
+                      'group hover:bg-gradient-to-t from-black/25 to-[48px] bg-gradient-to-t'
+                  )}
+                >
+                  <div // top black
+                    class={cn(
+                      'absolute inset-0 bg-gradient-to-b from-black/25 to-[48px] w-full h-full opacity-0 hover:opacity-100',
+                      isSelectMode() && 'opacity-100'
+                    )}
+                  >
+                    <button // button
+                      class={cn(
+                        'absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400',
+                        !isSelectMode() && 'hover:bg-gray-100',
+                        isSelectMode() && 'group-hover:bg-gray-100',
+                        libraryStore.selectedIndices.includes(index()) && 'bg-gray-100'
+                      )}
+                      onClick={[handleClick, index()]}
+                    />
+                  </div>
+                  <Show // full card button
+                    when={isSelectMode()}
+                  >
+                    <button
+                      class={cn('absolute inset-0 w-full h-full')}
+                      onClick={[handleClick, index()]}
+                    />
+                  </Show>
+                </div>
+              </div>
+            );
+          }}
+        </For>
+      </div>
+      <Show when={true}>
+        <div
+          class={cn(
+            'fixed top-0 left-[256px] flex items-center gap-2',
+            'bg-white py-1 px-1 rounded-b-md border-x border-b-2 shadow border-gray-300'
+          )}
+          style={{ width: `${screenWidth() - 256 - 32}px` }}
+        >
           <button
+            class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
+            onClick={async () => setLibraryStore('selectedIndices', [])}
+          >
+            <span>X</span> <span>{libraryStore.selectedIndices.length} Selected</span>
+          </button>
+          <div class="h-[24px] w-px bg-gray-200" />
+          <button
+            class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
             onClick={async () => {
               await addAcquiredItems(
                 libraryStore.selectedIndices.map((index) => filteredDiddls()[index]?.id || '')
@@ -57,9 +124,11 @@ const HomePage = () => {
             }}
           >
             <BsBookmarkPlus />
-            Add to Collection
+            <span>Add to Collection</span>
           </button>
+          <div class="h-[24px] w-px bg-gray-200" />
           <button
+            class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
             onClick={async () => {
               await removeAcquiredItems(
                 libraryStore.selectedIndices.map((index) => filteredDiddls()[index]?.id || '')
@@ -68,60 +137,27 @@ const HomePage = () => {
             }}
           >
             <BsBookmarkDash />
-            Remove from Collection
+            <span>Remove from Collection</span>
+          </button>
+          <div class="h-[24px] w-px bg-gray-200" />
+          <button
+            class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
+            onClick={async () => {}}
+          >
+            <RiMediaPlayListAddFill />
+            <span>Add To List</span>
+          </button>
+          <div class="h-[24px] w-px bg-gray-200" />
+          <button
+            class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
+            onClick={async () => {}}
+          >
+            <TbDownload />
+            <span>Download Images</span>
           </button>
         </div>
       </Show>
-
-      <For each={filteredDiddls()} fallback={<div>...loading</div>}>
-        {(diddl, index) => {
-          const ratio =
-            diddl.imageWidth && diddl.imageHeight ? diddl.imageWidth / diddl.imageHeight : null;
-          return (
-            <div
-              class={cn('relative h-[240px]')}
-              style={{ width: ratio ? `${240 * ratio}px` : undefined }}
-            >
-              <DiddlCard className={cn('w-full h-full')} diddl={diddl} />
-
-              <div // full overlay
-                class={cn(
-                  'h-[calc(100%-20px)] w-full absolute top-0 inset-x',
-                  libraryStore.selectedIndices.includes(index()) && 'border-4 border-blue-300',
-                  isSelectMode() &&
-                    'group hover:bg-gradient-to-t from-black/25 to-[48px] bg-gradient-to-t'
-                )}
-              >
-                <div // top black
-                  class={cn(
-                    'absolute inset-0 bg-gradient-to-b from-black/25 to-[48px] w-full h-full opacity-0 hover:opacity-100',
-                    isSelectMode() && 'opacity-100'
-                  )}
-                >
-                  <button // button
-                    class={cn(
-                      'absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400',
-                      !isSelectMode() && 'hover:bg-gray-100',
-                      isSelectMode() && 'group-hover:bg-gray-100',
-                      libraryStore.selectedIndices.includes(index()) && 'bg-gray-100'
-                    )}
-                    onClick={[handleClick, index()]}
-                  />
-                </div>
-                <Show // full card button
-                  when={isSelectMode()}
-                >
-                  <button
-                    class={cn('absolute inset-0 w-full h-full')}
-                    onClick={[handleClick, index()]}
-                  />
-                </Show>
-              </div>
-            </div>
-          );
-        }}
-      </For>
-    </div>
+    </>
   );
 };
 

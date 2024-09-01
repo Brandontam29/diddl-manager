@@ -4,6 +4,7 @@ import { A, useLocation } from '@solidjs/router';
 import { createEffect, For, JSX, Show } from 'solid-js';
 import { BsJournalBookmark } from 'solid-icons/bs';
 import { BiRegularHomeHeart } from 'solid-icons/bi';
+import { cn } from '@renderer/libs/cn';
 const BaseLayout = (props) => {
   const location = useLocation();
   createEffect(() => {
@@ -11,11 +12,25 @@ const BaseLayout = (props) => {
     fetchLibraryState();
   });
 
+  createEffect(() => console.log(location.search));
+  createEffect(() => console.log(LINKS));
   return (
     <>
-      <nav class="p-4 flex flex-col gap-2 border-r border-gray-200 h-screen sticky top-0 overflow-y-auto min-w-64 w-64">
-        <div>pathname: {location.pathname}</div>
-        <A href="/" class="flex items-center gap-2">
+      <nav
+        class={cn(
+          'py-4 flex flex-col border-r border-gray-200 h-screen sticky top-0 overflow-y-auto min-w-64 w-64',
+          'scrollbar-thumb-pink-300 scrollbar-track-transparent scrollbar-thin'
+        )}
+      >
+        <A
+          href="/"
+          class={cn(
+            'px-4 flex items-center gap-2',
+            location.search === '' && 'bg-red-200',
+            location.search !== '' && 'hover:bg-red-100'
+          )}
+          end={true}
+        >
           <div class="pb-0.5">
             <BiRegularHomeHeart class="h-8 w-8 " />
           </div>
@@ -24,14 +39,22 @@ const BaseLayout = (props) => {
         <span class="mgc_delete_2_line" />
         <For each={LINKS}>
           {(group) => (
-            <div>
+            <div class="pt-3">
               <Show when={group.title} keyed>
-                {(title) => <div>{title}</div>}
+                {(title) => <div class="px-4 font-semibold">{title}</div>}
               </Show>
               <div class="flex flex-col">
                 <For each={group.links}>
                   {(link) => (
-                    <A href={link.href} class="flex items-center gap-2">
+                    <A
+                      href={link.href}
+                      class={cn(
+                        'flex items-center gap-2 px-4',
+                        `/${location.search}` === link.href && 'bg-red-200',
+                        `/${location.search}` !== link.href && 'hover:bg-red-100'
+                      )}
+                      end={true}
+                    >
                       {link.label}
                     </A>
                   )}

@@ -5,7 +5,6 @@ import {
   defaultLibraryPath,
   libraryPath,
   libraryMapPath,
-  diddlImagesDirectory,
   relativeDiddlImagesDirectory
 } from '../pathing';
 import isExists from '../utils/isExists';
@@ -36,9 +35,9 @@ const setupLibrary = async () => {
     return;
   }
 
-  const rawLibrary = await readFile(libraryPath(), 'utf8');
-
   try {
+    const rawLibrary = await readFile(libraryPath(), 'utf8');
+
     const library = JSON.parse(rawLibrary);
 
     libraryEntrySchema.array().parse(library);

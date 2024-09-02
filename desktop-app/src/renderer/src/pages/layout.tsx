@@ -5,6 +5,7 @@ import { createEffect, For, JSX, Show } from 'solid-js';
 import { BsJournalBookmark } from 'solid-icons/bs';
 import { BiRegularHomeHeart } from 'solid-icons/bi';
 import { cn } from '@renderer/libs/cn';
+import SettingsDialog from './components/SettingsDialog';
 const BaseLayout = (props) => {
   const location = useLocation();
   createEffect(() => {
@@ -12,8 +13,6 @@ const BaseLayout = (props) => {
     fetchLibraryState();
   });
 
-  createEffect(() => console.log(location.search));
-  createEffect(() => console.log(LINKS));
   return (
     <>
       <nav
@@ -26,17 +25,15 @@ const BaseLayout = (props) => {
           href="/"
           class={cn(
             'px-4 flex items-center gap-2',
-            location.search === '' && 'bg-red-200',
-            location.search !== '' && 'hover:bg-red-100'
+            location.pathname === '/' && location.search === '' ? 'bg-red-200' : 'hover:bg-red-100'
           )}
           end={true}
         >
           <div class="pb-0.5">
-            <BiRegularHomeHeart class="h-8 w-8 " />
+            <BiRegularHomeHeart class="h-8 w-8" />
           </div>
           <span>Home</span>
         </A>
-        <span class="mgc_delete_2_line" />
         <For each={LINKS}>
           {(group) => (
             <div class="pt-3">
@@ -50,8 +47,8 @@ const BaseLayout = (props) => {
                       href={link.href}
                       class={cn(
                         'flex items-center gap-2 px-4',
-                        `/${location.search}` === link.href && 'bg-red-200',
-                        `/${location.search}` !== link.href && 'hover:bg-red-100'
+                        `${location.pathname}${location.search}` === link.href && 'bg-red-200',
+                        `${location.pathname}${location.search}` !== link.href && 'hover:bg-red-100'
                       )}
                       end={true}
                     >
@@ -63,6 +60,9 @@ const BaseLayout = (props) => {
             </div>
           )}
         </For>
+        <div class="pt-3">
+          <SettingsDialog />
+        </div>
       </nav>
       {props.children}
     </>
@@ -110,6 +110,12 @@ const LINKS = [
         ),
         href: '/collection'
       }
+    ]
+  },
+  {
+    title: undefined,
+    links: [
+      { label: <span class="text-transparent">I love Diddl</span>, href: '/catherine-is-my-wife' }
     ]
   },
   {

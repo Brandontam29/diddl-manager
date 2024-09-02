@@ -1,15 +1,13 @@
-import DiddlCard from '@renderer/components/diddl-card';
 import { acquiredStore, removeAcquiredItems } from '@renderer/features/acquired';
 import { libraryStore, setLibraryStore } from '@renderer/features/library';
 import {
   addSelectedIndices,
   removeSelectedIndices
 } from '@renderer/features/library/selectedIndicesMethods';
-import BsCheckCircleFill from '@renderer/icons/BsCheckCircleFill';
-import { cn } from '@renderer/libs/cn';
-import { createEffect, createMemo, For, Show } from 'solid-js';
-import FallbackNoDiddl from './components/FallbackNoDiddl';
+import { createMemo, Show } from 'solid-js';
+import FallbackNoDiddl from '../../components/FallbackNoDiddl';
 import { BsBookmarkDash } from 'solid-icons/bs';
+import DiddlCardList from '@renderer/components/DIddlCardList';
 
 const CollectionPage = () => {
   const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
@@ -46,33 +44,7 @@ const CollectionPage = () => {
 
       <Show when={Array.isArray(acquiredStore.acquiredItems)} fallback={<div>...loading</div>}>
         <Show when={acquiredStore.acquiredItems.length > 0} fallback={<FallbackNoDiddl />}>
-          <For each={diddls()}>
-            {(diddl, index) => {
-              const selected = libraryStore.selectedIndices.includes(index());
-              return (
-                <div class="relative group">
-                  <DiddlCard diddl={diddl} />
-                  <div
-                    class={cn(
-                      'w-full absolute inset-x top-0 h-8 bg-black/10 block invisible group-hover:visible',
-                      isSelectMode() && 'visible'
-                    )}
-                  />
-
-                  <button
-                    class={cn(
-                      'absolute top-0 right-0 h-8 w-8 flex invisible group-hover:visible border border-red-400 rounded-full items-center justify-center',
-                      isSelectMode() && 'visible',
-                      selected && 'bg-yellow-500'
-                    )}
-                    onClick={[handleClick, index()]}
-                  >
-                    <BsCheckCircleFill class={cn('text-green-400 h-6 w-6')} />
-                  </button>
-                </div>
-              );
-            }}
-          </For>
+          <DiddlCardList diddls={diddls()} />
         </Show>
       </Show>
     </div>

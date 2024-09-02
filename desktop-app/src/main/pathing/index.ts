@@ -20,7 +20,9 @@ export const libraryMapPath = () => path.join(appPath(), 'library-map.json');
 export const defaultLibraryPath = () =>
   path.join(app.getAppPath(), 'resources', 'default-library.json');
 
-export const wishlistPath = () => path.join(appPath(), 'wishlist.json');
+export const listDirectory = () => path.join(appPath(), 'lists');
+export const listTrackerPath = () => path.join(appPath(), 'lists', 'list-tracker.json');
+
 export const acquiredListPath = () => path.join(appPath(), 'acquired-list.json');
 
 export const logDirectory = () => path.join(appPath(), 'logs');

@@ -5,7 +5,7 @@ import {
   libraryPath,
   libraryMapPath,
   defaultLibraryPath,
-  wishlistPath,
+  listDirectory,
   acquiredListPath,
   logDirectory
 } from '.';
@@ -24,7 +24,7 @@ const logAllPaths = () => {
     libraryPath,
     libraryMapPath,
     defaultLibraryPath,
-    wishlistPath,
+    listDirectory,
     acquiredListPath,
     logDirectory
   ];

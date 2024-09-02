@@ -6,7 +6,7 @@ import registerMainHandlers from './registerMainHandlers';
 import { logAllPaths } from './pathing';
 import { setupLibrary } from './library';
 import { setupAcquiredList } from './acquired';
-import { setupWishlist } from './wishlist';
+import { setupListTracker } from './list';
 
 function createWindow() {
   // Create the browser window.
@@ -61,7 +61,7 @@ app.whenReady().then(async () => {
    */
 
   logAllPaths();
-  await Promise.all([setupAcquiredList(), setupLibrary()]);
+  await Promise.all([, setupLibrary(), setupListTracker(), setupAcquiredList()]);
 
   const window = createWindow();
   registerMainHandlers(window);

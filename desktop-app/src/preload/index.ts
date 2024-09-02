@@ -2,14 +2,14 @@ import { contextBridge } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
 import { fileSystemPreloadApi } from '../main/file-system';
 import { libraryPreloadApi } from '../main/library';
-import { wishlistPreloadApi } from '../main/wishlist';
+import { listPreloadApi } from '../main/list';
 import { acquiredPreloadApi } from '../main/acquired';
 
 // Custom APIs for renderer
 const api = {
   ...fileSystemPreloadApi,
   ...libraryPreloadApi,
-  ...wishlistPreloadApi,
+  ...listPreloadApi,
   ...acquiredPreloadApi
 };
 

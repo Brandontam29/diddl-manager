@@ -1,0 +1,67 @@
+import { readFile, writeFile } from 'fs/promises';
+import { listTrackerPath } from '../pathing';
+import { listNameSchema, TrackerListItem, trackerListItemSchema } from '../../shared';
+import { nanoid } from 'nanoid';
+
+export const createList = async (listPayload: Pick<TrackerListItem, 'name' | 'filePath'>) => {
+  const trackerListRaw = await readFile(listTrackerPath(), 'utf8');
+  const trackerList = JSON.parse(trackerListRaw) as TrackerListItem[];
+
+  const trackerListItem = trackerListItemSchema.parse({ id: nanoid(), ...listPayload });
+  trackerList.push(trackerListItem);
+
+  await writeFile(listTrackerPath(), JSON.stringify(trackerList));
+
+  return trackerListItem;
+};
+export const getList = async (listId: string) => {
+  const trackerListRaw = await readFile(listTrackerPath(), 'utf8');
+  const trackerList = JSON.parse(trackerListRaw) as TrackerListItem[];
+
+  return trackerList.find((item) => item.id === listId);
+};
+
+export const getLists = async () => {
+  const trackerListRaw = await readFile(listTrackerPath(), 'utf8');
+  const trackerList = JSON.parse(trackerListRaw) as TrackerListItem[];
+
+  return trackerList.filter((item) => item.deletedAt !== null);
+};
+
+export const deleteList = async (id: string) => {
+  const trackerListRaw = await readFile(listTrackerPath(), 'utf8');
+  const trackerList = JSON.parse(trackerListRaw) as TrackerListItem[];
+
+  const index = trackerList.findIndex((item) => item.id === id);
+
+  if (index === -1) return;
+
+  trackerList[index] = {
+    ...trackerList[index],
+
+    deletedAt: new Date().toISOString()
+  };
+
+  writeFile(listTrackerPath(), JSON.stringify(trackerList));
+
+  return trackerList[index];
+};
+
+export const updateListName = async (id: string, name: string) => {
+  const parsedname = listNameSchema.parse(name);
+  const trackerListRaw = await readFile(listTrackerPath(), 'utf8');
+  const trackerList = JSON.parse(trackerListRaw) as TrackerListItem[];
+
+  const index = trackerList.findIndex((item) => item.id === id);
+
+  if (index === -1) return;
+  trackerList[index] = {
+    ...trackerList[index],
+
+    name: parsedname
+  };
+
+  await writeFile(listTrackerPath(), JSON.stringify(trackerList));
+
+  return trackerList[index];
+};

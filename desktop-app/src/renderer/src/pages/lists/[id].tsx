@@ -4,13 +4,15 @@ import { createEffect, createMemo, Show } from 'solid-js';
 import { BsBookmarkDash } from 'solid-icons/bs';
 import DiddlCardList from '@renderer/components/DIddlCardList';
 import { fetchListItems, listStore } from '@renderer/features/lists';
+import { useParams } from '@solidjs/router';
 
 import useScreenWidth from '@renderer/hooks/useScreenWidth';
 import { cn } from '@renderer/libs/cn';
 
-const CollectionPage = () => {
+const ListIdPage = () => {
   const screenWidth = useScreenWidth();
 
+  const params = useParams();
   const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
 
   const diddls = createMemo(() => {
@@ -25,7 +27,7 @@ const CollectionPage = () => {
   });
 
   createEffect(() => {
-    fetchListItems('collection');
+    fetchListItems(params.id);
   });
 
   return (
@@ -52,4 +54,4 @@ const CollectionPage = () => {
   );
 };
 
-export default CollectionPage;
+export default ListIdPage;

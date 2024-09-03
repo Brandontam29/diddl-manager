@@ -8,20 +8,28 @@ const validateDiddlIds = (ids: string[]) => {
 
   const status: boolean[] = [];
   const validDiddlIds: string[] = [];
+  const validDiddlIndexes: number[] = [];
   const invalidDiddlIds: string[] = [];
-
   for (let i = 0; i < ids.length; i++) {
     const id = ids[i];
     const isValid = libraryMap[id] !== undefined;
     status.push(isValid);
 
-    isValid ? validDiddlIds.push(id) : invalidDiddlIds.push(id);
+    validDiddlIndexes.push(libraryMap[id]);
+
+    if (isValid) {
+      validDiddlIds.push(id);
+      validDiddlIndexes.push(libraryMap[id]);
+    } else {
+      invalidDiddlIds.push(id);
+    }
   }
 
   return {
-    allStatus: status.includes(false),
+    allStatus: invalidDiddlIds.length === 0,
     status,
     validDiddlIds,
+    validDiddlIndexes,
     invalidDiddlIds
   };
 };

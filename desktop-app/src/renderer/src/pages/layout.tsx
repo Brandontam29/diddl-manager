@@ -1,4 +1,4 @@
-import { fetchAcquiredState } from '@renderer/features/acquired';
+import { fetchTrackerList, listStore } from '@renderer/features/lists';
 import { fetchLibraryState } from '@renderer/features/library';
 import { A, useLocation } from '@solidjs/router';
 import { createEffect, For, JSX, Show } from 'solid-js';
@@ -6,10 +6,11 @@ import { BsJournalBookmark } from 'solid-icons/bs';
 import { BiRegularHomeHeart } from 'solid-icons/bi';
 import { cn } from '@renderer/libs/cn';
 import SettingsDialog from './components/SettingsDialog';
+import ListLinks from './components/ListLinks';
 const BaseLayout = (props) => {
   const location = useLocation();
   createEffect(() => {
-    fetchAcquiredState();
+    fetchTrackerList();
     fetchLibraryState();
   });
 
@@ -21,7 +22,7 @@ const BaseLayout = (props) => {
           'scrollbar-thumb-pink-300 scrollbar-track-transparent scrollbar-thin'
         )}
       >
-        <A
+        {/* <A
           href="/"
           class={cn(
             'px-4 flex items-center gap-2',
@@ -33,7 +34,8 @@ const BaseLayout = (props) => {
             <BiRegularHomeHeart class="h-8 w-8" />
           </div>
           <span>Home</span>
-        </A>
+        </A> */}
+        <ListLinks trackerListItems={listStore.trackerListItems} />
         <For each={LINKS}>
           {(group) => (
             <div class="pt-3">
@@ -80,6 +82,22 @@ const getParams = (params: { type?: string; from?: number; to?: number }) => {
 };
 
 const LINKS = [
+  {
+    title: undefined,
+    links: [
+      {
+        label: (
+          <>
+            <div class="pb-0.5">
+              <BiRegularHomeHeart class="h-8 w-8" />
+            </div>
+            <span>Home</span>
+          </>
+        ),
+        href: '/'
+      }
+    ]
+  },
   {
     title: undefined,
     links: [

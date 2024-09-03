@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const libraryEntryType = z.enum([
+export const libraryEntryTypeSchema = z.enum([
   'sticker',
   'A7',
   'A6',
@@ -30,10 +30,12 @@ const libraryEntryType = z.enum([
   'towel'
 ]);
 
+export type LibraryEntryType = z.infer<typeof libraryEntryTypeSchema>;
+
 export const libraryEntrySchema = z.object({
   id: z.string(),
   name: z.string(),
-  type: libraryEntryType,
+  type: libraryEntryTypeSchema,
   imagePath: z.string(),
   imageWidth: z.number().nullable(),
   imageHeight: z.number().nullable()

@@ -5,7 +5,7 @@ import icon from '../../resources/icon.png?asset';
 import registerMainHandlers from './registerMainHandlers';
 import { logAllPaths } from './pathing';
 import { setupLibrary } from './library';
-import { setupAcquiredList } from './acquired';
+import { setupAcquiredList } from './collection';
 import { setupListTracker } from './list';
 
 function createWindow() {

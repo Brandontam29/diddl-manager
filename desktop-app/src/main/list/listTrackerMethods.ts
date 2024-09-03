@@ -1,12 +1,11 @@
-import { readFile, writeFile } from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import { listTrackerPath } from '../pathing';
 import { listNameSchema, TrackerListItem, trackerListItemSchema } from '../../shared';
 import { nanoid } from 'nanoid';
+import { getAppFile } from '../file-system';
 
 export const createList = async (listPayload: Pick<TrackerListItem, 'name' | 'filePath'>) => {
-  const trackerListRaw = await readFile(listTrackerPath(), 'utf8');
-  const trackerList = JSON.parse(trackerListRaw) as TrackerListItem[];
-
+  const trackerList = getAppFile('list-tracker');
   const trackerListItem = trackerListItemSchema.parse({ id: nanoid(), ...listPayload });
   trackerList.push(trackerListItem);
 
@@ -15,23 +14,17 @@ export const createList = async (listPayload: Pick<TrackerListItem, 'name' | 'fi
   return trackerListItem;
 };
 export const getList = async (listId: string) => {
-  const trackerListRaw = await readFile(listTrackerPath(), 'utf8');
-  const trackerList = JSON.parse(trackerListRaw) as TrackerListItem[];
-
+  const trackerList = getAppFile('list-tracker');
   return trackerList.find((item) => item.id === listId);
 };
 
 export const getLists = async () => {
-  const trackerListRaw = await readFile(listTrackerPath(), 'utf8');
-  const trackerList = JSON.parse(trackerListRaw) as TrackerListItem[];
-
+  const trackerList = getAppFile('list-tracker');
   return trackerList.filter((item) => item.deletedAt !== null);
 };
 
 export const deleteList = async (id: string) => {
-  const trackerListRaw = await readFile(listTrackerPath(), 'utf8');
-  const trackerList = JSON.parse(trackerListRaw) as TrackerListItem[];
-
+  const trackerList = getAppFile('list-tracker');
   const index = trackerList.findIndex((item) => item.id === id);
 
   if (index === -1) return;
@@ -49,9 +42,7 @@ export const deleteList = async (id: string) => {
 
 export const updateListName = async (id: string, name: string) => {
   const parsedname = listNameSchema.parse(name);
-  const trackerListRaw = await readFile(listTrackerPath(), 'utf8');
-  const trackerList = JSON.parse(trackerListRaw) as TrackerListItem[];
-
+  const trackerList = getAppFile('list-tracker');
   const index = trackerList.findIndex((item) => item.id === id);
 
   if (index === -1) return;

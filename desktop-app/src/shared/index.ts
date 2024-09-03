@@ -1,5 +1,9 @@
-import { acquiredItemSchema, type AcquiredItem } from './acquired-list-models';
-import { libraryEntrySchema, type LibraryEntry } from './library-models';
+import {
+  libraryEntrySchema,
+  LibraryEntryType,
+  libraryEntryTypeSchema,
+  type LibraryEntry
+} from './library-models';
 import {
   type ListItem,
   listItemSchema,
@@ -11,9 +15,9 @@ import {
 export {
   libraryEntrySchema,
   listItemSchema,
-  acquiredItemSchema,
   listNameSchema,
-  trackerListItemSchema
+  trackerListItemSchema,
+  libraryEntryTypeSchema
 };
 
-export type { LibraryEntry, ListItem, AcquiredItem, TrackerListItem };
+export type { LibraryEntry, ListItem, TrackerListItem, LibraryEntryType };

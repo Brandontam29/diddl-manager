@@ -1,5 +1,5 @@
 import { readFile, writeFile } from 'fs/promises';
-import { ListItem, listItemSchema } from '../../shared';
+import { type ListItem, listItemSchema } from '../../shared';
 import { logging } from '../logging';
 import { getList } from './listTrackerMethods';
 import { idsToIndexes } from '../library';
@@ -36,7 +36,7 @@ export const addListItems = async (listId: string, payload: ListItem[]) => {
     return;
   }
 
-  let listLibIndexesNewWithUndefined = idsToIndexes(listItemsNew.map((item) => item.id));
+  const listLibIndexesNewWithUndefined = idsToIndexes(listItemsNew.map((item) => item.id));
   const listLibIndexesCurrent = idsToIndexes(listItemsCurrent.map((item) => item.id)) as number[];
 
   listItemsNew = listItemsNew.filter((_, index) => listLibIndexesNew[index] !== undefined);

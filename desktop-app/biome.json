@@ -1,5 +1,13 @@
 {
   "organizeImports": { "enabled": true },
+  "files": {
+    "include": ["src/**/*.*", "resources/**/*.*"],
+    "ignore": ["out/", "node_modules/", "**/*.min.js"]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "lineWidth": 100
+  },
   "linter": {
     "enabled": true,
     "rules": { "recommended": true }

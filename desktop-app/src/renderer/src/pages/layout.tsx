@@ -1,7 +1,7 @@
 import { fetchTrackerList, listStore } from '@renderer/features/lists';
 import { fetchLibraryState } from '@renderer/features/library';
 import { A, useLocation } from '@solidjs/router';
-import { Component, createEffect, For, JSX, Match, Show, Switch } from 'solid-js';
+import { type Component, createEffect, For, type JSX, Match, Show, Switch } from 'solid-js';
 import { BsJournalBookmark } from 'solid-icons/bs';
 import { BiRegularHomeHeart } from 'solid-icons/bi';
 import { cn } from '@renderer/libs/cn';

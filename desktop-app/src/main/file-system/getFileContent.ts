@@ -1,5 +1,5 @@
-import { readFile } from 'fs/promises'
-import path from 'path'
+import { readFile } from 'fs/promises';
+import path from 'path';
 
 const textExtensions = [
   '.txt',
@@ -15,26 +15,26 @@ const textExtensions = [
   '.input',
   '.tp',
   '.out'
-]
+];
 
 function isTextFile(filename: string) {
-  if (path.extname(filename).includes('.tp')) return true
+  if (path.extname(filename).includes('.tp')) return true;
 
-  return textExtensions.includes(path.extname(filename).toLowerCase())
+  return textExtensions.includes(path.extname(filename).toLowerCase());
 }
 
 const getFileContent = async (path: string) => {
   if (!isTextFile(path)) {
-    throw new Error('Cannot read file that is not text based')
+    throw new Error('Cannot read file that is not text based');
   }
 
   try {
-    const result = await readFile(path, 'utf8')
+    const result = await readFile(path, 'utf8');
 
-    return result
+    return result;
   } catch (e) {
-    throw new Error('Sorry, there was a problem reading your file')
+    throw new Error('Sorry, there was a problem reading your file');
   }
-}
+};
 
-export default getFileContent
+export default getFileContent;

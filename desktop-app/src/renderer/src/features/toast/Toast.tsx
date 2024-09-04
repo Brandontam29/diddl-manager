@@ -7,7 +7,7 @@ import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Icon from '@/components/atoms/Icon';
 
-import { Toast } from './useToastStore';
+import type { Toast } from './useToastStore';
 
 const toastHeading = cva('leading-none', {
   variants: {

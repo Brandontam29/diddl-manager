@@ -3,12 +3,12 @@ import { addListItems, setListItems } from '@renderer/features/lists';
 import { removeListItems } from '@renderer/features/lists/listMethods';
 import useScreenWidth from '@renderer/hooks/useScreenWidth';
 import { cn } from '@renderer/libs/cn';
-import { LibraryEntry } from '@shared/library-models';
+import type { LibraryEntry } from '@shared/library-models';
 import { BsBookmarkPlus, BsBookmarkDash } from 'solid-icons/bs';
 import { HiOutlineXCircle } from 'solid-icons/hi';
 import { RiMediaPlayListAddFill } from 'solid-icons/ri';
 import { TbDownload } from 'solid-icons/tb';
-import { Component } from 'solid-js';
+import type { Component } from 'solid-js';
 
 const TaskbarLibrary: Component<{ diddls: LibraryEntry[] }> = (props) => {
   const screenWidth = useScreenWidth();

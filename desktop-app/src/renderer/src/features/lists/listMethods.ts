@@ -1,4 +1,4 @@
-import { ListItem } from '@shared';
+import type { ListItem } from '@shared';
 import { listStore, setListStore } from './createListsStore';
 
 export const fetchListItems = async (listId: string) => {

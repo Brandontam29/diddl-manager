@@ -1,4 +1,4 @@
-import { LibraryEntry } from '@shared';
+import type { LibraryEntry } from '@shared';
 
 type Store = {
   libraryState: LibraryEntry[];

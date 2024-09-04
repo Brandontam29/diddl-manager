@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { collectionListPath, libraryMapPath, libraryPath, listTrackerPath } from '../pathing';
-import { LibraryEntry, ListItem, TrackerListItem } from '../../shared';
+import type { LibraryEntry, ListItem, TrackerListItem } from '../../shared';
 
 function getAppFile(type: 'list-tracker'): TrackerListItem[];
 function getAppFile(type: 'library'): LibraryEntry[];

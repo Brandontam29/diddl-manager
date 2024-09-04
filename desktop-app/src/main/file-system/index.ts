@@ -3,7 +3,7 @@ import fileSystemMainHandlers from './fileSystemMainHandlers';
 import fileSystemPreloadApi from './fileSystemPreloadApi';
 import getAppFile from './getAppFile';
 import getFileContent from './getFileContent';
-import { FileRender } from './getFolderStructure';
+import type { FileRender } from './getFolderStructure';
 
 export { fileSystemMainHandlers, fileSystemPreloadApi, getFileContent, getAppFile };
 

@@ -10,7 +10,7 @@ import {
   DELETE_LIST,
   UPDATE_LIST_NAME
 } from './listMainHandlers';
-import { ListItem, TrackerListItem } from '../../shared';
+import type { ListItem, TrackerListItem } from '../../shared';
 
 const listPreloadApi = {
   getLists: (): Promise<TrackerListItem[]> => ipcRenderer.invoke(GET_TRACKER_LIST),

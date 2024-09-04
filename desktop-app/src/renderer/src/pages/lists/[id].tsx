@@ -9,7 +9,7 @@ import { useParams } from '@solidjs/router';
 import useScreenWidth from '@renderer/hooks/useScreenWidth';
 import { cn } from '@renderer/libs/cn';
 import { removeListItems } from '@renderer/features/lists/listMethods';
-import { ListItem } from '@shared/index';
+import type { ListItem } from '@shared/index';
 
 const ListIdPage = () => {
   const screenWidth = useScreenWidth();

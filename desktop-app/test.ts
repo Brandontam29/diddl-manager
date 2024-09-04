@@ -38,7 +38,7 @@ function arrayHasAllSetElements(array, set) {
   // Convert the array to a Set for faster lookups
   const arraySet = new Set(array);
 
-  for (let item of set) {
+  for (const item of set) {
     if (!arraySet.has(item)) {
       return false; // If any item in the Set is not found in the arraySet, return false
     }
@@ -48,7 +48,7 @@ function arrayHasAllSetElements(array, set) {
 
 function getNumbersBetween(a: number, b: number) {
   //a is exclusive, b is inclusive
-  let numbers: number[] = [];
+  const numbers: number[] = [];
 
   if (a < b) {
     for (let i = a + 1; i <= b; i++) {

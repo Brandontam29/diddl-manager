@@ -19,8 +19,8 @@ const HomePage = () => {
 
     if (searchParams.from || searchParams.to) {
       diddls = diddls.slice(
-        searchParams.from !== undefined ? parseInt(searchParams.from) : 0,
-        searchParams.to !== undefined ? parseInt(searchParams.to) : undefined
+        searchParams.from !== undefined ? Number.parseInt(searchParams.from) : 0,
+        searchParams.to !== undefined ? Number.parseInt(searchParams.to) : undefined
       );
     }
 

@@ -1,8 +1,8 @@
 import { libraryStore, setLibraryStore } from '@renderer/features/library';
 import { cn } from '@renderer/libs/cn';
-import { LibraryEntry } from '@shared/library-models';
+import type { LibraryEntry } from '@shared/library-models';
 import { useSearchParams } from '@solidjs/router';
-import { Component, createEffect, createMemo, For, Show } from 'solid-js';
+import { type Component, createEffect, createMemo, For, Show } from 'solid-js';
 import DiddlCard from './DiddlCard';
 import {
   addSelectedIndices,
@@ -125,7 +125,7 @@ const isAdd = (arr: number[], shiftClickIndex: number) => {
 function arrayHasAllSetElements(array: any[], set: Set<any>) {
   const arraySet = new Set(array);
 
-  for (let item of set) {
+  for (const item of set) {
     if (!arraySet.has(item)) {
       return false;
     }
@@ -134,7 +134,7 @@ function arrayHasAllSetElements(array: any[], set: Set<any>) {
 }
 
 function getNumbersBetween(a: number, b: number) {
-  let numbers: number[] = [];
+  const numbers: number[] = [];
 
   if (a < b) {
     for (let i = a + 1; i <= b; i++) {

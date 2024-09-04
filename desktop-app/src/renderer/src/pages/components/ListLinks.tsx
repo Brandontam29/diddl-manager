@@ -1,4 +1,4 @@
-import { PopoverTriggerProps } from '@kobalte/core/popover';
+import type { PopoverTriggerProps } from '@kobalte/core/popover';
 import {
   Popover,
   PopoverContent,
@@ -6,9 +6,9 @@ import {
   PopoverTitle,
   PopoverTrigger
 } from '@renderer/components/ui/popover';
-import { TrackerListItem } from '@shared/index';
+import type { TrackerListItem } from '@shared/index';
 import { BsCaretDown, BsCaretRight } from 'solid-icons/bs';
-import { Component, createEffect, createMemo, createSignal, For } from 'solid-js';
+import { type Component, createEffect, createMemo, createSignal, For } from 'solid-js';
 import CreateListDialog from './CreateListDialog';
 import { A, useLocation } from '@solidjs/router';
 import { Button } from '@kobalte/core/button';

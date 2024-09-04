@@ -1,6 +1,6 @@
 import {
   libraryEntrySchema,
-  LibraryEntryType,
+  type LibraryEntryType,
   libraryEntryTypeSchema,
   type LibraryEntry
 } from './library-models';

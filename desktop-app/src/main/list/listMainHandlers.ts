@@ -1,6 +1,6 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { type BrowserWindow, ipcMain } from 'electron';
 import { mkdir, readFile, writeFile } from 'fs/promises';
-import { ListItem, listItemSchema, listNameSchema } from '../../shared';
+import { type ListItem, listItemSchema, listNameSchema } from '../../shared';
 import { listDirectory } from '../pathing';
 import path from 'path';
 import { nanoid } from 'nanoid';

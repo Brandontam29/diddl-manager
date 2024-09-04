@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import { readFile, writeFile } from 'fs/promises';
-import { LibraryEntry, libraryEntrySchema } from '../../shared/library-models';
+import { type LibraryEntry, libraryEntrySchema } from '../../shared/library-models';
 import { libraryMapPath, libraryPath } from '../pathing';
 
 export const SET_LIBRARY = 'set-library';

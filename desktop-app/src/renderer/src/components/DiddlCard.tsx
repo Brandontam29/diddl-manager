@@ -1,6 +1,6 @@
 import { cn } from '@renderer/libs/cn';
-import { LibraryEntry } from '@shared';
-import { Component } from 'solid-js';
+import type { LibraryEntry } from '@shared';
+import type { Component } from 'solid-js';
 
 const DiddlCard: Component<{ diddl: LibraryEntry; className?: string }> = (props) => {
   return (

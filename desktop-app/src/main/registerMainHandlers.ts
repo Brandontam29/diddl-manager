@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import type { BrowserWindow } from 'electron';
 import { fileSystemMainHandlers } from './file-system';
 import { libraryMainHandlers } from './library';
 import { listMainHandlers } from './list';

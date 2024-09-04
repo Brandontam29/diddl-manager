@@ -9,7 +9,7 @@ import {
   DialogTrigger
 } from '@renderer/components/ui/dialog';
 
-import { Component, createSignal } from 'solid-js';
+import { type Component, createSignal } from 'solid-js';
 import { TextField, TextFieldLabel, TextFieldRoot } from '@renderer/components/ui/textfield';
 import { FaSolidPlus } from 'solid-icons/fa';
 import { fetchTrackerList } from '@renderer/features/lists';

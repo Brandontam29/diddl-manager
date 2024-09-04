@@ -1,6 +1,6 @@
 import { writeFile } from 'fs/promises';
 import { listTrackerPath } from '../pathing';
-import { listNameSchema, TrackerListItem, trackerListItemSchema } from '../../shared';
+import { listNameSchema, type TrackerListItem, trackerListItemSchema } from '../../shared';
 import { nanoid } from 'nanoid';
 import { getAppFile } from '../file-system';
 

@@ -17,7 +17,7 @@ import {
   SelectValue
 } from '@renderer/components/ui/select';
 import { HEIGHT_ZOOM_MAP, setCardZoomLevel, uiStore } from '@renderer/features/ui-state';
-import { DeepMutable } from '@renderer/type-utils';
+import type { DeepMutable } from '@renderer/type-utils';
 import { createSignal } from 'solid-js';
 
 const ZOOM_OPTIONS = [

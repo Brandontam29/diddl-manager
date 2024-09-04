@@ -1,4 +1,4 @@
-import { ListItem, TrackerListItem } from '@shared';
+import type { ListItem, TrackerListItem } from '@shared';
 
 type Store = {
   trackerListItems: TrackerListItem[] | undefined;

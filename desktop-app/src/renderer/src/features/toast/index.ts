@@ -1,16 +1,16 @@
 import Toaster from './Toaster';
-import useToastStore, { ToastProps } from './useToastStore';
+import useToastStore, { type ToastProps } from './useToastStore';
 
 const toast = (props: ToastProps) => {
-    const { addToast } = useToastStore.getState();
+  const { addToast } = useToastStore.getState();
 
-    addToast(props);
+  addToast(props);
 };
 
 const dismissToast = (id: string) => {
-    const { removeToast } = useToastStore.getState();
+  const { removeToast } = useToastStore.getState();
 
-    removeToast(id);
+  removeToast(id);
 };
 
 export { Toaster, useToastStore, toast, dismissToast };

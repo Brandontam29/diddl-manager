@@ -1,26 +1,26 @@
-import { readFile, rename, writeFile } from 'fs/promises';
-import { libraryEntrySchema } from '../../shared/library-models';
+import { readFile, rename, writeFile } from "fs/promises";
+import { libraryEntrySchema } from "../../shared/library-models";
 import {
   appPath,
   defaultLibraryPath,
   libraryPath,
   libraryMapPath,
-  relativeDiddlImagesDirectory
-} from '../pathing';
-import isExists from '../utils/isExists';
-import path from 'path';
-import { logging } from '../logging';
+  relativeDiddlImagesDirectory,
+} from "../pathing";
+import isExists from "../utils/isExists";
+import path from "path";
+import { logging } from "../logging";
 
 const libraryBackupPath = () => path.join(appPath(), `${new Date().toISOString()}-library.json`);
 
 const createDefaultLibrary = async () => {
-  const rawLibrary = await readFile(defaultLibraryPath(), 'utf8');
+  const rawLibrary = await readFile(defaultLibraryPath(), "utf8");
 
   const library = JSON.parse(rawLibrary);
 
   const libraryWithFullImagePaths = library.map((entry) => ({
     ...entry,
-    imagePath: path.join(relativeDiddlImagesDirectory(), entry.imagePath)
+    imagePath: path.join(relativeDiddlImagesDirectory(), entry.imagePath),
   }));
 
   writeFile(libraryPath(), JSON.stringify(libraryWithFullImagePaths));
@@ -29,19 +29,19 @@ const createDefaultLibrary = async () => {
 
 const setupLibrary = async () => {
   if (!(await isExists(libraryPath()))) {
-    logging.info('library.json not found. Creating new library.json.');
+    logging.info("library.json not found. Creating new library.json.");
     createDefaultLibrary();
 
     return;
   }
 
   try {
-    const rawLibrary = await readFile(libraryPath(), 'utf8');
+    const rawLibrary = await readFile(libraryPath(), "utf8");
 
     const library = JSON.parse(rawLibrary);
 
     libraryEntrySchema.array().parse(library);
-    logging.info('Found library.json. Data is valid.');
+    logging.info("Found library.json. Data is valid.");
   } catch (err) {
     logging.error(`Library corrupted. Backing up Library to ${libraryBackupPath()}`);
     await rename(libraryPath(), libraryBackupPath());

@@ -8,8 +8,8 @@ import {
   listDirectory,
   listTrackerPath,
   collectionListPath,
-  logDirectory
-} from '.';
+  logDirectory,
+} from ".";
 
 function logFunctionResult(func: (...args: any) => string, ...args: any) {
   const result = func(...args);
@@ -28,7 +28,7 @@ const logAllPaths = () => {
     listDirectory,
     listTrackerPath,
     collectionListPath,
-    logDirectory
+    logDirectory,
   ];
 
   pathFunctions.forEach((func) => logFunctionResult(func));

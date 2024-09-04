@@ -1,60 +1,60 @@
-import { cva, cx } from 'class-variance-authority';
-import { useEffect } from 'react';
+import { cva, cx } from "class-variance-authority";
+import { useEffect } from "react";
 
-import cxtw from '@renderer/utils/cxtw';
+import cxtw from "@renderer/utils/cxtw";
 
-import Button from '@/components/atoms/Button';
-import Heading from '@/components/atoms/Heading';
-import Icon from '@/components/atoms/Icon';
+import Button from "@/components/atoms/Button";
+import Heading from "@/components/atoms/Heading";
+import Icon from "@/components/atoms/Icon";
 
-import type { Toast } from './useToastStore';
+import type { Toast } from "./useToastStore";
 
-const toastHeading = cva('leading-none', {
+const toastHeading = cva("leading-none", {
   variants: {
     variant: {
-      success: ['text-green-800'],
-      error: ['text-red-800'],
-      warning: ['text-yellow-800'],
-      information: ['text-sky-800'],
-      update: ['text-orange-800']
-    }
+      success: ["text-green-800"],
+      error: ["text-red-800"],
+      warning: ["text-yellow-800"],
+      information: ["text-sky-800"],
+      update: ["text-orange-800"],
+    },
   },
 
   defaultVariants: {
-    variant: 'information'
-  }
+    variant: "information",
+  },
 });
 
-const toastDescription = cva('leading-tight', {
+const toastDescription = cva("leading-tight", {
   variants: {
     variant: {
-      success: ['text-green-700'],
-      error: ['text-red-700'],
-      warning: ['text-yellow-700'],
-      information: ['text-sky-700'],
-      update: ['text-orange-700']
-    }
+      success: ["text-green-700"],
+      error: ["text-red-700"],
+      warning: ["text-yellow-700"],
+      information: ["text-sky-700"],
+      update: ["text-orange-700"],
+    },
   },
 
   defaultVariants: {
-    variant: 'information'
-  }
+    variant: "information",
+  },
 });
 
-const toastContainer = cva('min-w-sm w-full max-w-xl rounded p-4 shadow space-y-2', {
+const toastContainer = cva("min-w-sm w-full max-w-xl rounded p-4 shadow space-y-2", {
   variants: {
     variant: {
-      success: ['bg-green-50'],
-      error: ['bg-red-50'],
-      warning: ['bg-yellow-50'],
-      information: ['bg-sky-50'],
-      update: ['bg-orange-50']
-    }
+      success: ["bg-green-50"],
+      error: ["bg-red-50"],
+      warning: ["bg-yellow-50"],
+      information: ["bg-sky-50"],
+      update: ["bg-orange-50"],
+    },
   },
 
   defaultVariants: {
-    variant: 'information'
-  }
+    variant: "information",
+  },
 });
 
 type Props = {

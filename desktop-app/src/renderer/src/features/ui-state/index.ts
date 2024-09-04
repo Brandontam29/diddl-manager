@@ -1,11 +1,11 @@
-import { createStore } from 'solid-js/store';
+import { createStore } from "solid-js/store";
 
 type Store = {
   cardHeight: number;
 };
 
 const [uiStore, setUiStore] = createStore<Store>({
-  cardHeight: 240
+  cardHeight: 240,
 });
 
 /**
@@ -25,7 +25,7 @@ type InvertedZoomLevelMap = {
 };
 
 const setCardZoomLevel = (zoom: ZoomLevel) => {
-  setUiStore('cardHeight', ZOOM_LEVEL_MAP[zoom]);
+  setUiStore("cardHeight", ZOOM_LEVEL_MAP[zoom]);
 };
 
 // Output: { 215: 'sm', 240: 'md', 265: 'lg', 290: 'xl' }

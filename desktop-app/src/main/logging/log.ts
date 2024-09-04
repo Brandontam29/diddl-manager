@@ -1,18 +1,18 @@
-import { appendFile } from 'fs/promises';
-import path from 'path';
+import { appendFile } from "fs/promises";
+import path from "path";
 
-import { logDirectory } from '../pathing';
-import isExists from '../utils/isExists';
-import ensureFileExists from '../utils/ensureFileExists';
+import { logDirectory } from "../pathing";
+import isExists from "../utils/isExists";
+import ensureFileExists from "../utils/ensureFileExists";
 
 const formatDate = (date: Date) => {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-  const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  const milliseconds = String(date.getMilliseconds()).padStart(3, "0");
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
 };
@@ -31,7 +31,7 @@ function getQuarter(date: Date) {
 //     fatal: 'font-size: 1rem; color: red; padding: 4px; font-weight: bold;',
 // } as const;
 
-const logHandler = async (type: 'info' | 'warn' | 'error' | 'fatal', ...messages: any[]) => {
+const logHandler = async (type: "info" | "warn" | "error" | "fatal", ...messages: any[]) => {
   const date = new Date();
 
   const quarter = getQuarter(date);
@@ -80,16 +80,16 @@ const logHandler = async (type: 'info' | 'warn' | 'error' | 'fatal', ...messages
     }
   } catch (err) {
     if (err) {
-      console.error('Error appending text to file:', err);
+      console.error("Error appending text to file:", err);
     }
   }
 };
 
 const log = {
-  info: (...messages: (string | unknown)[]) => logHandler('info', ...messages),
-  warn: (...messages: (string | unknown)[]) => logHandler('warn', ...messages),
-  error: (...messages: (string | Error | unknown)[]) => logHandler('error', ...messages),
-  fatal: (...messages: (string | unknown)[]) => logHandler('fatal', ...messages)
+  info: (...messages: (string | unknown)[]) => logHandler("info", ...messages),
+  warn: (...messages: (string | unknown)[]) => logHandler("warn", ...messages),
+  error: (...messages: (string | Error | unknown)[]) => logHandler("error", ...messages),
+  fatal: (...messages: (string | unknown)[]) => logHandler("fatal", ...messages),
 };
 
 export default log;

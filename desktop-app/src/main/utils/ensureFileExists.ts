@@ -1,8 +1,8 @@
-import { mkdir, writeFile } from 'fs/promises';
-import path from 'path';
-import { logging } from '../logging';
+import { mkdir, writeFile } from "fs/promises";
+import path from "path";
+import { logging } from "../logging";
 
-const ensureFileExists = async (filePath: string, defaultContent = '') => {
+const ensureFileExists = async (filePath: string, defaultContent = "") => {
   const dir = path.dirname(filePath);
 
   try {

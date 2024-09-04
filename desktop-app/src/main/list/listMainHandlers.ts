@@ -1,31 +1,31 @@
-import { type BrowserWindow, ipcMain } from 'electron';
-import { mkdir, readFile, writeFile } from 'fs/promises';
-import { type ListItem, listItemSchema, listNameSchema } from '../../shared';
-import { listDirectory } from '../pathing';
-import path from 'path';
-import { nanoid } from 'nanoid';
-import { createList, deleteList, getList, getLists, updateListName } from './listTrackerMethods';
-import { validateDiddlIds } from '../library';
-import { logging } from '../logging';
-import isExists from '../utils/isExists';
-import { addListItems, getListItems, removeListItems } from './listMethods';
+import { type BrowserWindow, ipcMain } from "electron";
+import { mkdir, readFile, writeFile } from "fs/promises";
+import { type ListItem, listItemSchema, listNameSchema } from "../../shared";
+import { listDirectory } from "../pathing";
+import path from "path";
+import { nanoid } from "nanoid";
+import { createList, deleteList, getList, getLists, updateListName } from "./listTrackerMethods";
+import { validateDiddlIds } from "../library";
+import { logging } from "../logging";
+import isExists from "../utils/isExists";
+import { addListItems, getListItems, removeListItems } from "./listMethods";
 
-export const GET_TRACKER_LIST = 'get-tracker-list';
+export const GET_TRACKER_LIST = "get-tracker-list";
 
-export const SET_LIST_ITEMS = 'set-list-items';
-export const ADD_LIST_ITEMS = 'add-list-items';
-export const REMOVE_LIST_ITEMS = 'remove-list-items';
+export const SET_LIST_ITEMS = "set-list-items";
+export const ADD_LIST_ITEMS = "add-list-items";
+export const REMOVE_LIST_ITEMS = "remove-list-items";
 
-export const GET_LIST = 'get-list';
-export const CREATE_LIST = 'create-list';
-export const DELETE_LIST = 'delete-list';
-export const UPDATE_LIST_NAME = 'update-list-name';
+export const GET_LIST = "get-list";
+export const CREATE_LIST = "create-list";
+export const DELETE_LIST = "delete-list";
+export const UPDATE_LIST_NAME = "update-list-name";
 
 const listMainHandlers = (browserWindow: BrowserWindow) => {
   ipcMain.handle(GET_TRACKER_LIST, async (_event) => {
     const lists = await getLists();
 
-    if (lists.length === 0) logging.warn('no lists found');
+    if (lists.length === 0) logging.warn("no lists found");
 
     return lists;
   });
@@ -35,7 +35,7 @@ const listMainHandlers = (browserWindow: BrowserWindow) => {
     const list = await getList(listId);
 
     if (!list) {
-      logging.warn('list not found ', listId);
+      logging.warn("list not found ", listId);
       return;
     }
     const diddlStatus = validateDiddlIds(listItems.map((item) => item.id));
@@ -65,7 +65,7 @@ const listMainHandlers = (browserWindow: BrowserWindow) => {
     const result = validateDiddlIds(ddidlIds);
 
     if (!result.allStatus) {
-      logging.warn('invalid diddl ids sent to CREATE_LIST', result.invalidDiddlIds);
+      logging.warn("invalid diddl ids sent to CREATE_LIST", result.invalidDiddlIds);
     }
 
     if (!(await isExists(listDirectory()))) {
@@ -84,7 +84,7 @@ const listMainHandlers = (browserWindow: BrowserWindow) => {
     const list = await deleteList(listId);
 
     if (!list) {
-      logging.warn('list not found ', listId);
+      logging.warn("list not found ", listId);
       return;
     }
 

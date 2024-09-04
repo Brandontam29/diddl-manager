@@ -1,5 +1,5 @@
-import { accessSync } from 'fs';
-import { access } from 'fs/promises';
+import { accessSync } from "fs";
+import { access } from "fs/promises";
 
 const isExists = async (path: string) => {
   try {

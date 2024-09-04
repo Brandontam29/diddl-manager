@@ -1,8 +1,8 @@
-import fs from 'fs';
+import fs from "fs";
 
 const parseXYZ = (filePath: string) => {
-  const fileContent = fs.readFileSync(filePath, 'utf-8');
-  const lines = fileContent.split('\n').filter((line) => line.trim() !== '');
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const lines = fileContent.split("\n").filter((line) => line.trim() !== "");
   // Read the number of atoms from the first line
   const numberOfAtoms = Number.parseInt(lines[0].trim(), 10);
 

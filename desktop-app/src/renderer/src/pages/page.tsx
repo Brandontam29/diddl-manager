@@ -1,10 +1,10 @@
-import { libraryStore } from '@renderer/features/library';
-import useScreenWidth from '@renderer/hooks/useScreenWidth';
-import { cn } from '@renderer/libs/cn';
-import { useSearchParams } from '@solidjs/router';
-import { createMemo, Show } from 'solid-js';
-import DiddlCardList from '@renderer/components/DIddlCardList';
-import TaskbarLibrary from './components/TaskbarLibrary';
+import { libraryStore } from "@renderer/features/library";
+import useScreenWidth from "@renderer/hooks/useScreenWidth";
+import { cn } from "@renderer/libs/cn";
+import { useSearchParams } from "@solidjs/router";
+import { createMemo, Show } from "solid-js";
+import DiddlCardList from "@renderer/components/DIddlCardList";
+import TaskbarLibrary from "./components/TaskbarLibrary";
 
 const HomePage = () => {
   const screenWidth = useScreenWidth();
@@ -20,7 +20,7 @@ const HomePage = () => {
     if (searchParams.from || searchParams.to) {
       diddls = diddls.slice(
         searchParams.from !== undefined ? Number.parseInt(searchParams.from) : 0,
-        searchParams.to !== undefined ? Number.parseInt(searchParams.to) : undefined
+        searchParams.to !== undefined ? Number.parseInt(searchParams.to) : undefined,
       );
     }
 
@@ -30,7 +30,7 @@ const HomePage = () => {
   return (
     <>
       <div
-        class={cn('relative grow px-4 pt-10 pb-4 flex flex-wrap gap-2 content-start')}
+        class={cn("relative grow px-4 pt-10 pb-4 flex flex-wrap gap-2 content-start")}
         style={{ width: `${screenWidth() - 256 - 32}px` }}
       >
         <DiddlCardList diddls={filteredDiddls()} />

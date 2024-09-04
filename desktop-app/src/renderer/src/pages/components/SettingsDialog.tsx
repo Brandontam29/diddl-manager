@@ -1,36 +1,36 @@
-import { HiOutlineCog6Tooth } from 'solid-icons/hi';
-import { Button } from '@kobalte/core/button';
-import type { DialogTriggerProps } from '@kobalte/core/dialog';
+import { HiOutlineCog6Tooth } from "solid-icons/hi";
+import { Button } from "@kobalte/core/button";
+import type { DialogTriggerProps } from "@kobalte/core/dialog";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@renderer/components/ui/dialog';
+  DialogTrigger,
+} from "@renderer/components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '@renderer/components/ui/select';
-import { HEIGHT_ZOOM_MAP, setCardZoomLevel, uiStore } from '@renderer/features/ui-state';
-import type { DeepMutable } from '@renderer/type-utils';
-import { createSignal } from 'solid-js';
+  SelectValue,
+} from "@renderer/components/ui/select";
+import { HEIGHT_ZOOM_MAP, setCardZoomLevel, uiStore } from "@renderer/features/ui-state";
+import type { DeepMutable } from "@renderer/type-utils";
+import { createSignal } from "solid-js";
 
 const ZOOM_OPTIONS = [
-  { label: 'Small', value: 'sm' },
-  { label: 'Medium', value: 'md' },
-  { label: 'Large', value: 'lg' },
-  { label: 'Extra-Large', value: 'xl' }
+  { label: "Small", value: "sm" },
+  { label: "Medium", value: "md" },
+  { label: "Large", value: "lg" },
+  { label: "Extra-Large", value: "xl" },
 ] as const;
 
 const SettingsDialog = () => {
   const [zoomOption, setZoomOption] = createSignal(
     ZOOM_OPTIONS.find((option) => option.value === HEIGHT_ZOOM_MAP[uiStore.cardHeight]) ||
-      ZOOM_OPTIONS[1]
+      ZOOM_OPTIONS[1],
   );
   return (
     <Dialog>

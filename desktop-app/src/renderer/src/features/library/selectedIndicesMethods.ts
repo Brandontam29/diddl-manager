@@ -1,21 +1,21 @@
-import { libraryStore, setLibraryStore } from './createLibraryStore';
+import { libraryStore, setLibraryStore } from "./createLibraryStore";
 
 export const addSelectedIndices = (indices: number | number[]) => {
-  setLibraryStore('selectedIndices', [
+  setLibraryStore("selectedIndices", [
     ...libraryStore.selectedIndices,
-    ...(typeof indices === 'number' ? [indices] : indices)
+    ...(typeof indices === "number" ? [indices] : indices),
   ]);
 };
 
 export const removeSelectedIndices = (indices: number | number[]) => {
-  if (typeof indices === 'number')
+  if (typeof indices === "number")
     return setLibraryStore(
-      'selectedIndices',
-      libraryStore.selectedIndices.filter((num) => indices !== num)
+      "selectedIndices",
+      libraryStore.selectedIndices.filter((num) => indices !== num),
     );
 
   setLibraryStore(
-    'selectedIndices',
-    libraryStore.selectedIndices.filter((num) => !indices.includes(num))
+    "selectedIndices",
+    libraryStore.selectedIndices.filter((num) => !indices.includes(num)),
   );
 };

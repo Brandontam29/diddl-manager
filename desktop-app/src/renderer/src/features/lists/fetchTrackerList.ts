@@ -1,9 +1,9 @@
-import { setListStore } from './createListsStore';
+import { setListStore } from "./createListsStore";
 
 const fetchTrackerList = async () => {
   try {
     const lists = await window.api.getLists();
-    setListStore('trackerListItems', lists);
+    setListStore("trackerListItems", lists);
   } catch (err) {
     console.error(err);
   }

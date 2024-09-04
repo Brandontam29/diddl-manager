@@ -1,14 +1,14 @@
-import type { ListItem } from '@shared';
-import { listStore, setListStore } from './createListsStore';
+import type { ListItem } from "@shared";
+import { listStore, setListStore } from "./createListsStore";
 
 export const fetchListItems = async (listId: string) => {
   const listItems = await window.api.getListItems(listId);
 
-  setListStore('listItems', listItems);
+  setListStore("listItems", listItems);
 };
 
 export const setListItems = (listId: string, listItems: ListItem[]) => {
-  setListStore('listItems', listItems);
+  setListStore("listItems", listItems);
 
   window.api.setList(listId, listItems);
 };
@@ -16,11 +16,11 @@ export const setListItems = (listId: string, listItems: ListItem[]) => {
 export const addListItems = async (
   listId: string,
   diddlIds: string[],
-  state?: Partial<Omit<ListItem, 'id'>>
+  state?: Partial<Omit<ListItem, "id">>,
 ) => {
   const defaultState = { isDamaged: false, isCompleteSet: true, count: 1 } satisfies Omit<
     ListItem,
-    'id'
+    "id"
   >;
 
   const listItemsToAdd = diddlIds.map((id) => ({ id: id, ...defaultState, ...state }));
@@ -31,7 +31,7 @@ export const addListItems = async (
     return; //toast
   }
 
-  setListStore('listItems', completeListItems);
+  setListStore("listItems", completeListItems);
 };
 
 export const removeListItems = async (listId: string, idsToRemove: string[]) => {
@@ -39,7 +39,7 @@ export const removeListItems = async (listId: string, idsToRemove: string[]) => 
 
   const listItems = listStore.listItems.filter((diddl) => !idsToRemove.includes(diddl.id));
 
-  setListStore('listItems', listItems);
+  setListStore("listItems", listItems);
   window.api.setList(listId, listItems);
 };
 

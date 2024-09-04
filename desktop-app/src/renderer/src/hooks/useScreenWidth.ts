@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, onMount } from 'solid-js';
+import { createSignal, onCleanup, onMount } from "solid-js";
 
 function useScreenWidth() {
   const [screenWidth, setScreenWidth] = createSignal(window.innerWidth);
@@ -8,10 +8,10 @@ function useScreenWidth() {
   };
 
   onMount(() => {
-    window.addEventListener('resize', updateWidth);
+    window.addEventListener("resize", updateWidth);
 
     onCleanup(() => {
-      window.removeEventListener('resize', updateWidth);
+      window.removeEventListener("resize", updateWidth);
     });
   });
 

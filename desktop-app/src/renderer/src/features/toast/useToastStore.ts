@@ -1,18 +1,18 @@
-import { nanoid } from 'nanoid';
-import { create } from 'zustand';
+import { nanoid } from "nanoid";
+import { create } from "zustand";
 
-export type ToastType = 'error' | 'warning' | 'success' | 'information' | 'update';
+export type ToastType = "error" | "warning" | "success" | "information" | "update";
 
 const toastDurationMap = {
   short: 2750,
   medium: 5500,
   long: 9000,
-  'extra-long': 15000
+  "extra-long": 15000,
 } as const;
 
 export type ToastDuration = keyof typeof toastDurationMap;
 
-const DEFAULT_DURATION = 'medium';
+const DEFAULT_DURATION = "medium";
 
 export type Toast = {
   id: string;
@@ -59,14 +59,14 @@ const useToastStore = create<ToastStore>((set, get) => ({
     const newToast = generateToast(toastProps);
 
     set({
-      toasts: [...toasts, newToast]
+      toasts: [...toasts, newToast],
     });
   },
 
   removeToast: (id: string) =>
     set((state) => ({
-      toasts: state.toasts.filter((item) => item.id !== id)
-    }))
+      toasts: state.toasts.filter((item) => item.id !== id),
+    })),
 }));
 
 const generateToast = (toastProps: ToastProps): Toast => {
@@ -76,14 +76,14 @@ const generateToast = (toastProps: ToastProps): Toast => {
   const DEFAULT_PROPS = {
     onClick: () => removeToast(id),
     onClose: () => removeToast(id),
-    duration: toastDurationMap[DEFAULT_DURATION]
+    duration: toastDurationMap[DEFAULT_DURATION],
   };
 
   return {
     id,
     ...DEFAULT_PROPS,
     ...toastProps,
-    duration: toastDurationMap[toastProps.duration || DEFAULT_DURATION]
+    duration: toastDurationMap[toastProps.duration || DEFAULT_DURATION],
   };
 };
 

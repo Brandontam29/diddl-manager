@@ -1,15 +1,15 @@
-import { libraryStore, setLibraryStore } from '@renderer/features/library';
+import { libraryStore, setLibraryStore } from "@renderer/features/library";
 
-import { createEffect, createMemo, Show } from 'solid-js';
-import { BsBookmarkDash } from 'solid-icons/bs';
-import DiddlCardList from '@renderer/components/DIddlCardList';
-import { fetchListItems, listStore } from '@renderer/features/lists';
-import { useParams } from '@solidjs/router';
+import { createEffect, createMemo, Show } from "solid-js";
+import { BsBookmarkDash } from "solid-icons/bs";
+import DiddlCardList from "@renderer/components/DIddlCardList";
+import { fetchListItems, listStore } from "@renderer/features/lists";
+import { useParams } from "@solidjs/router";
 
-import useScreenWidth from '@renderer/hooks/useScreenWidth';
-import { cn } from '@renderer/libs/cn';
-import { removeListItems } from '@renderer/features/lists/listMethods';
-import type { ListItem } from '@shared/index';
+import useScreenWidth from "@renderer/hooks/useScreenWidth";
+import { cn } from "@renderer/libs/cn";
+import { removeListItems } from "@renderer/features/lists/listMethods";
+import type { ListItem } from "@shared/index";
 
 const ListIdPage = () => {
   const screenWidth = useScreenWidth();
@@ -35,7 +35,7 @@ const ListIdPage = () => {
   return (
     <>
       <div
-        class={cn('relative grow px-4 pt-10 pb-4 flex flex-wrap gap-2')}
+        class={cn("relative grow px-4 pt-10 pb-4 flex flex-wrap gap-2")}
         style={{ width: `${screenWidth() - 256 - 32}px` }}
       >
         <DiddlCardList diddls={diddls()} />
@@ -57,9 +57,9 @@ const onRemoveFromList = async (id: string, listItems?: ListItem[]) => {
 
   await removeListItems(
     id,
-    libraryStore.selectedIndices.map((n) => listItems[n].id)
+    libraryStore.selectedIndices.map((n) => listItems[n].id),
   );
-  setLibraryStore('selectedIndices', []);
+  setLibraryStore("selectedIndices", []);
 };
 
 export default ListIdPage;

@@ -1,7 +1,7 @@
-import fs from 'fs/promises';
-import path from 'path';
+import fs from "fs/promises";
+import path from "path";
 
-import isExists from './isExists';
+import isExists from "./isExists";
 
 async function copyFolder(source: string, destination: string) {
   // Create the destination folder if it doesn't exist

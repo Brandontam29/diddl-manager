@@ -1,5 +1,5 @@
-import fs, { type Dirent, readdirSync } from 'fs';
-import path from 'path';
+import fs, { type Dirent, readdirSync } from "fs";
+import path from "path";
 
 export type FileRender = { name: string; path: string } & (
   | { isFile: true }
@@ -15,12 +15,12 @@ const direntToFile = (dirent: Dirent): FileRender => {
         isFile: false,
         name: dirent.name,
         path: dirent.path,
-        children: []
+        children: [],
       }
     : {
         isFile: true,
         name: dirent.name,
-        path: dirent.path
+        path: dirent.path,
       };
 };
 

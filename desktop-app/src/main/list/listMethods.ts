@@ -1,19 +1,19 @@
-import { readFile, writeFile } from 'fs/promises';
-import { type ListItem, listItemSchema } from '../../shared';
-import { logging } from '../logging';
-import { getList } from './listTrackerMethods';
-import { idsToIndexes } from '../library';
-import { getAppFile } from '../file-system';
+import { readFile, writeFile } from "fs/promises";
+import { type ListItem, listItemSchema } from "../../shared";
+import { logging } from "../logging";
+import { getList } from "./listTrackerMethods";
+import { idsToIndexes } from "../library";
+import { getAppFile } from "../file-system";
 
 export const getListItems = async (listId: string) => {
   const list = await getList(listId);
 
   if (!list) {
-    logging.error('list not found ', listId);
+    logging.error("list not found ", listId);
     return;
   }
 
-  const rawlistEntries = await readFile(list.filePath, 'utf8');
+  const rawlistEntries = await readFile(list.filePath, "utf8");
 
   const listEntries = JSON.parse(rawlistEntries) as ListItem[];
 
@@ -24,7 +24,7 @@ export const addListItems = async (listId: string, payload: ListItem[]) => {
   const list = await getList(listId);
 
   if (!list) {
-    logging.error('list not found ', listId);
+    logging.error("list not found ", listId);
     return;
   }
 
@@ -32,7 +32,7 @@ export const addListItems = async (listId: string, payload: ListItem[]) => {
   const listItemsCurrent = await getListItems(listId);
 
   if (listItemsCurrent === undefined) {
-    logging.warn('list not found ', listId);
+    logging.warn("list not found ", listId);
     return;
   }
 
@@ -43,10 +43,10 @@ export const addListItems = async (listId: string, payload: ListItem[]) => {
   const listLibIndexesNew = listLibIndexesNewWithUndefined.filter((x) => x !== undefined);
 
   const libIndexToItemIndexNew = Object.fromEntries(
-    listItemsNew.map((_, i) => [listLibIndexesNew[i], i])
+    listItemsNew.map((_, i) => [listLibIndexesNew[i], i]),
   );
   const libIndexToItemIndexCurrent = Object.fromEntries(
-    listItemsCurrent.map((_, i) => [listLibIndexesCurrent[i], i])
+    listItemsCurrent.map((_, i) => [listLibIndexesCurrent[i], i]),
   );
 
   const libIndexesSorted = mergeSortedAndUnsorted(listLibIndexesCurrent, listLibIndexesNew);
@@ -72,7 +72,7 @@ export const removeListItems = async (listId: string, idsToRemove: string[]) => 
   const list = await getList(listId);
 
   if (!list) {
-    logging.error('list not found ', listId);
+    logging.error("list not found ", listId);
     return;
   }
 

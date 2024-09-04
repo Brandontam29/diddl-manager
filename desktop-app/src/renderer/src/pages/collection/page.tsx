@@ -1,12 +1,12 @@
-import { libraryStore, setLibraryStore } from '@renderer/features/library';
+import { libraryStore, setLibraryStore } from "@renderer/features/library";
 
-import { createEffect, createMemo, Show } from 'solid-js';
-import { BsBookmarkDash } from 'solid-icons/bs';
-import DiddlCardList from '@renderer/components/DIddlCardList';
-import { fetchListItems, listStore } from '@renderer/features/lists';
+import { createEffect, createMemo, Show } from "solid-js";
+import { BsBookmarkDash } from "solid-icons/bs";
+import DiddlCardList from "@renderer/components/DIddlCardList";
+import { fetchListItems, listStore } from "@renderer/features/lists";
 
-import useScreenWidth from '@renderer/hooks/useScreenWidth';
-import { cn } from '@renderer/libs/cn';
+import useScreenWidth from "@renderer/hooks/useScreenWidth";
+import { cn } from "@renderer/libs/cn";
 
 const CollectionPage = () => {
   const screenWidth = useScreenWidth();
@@ -25,7 +25,7 @@ const CollectionPage = () => {
   });
 
   createEffect(() => {
-    fetchListItems('collection');
+    fetchListItems("collection");
   });
   createEffect(() => {
     console.log(diddls());
@@ -34,7 +34,7 @@ const CollectionPage = () => {
   return (
     <>
       <div
-        class={cn('relative grow px-4 pt-10 pb-4 flex flex-wrap gap-2 content-start')}
+        class={cn("relative grow px-4 pt-10 pb-4 flex flex-wrap gap-2 content-start")}
         style={{ width: `${screenWidth() - 256 - 32}px` }}
       >
         <DiddlCardList diddls={diddls()} />
@@ -43,7 +43,7 @@ const CollectionPage = () => {
         <div class="w-full absolute top-0 inset-x flex gap-4">
           <button
             onClick={async () => {
-              setLibraryStore('selectedIndices', []);
+              setLibraryStore("selectedIndices", []);
             }}
           >
             <BsBookmarkDash />

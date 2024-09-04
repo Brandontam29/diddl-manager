@@ -1,8 +1,8 @@
-import { libraryMapPath } from '../pathing';
-import { readFileSync } from 'fs';
+import { libraryMapPath } from "../pathing";
+import { readFileSync } from "fs";
 
 const idsToIndexes = (ids: string[]) => {
-  const rawLibraryMap = readFileSync(libraryMapPath(), 'utf8');
+  const rawLibraryMap = readFileSync(libraryMapPath(), "utf8");
 
   const libraryMap = JSON.parse(rawLibraryMap) as Record<string, number>;
 

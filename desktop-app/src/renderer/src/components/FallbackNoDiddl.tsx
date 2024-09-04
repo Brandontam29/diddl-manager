@@ -1,6 +1,6 @@
-import { Image, ImageFallback, ImageRoot } from '@renderer/components/ui/image';
-import diddlSad from '../../assets/diddl-sad.gif';
-import { Skeleton } from '@renderer/components/ui/skeleton';
+import { Image, ImageFallback, ImageRoot } from "@renderer/components/ui/image";
+import diddlSad from "../../assets/diddl-sad.gif";
+import { Skeleton } from "@renderer/components/ui/skeleton";
 const FallbackNoDiddl = () => {
   return (
     <div class="max-w-lg mx-auto text-center space-y-2">

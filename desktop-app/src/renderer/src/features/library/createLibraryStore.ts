@@ -1,4 +1,4 @@
-import type { LibraryEntry } from '@shared';
+import type { LibraryEntry } from "@shared";
 
 type Store = {
   libraryState: LibraryEntry[];
@@ -6,13 +6,13 @@ type Store = {
   libraryIndexMap: Record<string, number>;
 };
 
-import { createStore } from 'solid-js/store';
+import { createStore } from "solid-js/store";
 
 // Initialize store
 const [libraryStore, setLibraryStore] = createStore<Store>({
   libraryState: [],
   selectedIndices: [],
-  libraryIndexMap: {}
+  libraryIndexMap: {},
 });
 
 // Export the store for direct access if needed

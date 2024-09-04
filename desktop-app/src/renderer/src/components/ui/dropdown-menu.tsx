@@ -1,4 +1,4 @@
-import { cn } from '@renderer/libs/cn';
+import { cn } from "@renderer/libs/cn";
 
 import type {
   DropdownMenuCheckboxItemProps,
@@ -9,12 +9,12 @@ import type {
   DropdownMenuRadioItemProps,
   DropdownMenuRootProps,
   DropdownMenuSeparatorProps,
-  DropdownMenuSubTriggerProps
-} from '@kobalte/core/dropdown-menu';
-import { DropdownMenu as DropdownMenuPrimitive } from '@kobalte/core/dropdown-menu';
-import type { PolymorphicProps } from '@kobalte/core/polymorphic';
-import type { ComponentProps, ParentProps, ValidComponent } from 'solid-js';
-import { mergeProps, splitProps } from 'solid-js';
+  DropdownMenuSubTriggerProps,
+} from "@kobalte/core/dropdown-menu";
+import { DropdownMenu as DropdownMenuPrimitive } from "@kobalte/core/dropdown-menu";
+import type { PolymorphicProps } from "@kobalte/core/polymorphic";
+import type { ComponentProps, ParentProps, ValidComponent } from "solid-js";
+import { mergeProps, splitProps } from "solid-js";
 
 export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 export const DropdownMenuGroup = DropdownMenuPrimitive.Group;
@@ -27,21 +27,21 @@ export const DropdownMenu = (props: DropdownMenuRootProps) => {
   return <DropdownMenuPrimitive {...merge} />;
 };
 
-type dropdownMenuContentProps<T extends ValidComponent = 'div'> = DropdownMenuContentProps<T> & {
+type dropdownMenuContentProps<T extends ValidComponent = "div"> = DropdownMenuContentProps<T> & {
   class?: string;
 };
 
-export const DropdownMenuContent = <T extends ValidComponent = 'div'>(
-  props: PolymorphicProps<T, dropdownMenuContentProps<T>>
+export const DropdownMenuContent = <T extends ValidComponent = "div">(
+  props: PolymorphicProps<T, dropdownMenuContentProps<T>>,
 ) => {
-  const [local, rest] = splitProps(props as dropdownMenuContentProps, ['class']);
+  const [local, rest] = splitProps(props as dropdownMenuContentProps, ["class"]);
 
   return (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
         class={cn(
-          'min-w-8rem z-50 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md transition-shadow focus-visible:outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95',
-          local.class
+          "min-w-8rem z-50 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md transition-shadow focus-visible:outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95",
+          local.class,
         )}
         {...rest}
       />
@@ -49,105 +49,105 @@ export const DropdownMenuContent = <T extends ValidComponent = 'div'>(
   );
 };
 
-type dropdownMenuItemProps<T extends ValidComponent = 'div'> = DropdownMenuItemProps<T> & {
+type dropdownMenuItemProps<T extends ValidComponent = "div"> = DropdownMenuItemProps<T> & {
   class?: string;
   inset?: boolean;
 };
 
-export const DropdownMenuItem = <T extends ValidComponent = 'div'>(
-  props: PolymorphicProps<T, dropdownMenuItemProps<T>>
+export const DropdownMenuItem = <T extends ValidComponent = "div">(
+  props: PolymorphicProps<T, dropdownMenuItemProps<T>>,
 ) => {
-  const [local, rest] = splitProps(props as dropdownMenuItemProps, ['class', 'inset']);
+  const [local, rest] = splitProps(props as dropdownMenuItemProps, ["class", "inset"]);
 
   return (
     <DropdownMenuPrimitive.Item
       class={cn(
-        'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-        local.inset && 'pl-8',
-        local.class
+        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        local.inset && "pl-8",
+        local.class,
       )}
       {...rest}
     />
   );
 };
 
-type dropdownMenuGroupLabelProps<T extends ValidComponent = 'span'> =
+type dropdownMenuGroupLabelProps<T extends ValidComponent = "span"> =
   DropdownMenuGroupLabelProps<T> & {
     class?: string;
   };
 
-export const DropdownMenuGroupLabel = <T extends ValidComponent = 'span'>(
-  props: PolymorphicProps<T, dropdownMenuGroupLabelProps<T>>
+export const DropdownMenuGroupLabel = <T extends ValidComponent = "span">(
+  props: PolymorphicProps<T, dropdownMenuGroupLabelProps<T>>,
 ) => {
-  const [local, rest] = splitProps(props as dropdownMenuGroupLabelProps, ['class']);
+  const [local, rest] = splitProps(props as dropdownMenuGroupLabelProps, ["class"]);
 
   return (
     <DropdownMenuPrimitive.GroupLabel
       as="div"
-      class={cn('px-2 py-1.5 text-sm font-semibold', local.class)}
+      class={cn("px-2 py-1.5 text-sm font-semibold", local.class)}
       {...rest}
     />
   );
 };
 
-type dropdownMenuItemLabelProps<T extends ValidComponent = 'div'> =
+type dropdownMenuItemLabelProps<T extends ValidComponent = "div"> =
   DropdownMenuItemLabelProps<T> & {
     class?: string;
   };
 
-export const DropdownMenuItemLabel = <T extends ValidComponent = 'div'>(
-  props: PolymorphicProps<T, dropdownMenuItemLabelProps<T>>
+export const DropdownMenuItemLabel = <T extends ValidComponent = "div">(
+  props: PolymorphicProps<T, dropdownMenuItemLabelProps<T>>,
 ) => {
-  const [local, rest] = splitProps(props as dropdownMenuItemLabelProps, ['class']);
+  const [local, rest] = splitProps(props as dropdownMenuItemLabelProps, ["class"]);
 
   return (
     <DropdownMenuPrimitive.ItemLabel
       as="div"
-      class={cn('px-2 py-1.5 text-sm font-semibold', local.class)}
+      class={cn("px-2 py-1.5 text-sm font-semibold", local.class)}
       {...rest}
     />
   );
 };
 
-type dropdownMenuSeparatorProps<T extends ValidComponent = 'hr'> = DropdownMenuSeparatorProps<T> & {
+type dropdownMenuSeparatorProps<T extends ValidComponent = "hr"> = DropdownMenuSeparatorProps<T> & {
   class?: string;
 };
 
-export const DropdownMenuSeparator = <T extends ValidComponent = 'hr'>(
-  props: PolymorphicProps<T, dropdownMenuSeparatorProps<T>>
+export const DropdownMenuSeparator = <T extends ValidComponent = "hr">(
+  props: PolymorphicProps<T, dropdownMenuSeparatorProps<T>>,
 ) => {
-  const [local, rest] = splitProps(props as dropdownMenuSeparatorProps, ['class']);
+  const [local, rest] = splitProps(props as dropdownMenuSeparatorProps, ["class"]);
 
   return (
     <DropdownMenuPrimitive.Separator
-      class={cn('-mx-1 my-1 h-px bg-muted', local.class)}
+      class={cn("-mx-1 my-1 h-px bg-muted", local.class)}
       {...rest}
     />
   );
 };
 
-export const DropdownMenuShortcut = (props: ComponentProps<'span'>) => {
-  const [local, rest] = splitProps(props, ['class']);
+export const DropdownMenuShortcut = (props: ComponentProps<"span">) => {
+  const [local, rest] = splitProps(props, ["class"]);
 
-  return <span class={cn('ml-auto text-xs tracking-widest opacity-60', local.class)} {...rest} />;
+  return <span class={cn("ml-auto text-xs tracking-widest opacity-60", local.class)} {...rest} />;
 };
 
-type dropdownMenuSubTriggerProps<T extends ValidComponent = 'div'> = ParentProps<
+type dropdownMenuSubTriggerProps<T extends ValidComponent = "div"> = ParentProps<
   DropdownMenuSubTriggerProps<T> & {
     class?: string;
   }
 >;
 
-export const DropdownMenuSubTrigger = <T extends ValidComponent = 'div'>(
-  props: PolymorphicProps<T, dropdownMenuSubTriggerProps<T>>
+export const DropdownMenuSubTrigger = <T extends ValidComponent = "div">(
+  props: PolymorphicProps<T, dropdownMenuSubTriggerProps<T>>,
 ) => {
-  const [local, rest] = splitProps(props as dropdownMenuSubTriggerProps, ['class', 'children']);
+  const [local, rest] = splitProps(props as dropdownMenuSubTriggerProps, ["class", "children"]);
 
   return (
     <DropdownMenuPrimitive.SubTrigger
       class={cn(
-        'flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[expanded]:bg-accent',
-        local.class
+        "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[expanded]:bg-accent",
+        local.class,
       )}
       {...rest}
     >
@@ -172,22 +172,22 @@ export const DropdownMenuSubTrigger = <T extends ValidComponent = 'div'>(
   );
 };
 
-type dropdownMenuSubContentProps<T extends ValidComponent = 'div'> =
+type dropdownMenuSubContentProps<T extends ValidComponent = "div"> =
   DropdownMenuSubTriggerProps<T> & {
     class?: string;
   };
 
-export const DropdownMenuSubContent = <T extends ValidComponent = 'div'>(
-  props: PolymorphicProps<T, dropdownMenuSubContentProps<T>>
+export const DropdownMenuSubContent = <T extends ValidComponent = "div">(
+  props: PolymorphicProps<T, dropdownMenuSubContentProps<T>>,
 ) => {
-  const [local, rest] = splitProps(props as dropdownMenuSubContentProps, ['class']);
+  const [local, rest] = splitProps(props as dropdownMenuSubContentProps, ["class"]);
 
   return (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.SubContent
         class={cn(
-          'min-w-8rem z-50 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95',
-          local.class
+          "min-w-8rem z-50 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95",
+          local.class,
         )}
         {...rest}
       />
@@ -195,22 +195,22 @@ export const DropdownMenuSubContent = <T extends ValidComponent = 'div'>(
   );
 };
 
-type dropdownMenuCheckboxItemProps<T extends ValidComponent = 'div'> = ParentProps<
+type dropdownMenuCheckboxItemProps<T extends ValidComponent = "div"> = ParentProps<
   DropdownMenuCheckboxItemProps<T> & {
     class?: string;
   }
 >;
 
-export const DropdownMenuCheckboxItem = <T extends ValidComponent = 'div'>(
-  props: PolymorphicProps<T, dropdownMenuCheckboxItemProps<T>>
+export const DropdownMenuCheckboxItem = <T extends ValidComponent = "div">(
+  props: PolymorphicProps<T, dropdownMenuCheckboxItemProps<T>>,
 ) => {
-  const [local, rest] = splitProps(props as dropdownMenuCheckboxItemProps, ['class', 'children']);
+  const [local, rest] = splitProps(props as dropdownMenuCheckboxItemProps, ["class", "children"]);
 
   return (
     <DropdownMenuPrimitive.CheckboxItem
       class={cn(
-        'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-        local.class
+        "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        local.class,
       )}
       {...rest}
     >
@@ -231,22 +231,22 @@ export const DropdownMenuCheckboxItem = <T extends ValidComponent = 'div'>(
   );
 };
 
-type dropdownMenuRadioItemProps<T extends ValidComponent = 'div'> = ParentProps<
+type dropdownMenuRadioItemProps<T extends ValidComponent = "div"> = ParentProps<
   DropdownMenuRadioItemProps<T> & {
     class?: string;
   }
 >;
 
-export const DropdownMenuRadioItem = <T extends ValidComponent = 'div'>(
-  props: PolymorphicProps<T, dropdownMenuRadioItemProps<T>>
+export const DropdownMenuRadioItem = <T extends ValidComponent = "div">(
+  props: PolymorphicProps<T, dropdownMenuRadioItemProps<T>>,
 ) => {
-  const [local, rest] = splitProps(props as dropdownMenuRadioItemProps, ['class', 'children']);
+  const [local, rest] = splitProps(props as dropdownMenuRadioItemProps, ["class", "children"]);
 
   return (
     <DropdownMenuPrimitive.RadioItem
       class={cn(
-        'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-        local.class
+        "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        local.class,
       )}
       {...rest}
     >

@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer } from "electron";
 
 import {
   GET_TRACKER_LIST,
@@ -8,9 +8,9 @@ import {
   GET_LIST,
   CREATE_LIST,
   DELETE_LIST,
-  UPDATE_LIST_NAME
-} from './listMainHandlers';
-import type { ListItem, TrackerListItem } from '../../shared';
+  UPDATE_LIST_NAME,
+} from "./listMainHandlers";
+import type { ListItem, TrackerListItem } from "../../shared";
 
 const listPreloadApi = {
   getLists: (): Promise<TrackerListItem[]> => ipcRenderer.invoke(GET_TRACKER_LIST),
@@ -30,7 +30,7 @@ const listPreloadApi = {
   setList: (listId: string, content: ListItem[]): Promise<ListItem[] | undefined> =>
     ipcRenderer.invoke(SET_LIST_ITEMS, listId, content),
   updateListName: (listId: string, newListName: string): Promise<ListItem | undefined> =>
-    ipcRenderer.invoke(UPDATE_LIST_NAME, listId, newListName)
+    ipcRenderer.invoke(UPDATE_LIST_NAME, listId, newListName),
 };
 
 export default listPreloadApi;

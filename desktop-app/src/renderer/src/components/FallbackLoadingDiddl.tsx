@@ -1,6 +1,6 @@
-import { For } from 'solid-js';
-import { Skeleton } from './ui/skeleton';
-import { uiStore } from '@renderer/features/ui-state';
+import { For } from "solid-js";
+import { Skeleton } from "./ui/skeleton";
+import { uiStore } from "@renderer/features/ui-state";
 
 const LIST = new Array(30);
 const FallbackLoadingDiddl = () => {
@@ -11,7 +11,7 @@ const FallbackLoadingDiddl = () => {
           <Skeleton
             class="aspect-[6/5]"
             style={{
-              height: `${uiStore.cardHeight}px`
+              height: `${uiStore.cardHeight}px`,
             }}
           />
         )}

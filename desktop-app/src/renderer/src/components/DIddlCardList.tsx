@@ -1,23 +1,23 @@
-import { libraryStore, setLibraryStore } from '@renderer/features/library';
-import { cn } from '@renderer/libs/cn';
-import type { LibraryEntry } from '@shared/library-models';
-import { useSearchParams } from '@solidjs/router';
-import { type Component, createEffect, createMemo, For, Show } from 'solid-js';
-import DiddlCard from './DiddlCard';
+import { libraryStore, setLibraryStore } from "@renderer/features/library";
+import { cn } from "@renderer/libs/cn";
+import type { LibraryEntry } from "@shared/library-models";
+import { useSearchParams } from "@solidjs/router";
+import { type Component, createEffect, createMemo, For, Show } from "solid-js";
+import DiddlCard from "./DiddlCard";
 import {
   addSelectedIndices,
-  removeSelectedIndices
-} from '@renderer/features/library/selectedIndicesMethods';
-import { uiStore } from '@renderer/features/ui-state';
-import FallbackNoDiddl from './FallbackNoDiddl';
-import FallbackLoadingDiddl from './FallbackLoadingDiddl';
+  removeSelectedIndices,
+} from "@renderer/features/library/selectedIndicesMethods";
+import { uiStore } from "@renderer/features/ui-state";
+import FallbackNoDiddl from "./FallbackNoDiddl";
+import FallbackLoadingDiddl from "./FallbackLoadingDiddl";
 
 const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
   const [searchParams] = useSearchParams();
 
   createEffect(() => {
     searchParams;
-    setLibraryStore('selectedIndices', []);
+    setLibraryStore("selectedIndices", []);
   });
 
   const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
@@ -34,34 +34,34 @@ const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
               diddl.imageWidth && diddl.imageHeight ? diddl.imageWidth / diddl.imageHeight : null;
             return (
               <div
-                class={cn('relative rounded overflow-hidden')}
+                class={cn("relative rounded overflow-hidden")}
                 style={{
                   height: `${uiStore.cardHeight}px`,
-                  width: ratio ? `${uiStore.cardHeight * ratio}px` : undefined
+                  width: ratio ? `${uiStore.cardHeight * ratio}px` : undefined,
                 }}
               >
-                <DiddlCard className={cn('w-full h-full')} diddl={diddl} />
+                <DiddlCard className={cn("w-full h-full")} diddl={diddl} />
 
                 <div // full overlay
                   class={cn(
-                    'h-[calc(100%-20px)] w-full absolute top-0 inset-x',
-                    libraryStore.selectedIndices.includes(index()) && 'border-4 border-blue-300',
+                    "h-[calc(100%-20px)] w-full absolute top-0 inset-x",
+                    libraryStore.selectedIndices.includes(index()) && "border-4 border-blue-300",
                     isSelectMode() &&
-                      'group hover:bg-gradient-to-t from-black/25 to-[48px] bg-gradient-to-t'
+                      "group hover:bg-gradient-to-t from-black/25 to-[48px] bg-gradient-to-t",
                   )}
                 >
                   <div // top black
                     class={cn(
-                      'absolute inset-0 bg-gradient-to-b from-black/25 to-[48px] w-full h-full opacity-0 hover:opacity-100',
-                      isSelectMode() && 'opacity-100'
+                      "absolute inset-0 bg-gradient-to-b from-black/25 to-[48px] w-full h-full opacity-0 hover:opacity-100",
+                      isSelectMode() && "opacity-100",
                     )}
                   >
                     <button // button
                       class={cn(
-                        'absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400',
-                        !isSelectMode() && 'hover:bg-gray-100',
-                        isSelectMode() && 'group-hover:bg-gray-100',
-                        libraryStore.selectedIndices.includes(index()) && 'bg-gray-100'
+                        "absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400",
+                        !isSelectMode() && "hover:bg-gray-100",
+                        isSelectMode() && "group-hover:bg-gray-100",
+                        libraryStore.selectedIndices.includes(index()) && "bg-gray-100",
                       )}
                       onClick={[handleClick, index()]}
                     />
@@ -70,7 +70,7 @@ const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
                     when={isSelectMode()}
                   >
                     <button
-                      class={cn('absolute inset-0 w-full h-full')}
+                      class={cn("absolute inset-0 w-full h-full")}
                       onClick={[handleClick, index()]}
                     />
                   </Show>
@@ -85,7 +85,7 @@ const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
 };
 
 const handleClick = (index: number, event: MouseEvent) => {
-  console.log('click');
+  console.log("click");
   if (event.shiftKey) {
     const lastClicked = libraryStore.selectedIndices[libraryStore.selectedIndices.length - 1];
     const numbersBetween = getNumbersBetween(lastClicked, index);
@@ -101,7 +101,7 @@ const handleClick = (index: number, event: MouseEvent) => {
   }
 
   const isAdding = !libraryStore.selectedIndices.includes(index);
-  console.log('isAdding', isAdding);
+  console.log("isAdding", isAdding);
   if (isAdding) {
     addSelectedIndices(index);
     return;

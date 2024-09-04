@@ -1,14 +1,14 @@
-import { contextBridge } from 'electron';
-import { electronAPI } from '@electron-toolkit/preload';
-import { fileSystemPreloadApi } from '../main/file-system';
-import { libraryPreloadApi } from '../main/library';
-import { listPreloadApi } from '../main/list';
+import { contextBridge } from "electron";
+import { electronAPI } from "@electron-toolkit/preload";
+import { fileSystemPreloadApi } from "../main/file-system";
+import { libraryPreloadApi } from "../main/library";
+import { listPreloadApi } from "../main/list";
 
 // Custom APIs for renderer
 const api = {
   ...fileSystemPreloadApi,
   ...libraryPreloadApi,
-  ...listPreloadApi
+  ...listPreloadApi,
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to
@@ -19,8 +19,8 @@ export type Api = typeof api;
 
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld('electron', electronAPI);
-    contextBridge.exposeInMainWorld('api', api);
+    contextBridge.exposeInMainWorld("electron", electronAPI);
+    contextBridge.exposeInMainWorld("api", api);
   } catch (error) {
     console.error(error);
   }

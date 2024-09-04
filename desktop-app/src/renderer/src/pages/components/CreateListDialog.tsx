@@ -1,21 +1,21 @@
-import { Button } from '@kobalte/core/button';
-import type { DialogTriggerProps } from '@kobalte/core/dialog';
+import { Button } from "@kobalte/core/button";
+import type { DialogTriggerProps } from "@kobalte/core/dialog";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@renderer/components/ui/dialog';
+  DialogTrigger,
+} from "@renderer/components/ui/dialog";
 
-import { type Component, createSignal } from 'solid-js';
-import { TextField, TextFieldLabel, TextFieldRoot } from '@renderer/components/ui/textfield';
-import { FaSolidPlus } from 'solid-icons/fa';
-import { fetchTrackerList } from '@renderer/features/lists';
+import { type Component, createSignal } from "solid-js";
+import { TextField, TextFieldLabel, TextFieldRoot } from "@renderer/components/ui/textfield";
+import { FaSolidPlus } from "solid-icons/fa";
+import { fetchTrackerList } from "@renderer/features/lists";
 
 const CreateListDialog: Component = () => {
-  const [listName, setListName] = createSignal('');
+  const [listName, setListName] = createSignal("");
   return (
     <Dialog>
       <DialogTrigger

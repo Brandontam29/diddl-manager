@@ -1,5 +1,5 @@
-import { For } from 'solid-js';
-import { Skeleton } from './ui/skeleton';
+import { For } from "solid-js";
+import { Skeleton } from "./ui/skeleton";
 
 const FallbackLoadingLists = () => {
   const LIST = new Array(4);

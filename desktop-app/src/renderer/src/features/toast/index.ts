@@ -1,5 +1,5 @@
-import Toaster from './Toaster';
-import useToastStore, { type ToastProps } from './useToastStore';
+import Toaster from "./Toaster";
+import useToastStore, { type ToastProps } from "./useToastStore";
 
 const toast = (props: ToastProps) => {
   const { addToast } = useToastStore.getState();

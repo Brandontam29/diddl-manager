@@ -1,8 +1,8 @@
-import FallbackLoadingLists from '@renderer/components/FallbackLoadingLists';
-import FallbackNoLists from '@renderer/components/FallbackNoLists';
-import { listStore } from '@renderer/features/lists';
-import { A } from '@solidjs/router';
-import { For, Show } from 'solid-js';
+import FallbackLoadingLists from "@renderer/components/FallbackLoadingLists";
+import FallbackNoLists from "@renderer/components/FallbackNoLists";
+import { listStore } from "@renderer/features/lists";
+import { A } from "@solidjs/router";
+import { For, Show } from "solid-js";
 
 const ListsPage = () => {
   return (

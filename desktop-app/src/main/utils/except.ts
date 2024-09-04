@@ -1,7 +1,7 @@
 export function except<
   T extends Record<string, any>,
   K extends Array<keyof T>,
-  R extends Pick<T, Exclude<keyof T, K[number]>>
+  R extends Pick<T, Exclude<keyof T, K[number]>>,
 >(value: T, ...exceptions: K): R {
   const copy: Record<string, any> = {};
   for (const key in value) {

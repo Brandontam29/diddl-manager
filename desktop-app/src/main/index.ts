@@ -5,7 +5,6 @@ import icon from '../../resources/icon.png?asset';
 import registerMainHandlers from './registerMainHandlers';
 import { logAllPaths } from './pathing';
 import { setupLibrary } from './library';
-import { setupAcquiredList } from './collection';
 import { setupListTracker } from './list';
 
 function createWindow() {
@@ -61,7 +60,7 @@ app.whenReady().then(async () => {
    */
 
   logAllPaths();
-  await Promise.all([, setupLibrary(), setupListTracker(), setupAcquiredList()]);
+  await Promise.all([, setupLibrary(), setupListTracker()]);
 
   const window = createWindow();
   registerMainHandlers(window);

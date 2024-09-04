@@ -30,7 +30,7 @@ const HomePage = () => {
   return (
     <>
       <div
-        class={cn('relative grow px-4 pt-10 pb-4 flex flex-wrap gap-2')}
+        class={cn('relative grow px-4 pt-10 pb-4 flex flex-wrap gap-2 content-start')}
         style={{ width: `${screenWidth() - 256 - 32}px` }}
       >
         <DiddlCardList diddls={filteredDiddls()} />

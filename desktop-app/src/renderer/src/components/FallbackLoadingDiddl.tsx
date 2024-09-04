@@ -2,14 +2,14 @@ import { For } from 'solid-js';
 import { Skeleton } from './ui/skeleton';
 import { uiStore } from '@renderer/features/ui-state';
 
-const LIST = new Array(10);
-const FallbackLoading = () => {
+const LIST = new Array(30);
+const FallbackLoadingDiddl = () => {
   return (
-    <div class="flex flex-wrap">
+    <div class="flex flex-wrap gap-2 content-start">
       <For each={LIST}>
         {() => (
           <Skeleton
-            class="aspect-video"
+            class="aspect-[6/5]"
             style={{
               height: `${uiStore.cardHeight}px`
             }}
@@ -20,4 +20,4 @@ const FallbackLoading = () => {
   );
 };
 
-export default FallbackLoading;
+export default FallbackLoadingDiddl;

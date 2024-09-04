@@ -4,13 +4,13 @@ import { LibraryEntry } from '@shared/library-models';
 import { useSearchParams } from '@solidjs/router';
 import { Component, createEffect, createMemo, For, Show } from 'solid-js';
 import DiddlCard from './DiddlCard';
-import FallbackLoading from './FallbackLoading';
 import {
   addSelectedIndices,
   removeSelectedIndices
 } from '@renderer/features/library/selectedIndicesMethods';
 import { uiStore } from '@renderer/features/ui-state';
 import FallbackNoDiddl from './FallbackNoDiddl';
+import FallbackLoadingDiddl from './FallbackLoadingDiddl';
 
 const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
   const [searchParams] = useSearchParams();
@@ -23,7 +23,7 @@ const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
   const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
 
   return (
-    <Show when={Array.isArray(props.diddls)} fallback={<FallbackLoading />}>
+    <Show when={Array.isArray(props.diddls)} fallback={<FallbackLoadingDiddl />}>
       <Show
         when={Array.isArray(props.diddls) && props.diddls.length > 0}
         fallback={<FallbackNoDiddl />}

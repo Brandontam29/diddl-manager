@@ -8,6 +8,8 @@ import { useParams } from '@solidjs/router';
 
 import useScreenWidth from '@renderer/hooks/useScreenWidth';
 import { cn } from '@renderer/libs/cn';
+import { removeListItems } from '@renderer/features/lists/listMethods';
+import { ListItem } from '@shared/index';
 
 const ListIdPage = () => {
   const screenWidth = useScreenWidth();
@@ -40,11 +42,7 @@ const ListIdPage = () => {
       </div>
       <Show when={isSelectMode()}>
         <div class="w-full absolute top-0 inset-x flex gap-4">
-          <button
-            onClick={async () => {
-              setLibraryStore('selectedIndices', []);
-            }}
-          >
+          <button onClick={() => onRemoveFromList(params.id, listStore.listItems)}>
             <BsBookmarkDash />
             Remove
           </button>
@@ -52,6 +50,16 @@ const ListIdPage = () => {
       </Show>
     </>
   );
+};
+
+const onRemoveFromList = async (id: string, listItems?: ListItem[]) => {
+  if (!listItems) return;
+
+  await removeListItems(
+    id,
+    libraryStore.selectedIndices.map((n) => listItems[n].id)
+  );
+  setLibraryStore('selectedIndices', []);
 };
 
 export default ListIdPage;

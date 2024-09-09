@@ -8,7 +8,7 @@ import {
 } from "@renderer/components/ui/popover";
 import type { TrackerListItem } from "@shared/index";
 import { BsCaretDown, BsCaretRight } from "solid-icons/bs";
-import { type Component, createEffect, createMemo, createSignal, For } from "solid-js";
+import { type Component, createMemo, createSignal, For } from "solid-js";
 import CreateListDialog from "./CreateListDialog";
 import { A, useLocation } from "@solidjs/router";
 import { Button } from "@kobalte/core/button";
@@ -20,12 +20,10 @@ const ListLinks: Component<{ trackerListItems: TrackerListItem[] | undefined }> 
 
   const first4List = createMemo(() =>
     props.trackerListItems
-      ?.filter((item) => item.name !== "Collection")
-      .sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime())
+      ?.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime())
       .slice(0, 4),
   );
 
-  createEffect(() => console.log(first4List()));
   return (
     <Popover open={open()} onOpenChange={setOpen}>
       <PopoverTrigger
@@ -47,11 +45,19 @@ const ListLinks: Component<{ trackerListItems: TrackerListItem[] | undefined }> 
       />
       <PopoverContent class="">
         <PopoverTitle class="sr-only">List Popover</PopoverTitle>
-        <PopoverDescription class="">
+        <PopoverDescription class="flex flex-col divide-y">
           <CreateListDialog />
 
-          <For each={first4List()}>{(item) => <A href={`/lists/${item.id}`}>{item.name}</A>}</For>
-          <A href="/lists">See All Lists</A>
+          <For each={first4List()}>
+            {(item) => (
+              <A class="py-1 px-2 hover:bg-gray-100" href={`/lists/${item.id}`}>
+                {item.name}
+              </A>
+            )}
+          </For>
+          <A class="py-1 px-2 hover:bg-gray-100" href="/lists">
+            See All Lists
+          </A>
         </PopoverDescription>
       </PopoverContent>
     </Popover>

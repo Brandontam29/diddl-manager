@@ -25,7 +25,7 @@ const listMainHandlers = (browserWindow: BrowserWindow) => {
   ipcMain.handle(GET_TRACKER_LIST, async (_event) => {
     const lists = await getLists();
 
-    if (lists.length === 0) logging.warn("no lists found");
+    if (lists.length === 0) logging.warn("no tracker list items found");
 
     return lists;
   });

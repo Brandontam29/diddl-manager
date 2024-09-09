@@ -1,29 +1,36 @@
 import { fetchTrackerList, listStore } from "@renderer/features/lists";
-import { fetchLibraryState } from "@renderer/features/library";
-import { A, useLocation } from "@solidjs/router";
+import { fetchLibraryState, setLibraryStore } from "@renderer/features/library";
+import { A, useLocation, useSearchParams } from "@solidjs/router";
 import { type Component, createEffect, For, type JSX, Match, Show, Switch } from "solid-js";
 import { BsJournalBookmark } from "solid-icons/bs";
 import { BiRegularHomeHeart } from "solid-icons/bi";
 import { cn } from "@renderer/libs/cn";
 import SettingsDialog from "./components/SettingsDialog";
 import ListLinks from "./components/ListLinks";
+
+const getParams = (params: { type?: string; from?: number; to?: number }) => {
+  const paramsStrings = Object.fromEntries(
+    Object.entries(params).map(([key, value]) => [key, `${value}`]),
+  );
+
+  const searchParams = new URLSearchParams(paramsStrings);
+
+  return `/?${searchParams.toString()}`;
+};
+
 const BaseLayout: Component<{ children: JSX.Element }> = (props) => {
   const location = useLocation();
-
   createEffect(() => {
     fetchTrackerList();
     fetchLibraryState();
   });
 
-  const getParams = (params: { type?: string; from?: number; to?: number }) => {
-    const paramsStrings = Object.fromEntries(
-      Object.entries(params).map(([key, value]) => [key, `${value}`]),
-    );
+  createEffect(() => {
+    location.pathname;
+    location.search;
 
-    const searchParams = new URLSearchParams(paramsStrings);
-
-    return `/?${searchParams.toString()}`;
-  };
+    setLibraryStore("selectedIndices", []);
+  });
 
   const LINKS = [
     {

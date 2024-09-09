@@ -27,9 +27,6 @@ const CollectionPage = () => {
   createEffect(() => {
     fetchListItems("collection");
   });
-  createEffect(() => {
-    console.log(diddls());
-  });
 
   return (
     <>

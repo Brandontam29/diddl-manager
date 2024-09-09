@@ -22,6 +22,7 @@ const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
 
   const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
 
+  createEffect(() => console.log(libraryStore.selectedIndices));
   return (
     <Show when={Array.isArray(props.diddls)} fallback={<FallbackLoadingDiddl />}>
       <Show
@@ -52,7 +53,7 @@ const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
                 >
                   <div // top black
                     class={cn(
-                      "absolute inset-0 bg-gradient-to-b from-black/25 to-[48px] w-full h-full opacity-0 hover:opacity-100",
+                      "absolute inset-0 bg-gradient-to-b from-black/25 w-full h-[48px] opacity-0 hover:opacity-100",
                       isSelectMode() && "opacity-100",
                     )}
                   >

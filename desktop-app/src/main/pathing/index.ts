@@ -23,7 +23,7 @@ export const defaultLibraryPath = () =>
 export const listDirectory = () => path.join(appPath(), "lists");
 export const listTrackerPath = () => path.join(appPath(), "lists", "list-tracker.json");
 
-export const collectionListPath = () => path.join(appPath(), "collection.json");
+export const collectionListPath = () => path.join(appPath(), "lists", "collection.json");
 
 export const logDirectory = () => path.join(appPath(), "logs");
 

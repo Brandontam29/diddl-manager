@@ -1,4 +1,4 @@
-import { readFile, rename } from "fs/promises";
+import { readFile, rename, writeFile } from "fs/promises";
 import { listItemSchema } from "../../shared";
 import { appPath, collectionListPath, listTrackerPath } from "../pathing";
 import { isExistsSync } from "../utils/isExists";
@@ -13,7 +13,12 @@ const setupListTracker = async () => {
   if (!isExistsSync(listTrackerPath())) {
     logging.info("list-tracker.json not found. Creating new list-tracker.json.");
     await ensureFileExists(listTrackerPath(), "[]");
-    await createList({ name: "Collection", filePath: collectionListPath() });
+    const trackerListItem = await createList({
+      name: "Collection",
+      id: "collection",
+      filePath: collectionListPath(),
+    });
+    await writeFile(trackerListItem.filePath, "[]");
     return;
   }
 
@@ -28,7 +33,12 @@ const setupListTracker = async () => {
     logging.error(`list corrupted. Backing up list to ${listBackupPath()}`);
     await rename(listTrackerPath(), listBackupPath());
     await ensureFileExists(listTrackerPath(), "[]");
-    await createList({ name: "Collection", filePath: collectionListPath() });
+    const trackerListItem = await createList({
+      name: "Collection",
+      id: "collection",
+      filePath: collectionListPath(),
+    });
+    await writeFile(trackerListItem.filePath, "[]");
   }
 };
 

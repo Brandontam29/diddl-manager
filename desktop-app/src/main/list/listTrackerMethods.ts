@@ -4,7 +4,9 @@ import { listNameSchema, type TrackerListItem, trackerListItemSchema } from "../
 import { nanoid } from "nanoid";
 import { getAppFile } from "../file-system";
 
-export const createList = async (listPayload: Pick<TrackerListItem, "name" | "filePath">) => {
+export const createList = async (
+  listPayload: Pick<TrackerListItem, "name" | "filePath"> & { id?: string },
+) => {
   const trackerList = getAppFile("list-tracker");
   const trackerListItem = trackerListItemSchema.parse({ id: nanoid(), ...listPayload });
   trackerList.push(trackerListItem);
@@ -20,7 +22,7 @@ export const getList = async (listId: string) => {
 
 export const getLists = async () => {
   const trackerList = getAppFile("list-tracker");
-  return trackerList.filter((item) => item.deletedAt !== null);
+  return trackerList.filter((item) => item.deletedAt === null);
 };
 
 export const deleteList = async (id: string) => {

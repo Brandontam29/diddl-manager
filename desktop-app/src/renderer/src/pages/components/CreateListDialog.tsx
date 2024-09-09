@@ -20,13 +20,9 @@ const CreateListDialog: Component = () => {
     <Dialog>
       <DialogTrigger
         as={(props: DialogTriggerProps) => (
-          <Button
-            variant="outline"
-            class="w-full flex items-center gap-2 px-4 hover:bg-red-100"
-            {...props}
-          >
+          <Button class="grow flex items-center gap-2 px-2 py-1 hover:bg-gray-100 mr-4" {...props}>
             <FaSolidPlus />
-            Create New
+            <span>Create New</span>
           </Button>
         )}
       />
@@ -46,8 +42,8 @@ const CreateListDialog: Component = () => {
 
         <DialogFooter>
           <Dialog.CloseButton
-            onClick={() => {
-              window.api.createList(listName(), []);
+            onClick={async () => {
+              await window.api.createList(listName(), []);
               fetchTrackerList();
             }}
           >

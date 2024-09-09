@@ -36,7 +36,6 @@ function getAppFile(type: string) {
       const rawFile = readFileSync(listTrackerPath(), "utf8");
 
       const parsedContent = JSON.parse(rawFile) as TrackerListItem[];
-
       return parsedContent;
     }
 

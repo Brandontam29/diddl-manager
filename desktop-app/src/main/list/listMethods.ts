@@ -28,44 +28,44 @@ export const addListItems = async (listId: string, payload: ListItem[]) => {
     return;
   }
 
-  let listItemsNew = listItemSchema.array().parse(payload);
+  const listItemsNew = listItemSchema.array().parse(payload);
+  console.log("listItemsNew", listItemsNew);
+
   const listItemsCurrent = await getListItems(listId);
+  console.log("listItemsCurrent", listItemsCurrent);
 
   if (listItemsCurrent === undefined) {
     logging.warn("list not found ", listId);
     return;
   }
 
-  const listLibIndexesNewWithUndefined = idsToIndexes(listItemsNew.map((item) => item.id));
-  const listLibIndexesCurrent = idsToIndexes(listItemsCurrent.map((item) => item.id)) as number[];
-
-  listItemsNew = listItemsNew.filter((_, index) => listLibIndexesNew[index] !== undefined);
-  const listLibIndexesNew = listLibIndexesNewWithUndefined.filter((x) => x !== undefined);
-
-  const libIndexToItemIndexNew = Object.fromEntries(
-    listItemsNew.map((_, i) => [listLibIndexesNew[i], i]),
-  );
-  const libIndexToItemIndexCurrent = Object.fromEntries(
-    listItemsCurrent.map((_, i) => [listLibIndexesCurrent[i], i]),
+  const listItemsCombined = [...listItemsNew, ...listItemsCurrent];
+  console.log("listItemsCombined", listItemsCombined);
+  const indexesListItems = idsToIndexes(listItemsCombined.map((item) => item.id)).filter(
+    (index) => index !== undefined,
   );
 
-  const libIndexesSorted = mergeSortedAndUnsorted(listLibIndexesCurrent, listLibIndexesNew);
+  if (listItemsCombined.length !== indexesListItems.length)
+    return new Error("Some items added to the lsit are invalid. Action aborted.");
 
-  const listItems = libIndexesSorted.map((libIndex) => {
-    let itemIndex = libIndexToItemIndexNew[libIndex];
+  const indexedArray = indexesListItems.map((n, i) => ({ listItemsIndex: i, libraryIndex: n }));
+  console.log("indexedArray", indexedArray);
 
-    if (itemIndex === undefined) {
-      itemIndex = libIndexToItemIndexCurrent[libIndex];
+  const sortedIndexArray = indexedArray.sort((a, b) => a.libraryIndex - b.libraryIndex);
+  console.log("sortedIndexArray", sortedIndexArray);
 
-      return listItemsCurrent[itemIndex];
-    }
-
-    return listItemsCurrent[itemIndex];
+  const sortedListItemsCombined = sortedIndexArray.map((item) => {
+    console.log("listItemsCombined[item.listItemsIndex]", listItemsCombined[item.listItemsIndex]);
+    console.log("listItemsCombined", listItemsCombined);
+    console.log("item.listItemsIndex", item.listItemsIndex);
+    return listItemsCombined[item.listItemsIndex];
   });
 
-  await writeFile(list.filePath, JSON.stringify(listItems));
+  console.log("sortedListItemsCombined", sortedListItemsCombined);
 
-  return listItems;
+  await writeFile(list.filePath, JSON.stringify(sortedListItemsCombined));
+
+  return sortedListItemsCombined;
 };
 
 export const removeListItems = async (listId: string, idsToRemove: string[]) => {
@@ -117,3 +117,54 @@ function mergeSortedAndUnsorted(sortedArr: number[], unsortedArr: number[]): num
 
   return result;
 }
+
+/**
+ * export const addListItems = async (listId: string, payload: ListItem[]) => {
+  const list = await getList(listId);
+
+  if (!list) {
+    logging.error("list not found ", listId);
+    return;
+  }
+
+  let listItemsNew = listItemSchema.array().parse(payload);
+  const listItemsCurrent = await getListItems(listId);
+
+  if (listItemsCurrent === undefined) {
+    logging.warn("list not found ", listId);
+    return;
+  }
+
+  const listLibIndexesNewWithUndefined = idsToIndexes(listItemsNew.map((item) => item.id));
+  const listLibIndexesCurrent = idsToIndexes(listItemsCurrent.map((item) => item.id)) as number[];
+
+  const listLibIndexesNew = listLibIndexesNewWithUndefined.filter((x) => x !== undefined);
+  listItemsNew = listItemsNew.filter((_, index) => listLibIndexesNew[index] !== undefined);
+
+  const libIndexToItemIndexNew = Object.fromEntries(
+    listItemsNew.map((_, i) => [listLibIndexesNew[i], i]),
+  );
+  const libIndexToItemIndexCurrent = Object.fromEntries(
+    listItemsCurrent.map((_, i) => [listLibIndexesCurrent[i], i]),
+  );
+
+  const libIndexesSorted = mergeSortedAndUnsorted(listLibIndexesCurrent, listLibIndexesNew);
+
+  const listItems = libIndexesSorted.map((libIndex) => {
+    let itemIndex = libIndexToItemIndexNew[libIndex];
+
+    if (itemIndex === undefined) {
+      itemIndex = libIndexToItemIndexCurrent[libIndex];
+
+      return listItemsCurrent[itemIndex];
+    }
+
+    return listItemsCurrent[itemIndex];
+  });
+
+  await writeFile(list.filePath, JSON.stringify(listItems));
+
+  return listItems;
+};
+
+ */

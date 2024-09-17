@@ -9,20 +9,19 @@ import {
   DialogTrigger,
 } from "@renderer/components/ui/dialog";
 
-import { type Component, createSignal } from "solid-js";
+import { type Component, createSignal, JSX } from "solid-js";
 import { TextField, TextFieldLabel, TextFieldRoot } from "@renderer/components/ui/textfield";
-import { FaSolidPlus } from "solid-icons/fa";
 import { fetchTrackerList } from "@renderer/features/lists";
 
-const CreateListDialog: Component = () => {
+const CreateListDialog: Component<{ children: JSX.Element }> = (props) => {
   const [listName, setListName] = createSignal("");
+
   return (
     <Dialog>
       <DialogTrigger
-        as={(props: DialogTriggerProps) => (
-          <Button class="grow flex items-center gap-2 px-2 py-1 hover:bg-gray-100 mr-4" {...props}>
-            <FaSolidPlus />
-            <span>Create New</span>
+        as={(triggerProps: DialogTriggerProps) => (
+          <Button {...triggerProps} variant="none">
+            {props.children}
           </Button>
         )}
       />

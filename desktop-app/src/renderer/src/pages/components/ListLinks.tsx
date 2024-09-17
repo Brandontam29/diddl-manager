@@ -13,16 +13,21 @@ import CreateListDialog from "./CreateListDialog";
 import { A, useLocation } from "@solidjs/router";
 import { Button } from "@kobalte/core/button";
 import { cn } from "@renderer/libs/cn";
+import { ListPlus } from "lucide-solid";
 
 const ListLinks: Component<{ trackerListItems: TrackerListItem[] | undefined }> = (props) => {
   const location = useLocation();
   const [open, setOpen] = createSignal(false);
 
-  const first4List = createMemo(() =>
-    props.trackerListItems
-      ?.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime())
-      .slice(0, 4),
-  );
+  const first4List = createMemo(() => {
+    if (!props.trackerListItems) return [];
+
+    const newList = [...props.trackerListItems];
+
+    return newList
+      .sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime())
+      .slice(0, 4);
+  });
 
   return (
     <Popover open={open()} onOpenChange={setOpen}>
@@ -46,16 +51,25 @@ const ListLinks: Component<{ trackerListItems: TrackerListItem[] | undefined }> 
       <PopoverContent class="">
         <PopoverTitle class="sr-only">List Popover</PopoverTitle>
         <PopoverDescription class="flex flex-col divide-y">
-          <CreateListDialog />
+          <CreateListDialog>
+            <div class="grow flex items-center gap-2 px-2 py-1 hover:bg-gray-100 mr-4">
+              <ListPlus />
+              <span>Create New</span>
+            </div>
+          </CreateListDialog>
 
           <For each={first4List()}>
             {(item) => (
-              <A class="py-1 px-2 hover:bg-gray-100" href={`/lists/${item.id}`}>
+              <A
+                class="py-1 px-2 hover:bg-gray-100"
+                href={`/lists/${item.id}`}
+                onClick={() => setOpen(false)}
+              >
                 {item.name}
               </A>
             )}
           </For>
-          <A class="py-1 px-2 hover:bg-gray-100" href="/lists">
+          <A class="py-1 px-2 hover:bg-gray-100" href="/lists" onClick={() => setOpen(false)}>
             See All Lists
           </A>
         </PopoverDescription>

@@ -10,6 +10,14 @@ import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { removeListItems } from "@renderer/features/lists/listMethods";
 
+import { addListItems } from "@renderer/features/lists";
+import ListDialog from "@renderer/features/lists/components/ListDialog";
+import type { LibraryEntry } from "@shared/library-models";
+import { BsBookmarkPlus } from "solid-icons/bs";
+import { HiOutlineXCircle } from "solid-icons/hi";
+import { TbDownload } from "solid-icons/tb";
+import { createSignal, type Component } from "solid-js";
+
 const ListIdPage = () => {
   const screenWidth = useScreenWidth();
 
@@ -21,7 +29,7 @@ const ListIdPage = () => {
 
     const entries = listStore.listItems.map((item) => {
       const index = libraryStore.libraryIndexMap[item.id];
-      return libraryStore.libraryState[index];
+      return { ...item, ...libraryStore.libraryState[index] };
     });
 
     return entries;
@@ -42,7 +50,7 @@ const ListIdPage = () => {
           <h1 class="pt-8 px-4 text-2xl font-bold">{listItem()?.name}</h1>
         </Show>
         <div class={cn("relative grow px-4 pt-8 pb-4 flex flex-wrap gap-2")}>
-          <DiddlCardList diddls={diddls()} />
+          <DiddlCardList diddls={diddls()} isListItem={true} />
         </div>
       </div>
       <Show when={isSelectMode()}>
@@ -53,14 +61,6 @@ const ListIdPage = () => {
     </>
   );
 };
-
-import { addListItems } from "@renderer/features/lists";
-import ListDialog from "@renderer/features/lists/components/ListDialog";
-import type { LibraryEntry } from "@shared/library-models";
-import { BsBookmarkPlus } from "solid-icons/bs";
-import { HiOutlineXCircle } from "solid-icons/hi";
-import { TbDownload } from "solid-icons/tb";
-import { createSignal, type Component } from "solid-js";
 
 const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
   const screenWidth = useScreenWidth();

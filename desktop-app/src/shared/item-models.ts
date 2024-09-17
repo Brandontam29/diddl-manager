@@ -14,7 +14,7 @@ export const listNameSchema = z
 export const listItemSchema = z.object({
   id: z.string(),
   isDamaged: z.boolean().default(false),
-  isCompleteSet: z.boolean().default(true),
+  isIncomplete: z.boolean().default(false),
   count: z.number().positive().default(1),
 });
 

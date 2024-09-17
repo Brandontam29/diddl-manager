@@ -2,7 +2,7 @@ import { libraryStore, setLibraryStore } from "@renderer/features/library";
 import { cn } from "@renderer/libs/cn";
 import type { LibraryEntry } from "@shared/library-models";
 import { useSearchParams } from "@solidjs/router";
-import { type Component, createEffect, createMemo, For, Show } from "solid-js";
+import { type Component, createEffect, createMemo, For, JSX, Show } from "solid-js";
 import DiddlCard from "./DiddlCard";
 import {
   addSelectedIndices,
@@ -11,8 +11,14 @@ import {
 import { uiStore } from "@renderer/features/ui-state";
 import FallbackNoDiddl from "./FallbackNoDiddl";
 import FallbackLoadingDiddl from "./FallbackLoadingDiddl";
+import { ListItem } from "@shared/item-models";
+import { Minus, Plus } from "lucide-solid";
+import { Button } from "./ui/button";
 
-const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
+const DiddlCardList: Component<{
+  diddls?: (LibraryEntry & Partial<ListItem>)[];
+  isListItem?: boolean;
+}> = (props) => {
   const [searchParams] = useSearchParams();
 
   createEffect(() => {
@@ -20,9 +26,10 @@ const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
     setLibraryStore("selectedIndices", []);
   });
 
-  const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
+  const selectedIndices = () => libraryStore.selectedIndices;
+  const isSelectMode = createMemo(() => selectedIndices().length !== 0);
 
-  createEffect(() => console.log(libraryStore.selectedIndices));
+  createEffect(() => console.log(selectedIndices()));
   return (
     <Show when={Array.isArray(props.diddls)} fallback={<FallbackLoadingDiddl />}>
       <Show
@@ -46,7 +53,7 @@ const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
                 <div // full overlay
                   class={cn(
                     "h-[calc(100%-20px)] w-full absolute top-0 inset-x",
-                    libraryStore.selectedIndices.includes(index()) && "border-4 border-blue-300",
+                    selectedIndices().includes(index()) && "border-4 border-blue-300",
                     isSelectMode() &&
                       "group hover:bg-gradient-to-t from-black/25 to-[48px] bg-gradient-to-t",
                   )}
@@ -62,9 +69,9 @@ const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
                         "absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400",
                         !isSelectMode() && "hover:bg-gray-100",
                         isSelectMode() && "group-hover:bg-gray-100",
-                        libraryStore.selectedIndices.includes(index()) && "bg-gray-100",
+                        selectedIndices().includes(index()) && "bg-gray-100",
                       )}
-                      onClick={[handleClick, index()]}
+                      onClick={(e) => handleClick(index(), e)}
                     />
                   </div>
                   <Show // full card button
@@ -76,6 +83,30 @@ const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
                     />
                   </Show>
                 </div>
+
+                <Show when={props.isListItem}>
+                  <div class="absolute bottom-0 left-0 flex flex-col">
+                    <Show when={diddl?.isDamaged}>
+                      <Badge dotColor="bg-red-400">Damaged</Badge>
+                    </Show>
+                    <Show when={diddl?.isIncomplete}>
+                      <Badge dotColor="bg-yellow-400">Incomplete</Badge>
+                    </Show>
+                    <Show when={diddl?.count}>
+                      <Badge>
+                        <div>{diddl.count}</div>
+                        <div>
+                          <Button variant="none">
+                            <Plus />
+                          </Button>
+                          <Button variant="none">
+                            <Minus />
+                          </Button>
+                        </div>
+                      </Badge>
+                    </Show>
+                  </div>
+                </Show>
               </div>
             );
           }}
@@ -85,12 +116,21 @@ const DiddlCardList: Component<{ diddls?: LibraryEntry[] }> = (props) => {
   );
 };
 
+const Badge: Component<{ dotColor?: string; children: JSX.Element }> = (props) => (
+  <div class="flex items-center gap-1 p-px rounded border border-gray-300">
+    <Show when={props.dotColor}>
+      <div class={cn("rounded-full", props.dotColor)} />
+    </Show>
+    <div class="text-sm">{props.children}</div>
+  </div>
+);
+
 const handleClick = (index: number, event: MouseEvent) => {
-  console.log("click");
+  const selectedIndices = libraryStore.selectedIndices;
   if (event.shiftKey) {
-    const lastClicked = libraryStore.selectedIndices[libraryStore.selectedIndices.length - 1];
+    const lastClicked = selectedIndices[selectedIndices.length - 1];
     const numbersBetween = getNumbersBetween(lastClicked, index);
-    const isAdding = isAdd(libraryStore.selectedIndices, index);
+    const isAdding = isAdd(selectedIndices, index);
     if (isAdding) {
       addSelectedIndices(numbersBetween);
       return;
@@ -101,7 +141,7 @@ const handleClick = (index: number, event: MouseEvent) => {
     }
   }
 
-  const isAdding = !libraryStore.selectedIndices.includes(index);
+  const isAdding = !selectedIndices.includes(index);
   console.log("isAdding", isAdding);
   if (isAdding) {
     addSelectedIndices(index);

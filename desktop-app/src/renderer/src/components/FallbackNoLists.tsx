@@ -14,7 +14,8 @@ const FallbackNoList = () => {
 
       <h1 class="text-lg font-semibold">List is empty!</h1>
       <p>
-        You can add some by clicking on the top left corner of List, then click "Create New List"
+        You can create one by pressing the button above. Then select Diddls in the categories and
+        press Add to List on the top bar.
       </p>
     </div>
   );

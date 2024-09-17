@@ -7,9 +7,10 @@ import {
   DialogTrigger,
 } from "@renderer/components/ui/dialog";
 import { RiMediaPlayListAddFill } from "solid-icons/ri";
-import { Component, For } from "solid-js";
+import { Component, For, Show } from "solid-js";
 import { listStore } from "../createListsStore";
 import { Button } from "@renderer/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
 
 const ListDialog: Component<{
   open: boolean;
@@ -46,6 +47,33 @@ const ListDialog: Component<{
         </DialogContent>
       </DialogContent>
     </Dialog>
+  );
+};
+
+const AddToListPopover: Component<{
+  open: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  onListClick: (listId: string) => void;
+}> = (props) => {
+  return (
+    <Popover>
+      <PopoverTrigger class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200">
+        <RiMediaPlayListAddFill />
+        <span>Add To List</span>
+      </PopoverTrigger>
+
+      <PopoverContent>
+        <Show when={listStore.trackerListItems}>
+          <For each={listStore.trackerListItems}>
+            {(trackerListItem) => (
+              <Button variant="outline" onClick={() => props.onListClick(trackerListItem.id)}>
+                {trackerListItem.name}
+              </Button>
+            )}
+          </For>
+        </Show>
+      </PopoverContent>
+    </Popover>
   );
 };
 

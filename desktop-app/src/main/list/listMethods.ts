@@ -29,10 +29,8 @@ export const addListItems = async (listId: string, payload: ListItem[]) => {
   }
 
   const listItemsNew = listItemSchema.array().parse(payload);
-  console.log("listItemsNew", listItemsNew);
 
   const listItemsCurrent = await getListItems(listId);
-  console.log("listItemsCurrent", listItemsCurrent);
 
   if (listItemsCurrent === undefined) {
     logging.warn("list not found ", listId);
@@ -40,7 +38,6 @@ export const addListItems = async (listId: string, payload: ListItem[]) => {
   }
 
   const listItemsCombined = [...listItemsNew, ...listItemsCurrent];
-  console.log("listItemsCombined", listItemsCombined);
   const indexesListItems = idsToIndexes(listItemsCombined.map((item) => item.id)).filter(
     (index) => index !== undefined,
   );
@@ -49,19 +46,12 @@ export const addListItems = async (listId: string, payload: ListItem[]) => {
     return new Error("Some items added to the lsit are invalid. Action aborted.");
 
   const indexedArray = indexesListItems.map((n, i) => ({ listItemsIndex: i, libraryIndex: n }));
-  console.log("indexedArray", indexedArray);
 
   const sortedIndexArray = indexedArray.sort((a, b) => a.libraryIndex - b.libraryIndex);
-  console.log("sortedIndexArray", sortedIndexArray);
 
   const sortedListItemsCombined = sortedIndexArray.map((item) => {
-    console.log("listItemsCombined[item.listItemsIndex]", listItemsCombined[item.listItemsIndex]);
-    console.log("listItemsCombined", listItemsCombined);
-    console.log("item.listItemsIndex", item.listItemsIndex);
     return listItemsCombined[item.listItemsIndex];
   });
-
-  console.log("sortedListItemsCombined", sortedListItemsCombined);
 
   await writeFile(list.filePath, JSON.stringify(sortedListItemsCombined));
 
@@ -84,39 +74,21 @@ export const removeListItems = async (listId: string, idsToRemove: string[]) => 
   return fitleredListItems;
 };
 
-function mergeSortedAndUnsorted(sortedArr: number[], unsortedArr: number[]): number[] {
-  // Sort the unsorted array
-  const sortedUnsortedArr = unsortedArr.sort((a, b) => a - b);
+export const updateListItems = async (listId: string, idsToRemove: string[]) => {
+  const list = await getList(listId);
 
-  // Merge the two sorted arrays
-  const result: number[] = [];
-  let i = 0,
-    j = 0;
-
-  while (i < sortedArr.length && j < sortedUnsortedArr.length) {
-    if (sortedArr[i] <= sortedUnsortedArr[j]) {
-      result.push(sortedArr[i]);
-      i++;
-    } else {
-      result.push(sortedUnsortedArr[j]);
-      j++;
-    }
+  if (!list) {
+    logging.error("list not found ", listId);
+    return;
   }
 
-  // Add remaining elements from sortedArr, if any
-  while (i < sortedArr.length) {
-    result.push(sortedArr[i]);
-    i++;
-  }
+  const listItems = getAppFile(list.filePath) as ListItem[];
 
-  // Add remaining elements from sortedUnsortedArr, if any
-  while (j < sortedUnsortedArr.length) {
-    result.push(sortedUnsortedArr[j]);
-    j++;
-  }
+  const fitleredListItems = listItems.filter((diddl) => !idsToRemove.includes(diddl.id));
+  await writeFile(list.filePath, JSON.stringify(fitleredListItems));
 
-  return result;
-}
+  return fitleredListItems;
+};
 
 /**
  * export const addListItems = async (listId: string, payload: ListItem[]) => {

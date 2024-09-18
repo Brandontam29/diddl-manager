@@ -19,9 +19,11 @@ export const buttonVariants = cva("", {
       ghost: "hover:bg-accent hover:text-accent-foreground",
       link: "text-primary underline-offset-4 hover:underline",
       none: "",
+
+      pink: "bg-pink-100 hover:bg-pink-200 focus:ring-2 focus:ring-violet-300",
     },
     size: {
-      default: "h-9 px-4 py-2",
+      default: "h-9 px-4 py-2 rounded-md",
       sm: "h-8 rounded-md px-3 text-xs",
       lg: "h-10 rounded-md px-8",
       icon: "h-9 w-9",

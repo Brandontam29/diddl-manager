@@ -14,7 +14,7 @@ const setupListTracker = async () => {
     logging.info("list-tracker.json not found. Creating new list-tracker.json.");
     await ensureFileExists(listTrackerPath(), "[]");
     const trackerListItem = await createList({
-      name: "Collection",
+      name: "My Collection",
       id: "collection",
       filePath: collectionListPath(),
     });
@@ -34,7 +34,7 @@ const setupListTracker = async () => {
     await rename(listTrackerPath(), listBackupPath());
     await ensureFileExists(listTrackerPath(), "[]");
     const trackerListItem = await createList({
-      name: "Collection",
+      name: "My Collection",
       id: "collection",
       filePath: collectionListPath(),
     });

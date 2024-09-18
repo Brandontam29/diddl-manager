@@ -9,7 +9,6 @@ export const fetchListItems = async (listId: string) => {
 
 export const setListItems = (listId: string, listItems: ListItem[]) => {
   setListStore("listItems", listItems);
-
   window.api.setList(listId, listItems);
 };
 
@@ -18,7 +17,7 @@ export const addListItems = async (
   diddlIds: string[],
   state?: Partial<Omit<ListItem, "id">>,
 ) => {
-  const defaultState = { isDamaged: false, isCompleteSet: true, count: 1 } satisfies Omit<
+  const defaultState = { isDamaged: false, isIncomplete: false, count: 1 } satisfies Omit<
     ListItem,
     "id"
   >;
@@ -30,8 +29,6 @@ export const addListItems = async (
   if (completeListItems === undefined) {
     return; //toast
   }
-
-  setListStore("listItems", completeListItems);
 };
 
 export const removeListItems = async (listId: string, idsToRemove: string[]) => {
@@ -43,17 +40,32 @@ export const removeListItems = async (listId: string, idsToRemove: string[]) => 
   window.api.setList(listId, listItems);
 };
 
-// export const updateListItems = async (
-//   listId: string,
-//   diddlIds: string[],
-//   action: {
-//     addCount?: number;
-//     isDamaged?: boolean;
-//     isCompleteSet?: boolean;
-//   }
-// ) => {
-//   const listIems =  await window.api.getList(listId);
-//   const listItems = diddls.filter((diddl) => !idsToRemove.includes(diddl.id));
+export const updateListItems = async (
+  listId: string,
+  itemIds: string[],
+  action: {
+    addCount?: number;
+    isDamaged?: boolean;
+    isIncomplete?: boolean;
+  },
+) => {
+  if (!listStore.listItems) return;
 
-//   window.api.setList(listId, listItems);
-// };
+  const newListItems = listStore.listItems.map((listItem) => {
+    const item = { ...listItem };
+    const itemIdIndex = itemIds.indexOf(item.id);
+    if (itemIdIndex === -1) return item; // Item not in itemIds, no changes
+
+    if (action.addCount !== undefined) item.count += action.addCount;
+    if (action.isDamaged !== undefined) item.isDamaged = action.isDamaged;
+    if (action.isIncomplete !== undefined) item.isIncomplete = action.isIncomplete;
+
+    // Remove the processed item from itemIds
+    itemIds.splice(itemIdIndex, 1);
+
+    return item;
+  });
+
+  setListStore("listItems", newListItems);
+  window.api.setList(listId, newListItems);
+};

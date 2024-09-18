@@ -12,8 +12,12 @@ import {
 import { type Component, createSignal, JSX } from "solid-js";
 import { TextField, TextFieldLabel, TextFieldRoot } from "@renderer/components/ui/textfield";
 import { fetchTrackerList } from "@renderer/features/lists";
+import { TrackerListItem } from "@shared/item-models";
 
-const CreateListDialog: Component<{ children: JSX.Element }> = (props) => {
+const CreateListDialog: Component<{
+  children: JSX.Element;
+  callback?: (trackerListItem: TrackerListItem) => void;
+}> = (props) => {
   const [listName, setListName] = createSignal("");
 
   return (
@@ -42,7 +46,8 @@ const CreateListDialog: Component<{ children: JSX.Element }> = (props) => {
         <DialogFooter>
           <Dialog.CloseButton
             onClick={async () => {
-              await window.api.createList(listName(), []);
+              const trackerListItem = await window.api.createList(listName(), []);
+              props.callback && props.callback(trackerListItem);
               fetchTrackerList();
             }}
           >

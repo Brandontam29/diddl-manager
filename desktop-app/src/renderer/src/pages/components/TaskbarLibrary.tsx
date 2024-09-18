@@ -1,6 +1,6 @@
 import { setLibraryStore, libraryStore } from "@renderer/features/library";
 import { addListItems } from "@renderer/features/lists";
-import ListDialog from "@renderer/features/lists/components/ListDialog";
+import AddToListPopover from "@renderer/features/lists/components/AddToListPopover";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import type { LibraryEntry } from "@shared/library-models";
@@ -42,7 +42,8 @@ const TaskbarLibrary: Component<{ diddls: LibraryEntry[] }> = (props) => {
         <span>Add to Collection</span>
       </button>
       <div class="h-[24px] w-px bg-gray-200" />
-      <ListDialog
+
+      <AddToListPopover
         open={open()}
         onOpenChange={setOpen}
         onListClick={async (listId) => {
@@ -54,6 +55,7 @@ const TaskbarLibrary: Component<{ diddls: LibraryEntry[] }> = (props) => {
           setOpen(false);
         }}
       />
+
       <div class="h-[24px] w-px bg-gray-200" />
       <button
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"

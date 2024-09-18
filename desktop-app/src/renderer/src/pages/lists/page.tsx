@@ -3,8 +3,8 @@ import FallbackNoLists from "@renderer/components/FallbackNoLists";
 import { listStore } from "@renderer/features/lists";
 import { A } from "@solidjs/router";
 import { For, Show } from "solid-js";
-import ListCard from "./components/ListCard";
-import CreateListDialog from "../components/CreateListDialog";
+import ListCard from "@renderer/features/lists/components/ListCard";
+import CreateListDialog from "@renderer/features/lists/components/CreateListDialog";
 import { ListPlus } from "lucide-solid";
 import { Button } from "@renderer/components/ui/button";
 

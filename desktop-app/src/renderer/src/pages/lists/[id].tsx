@@ -8,7 +8,7 @@ import { useParams } from "@solidjs/router";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 
-import TaskbarList from "@renderer/features/lists/components/TaskbarList";
+import TaskbarList from "@renderer/features/taskbars/TaskbarList";
 
 const ListIdPage = () => {
   const screenWidth = useScreenWidth();
@@ -33,12 +33,6 @@ const ListIdPage = () => {
 
   createEffect(() => {
     fetchListItems(params.id);
-  });
-
-  createEffect(() => {
-    console.log(trackerListItem());
-    console.log(listStore.trackerListItems);
-    console.log(params.id);
   });
 
   return (

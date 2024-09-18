@@ -4,7 +4,7 @@ import { cn } from "@renderer/libs/cn";
 import { useSearchParams } from "@solidjs/router";
 import { createMemo, Show } from "solid-js";
 import DiddlCardList from "@renderer/components/DIddlCardList";
-import TaskbarLibrary from "./components/TaskbarLibrary";
+import TaskbarLibrary from "@renderer/features/taskbars/TaskbarLibrary";
 
 const HomePage = () => {
   const screenWidth = useScreenWidth();
@@ -27,6 +27,8 @@ const HomePage = () => {
     return diddls;
   });
 
+  const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
+
   return (
     <>
       <div
@@ -35,7 +37,7 @@ const HomePage = () => {
       >
         <DiddlCardList diddls={filteredDiddls()} />
       </div>
-      <Show when={true}>
+      <Show when={isSelectMode()}>
         <TaskbarLibrary diddls={filteredDiddls()} />
       </Show>
     </>

@@ -4,11 +4,10 @@ import { cn } from "@renderer/libs/cn";
 import { LibraryEntry } from "@shared/library-models";
 import { useParams } from "@solidjs/router";
 import { Plus, Minus } from "lucide-solid";
-import { BsBookmarkDash, BsBookmarkPlus } from "solid-icons/bs";
 import { HiOutlineXCircle } from "solid-icons/hi";
 import { Component, createSignal } from "solid-js";
-import { removeListItems, addListItems, updateListItems } from "../listMethods";
-import AddToListPopover from "./AddToListPopover";
+import { addListItems, updateListItems } from "../lists/listMethods";
+import AddToListPopover from "../lists/components/AddToListPopover";
 
 const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
   const screenWidth = useScreenWidth();

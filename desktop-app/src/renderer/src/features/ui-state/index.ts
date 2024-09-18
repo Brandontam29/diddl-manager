@@ -11,7 +11,7 @@ const [uiStore, setUiStore] = createStore<Store>({
 /**
  * Methods
  */
-const ZOOM_LEVEL_MAP = { sm: 215, md: 240, lg: 265, xl: 290 } as const;
+const ZOOM_LEVEL_MAP = { sm: 215, md: 240, lg: 280, xl: 320 } as const;
 
 type ZoomLevel = keyof typeof ZOOM_LEVEL_MAP;
 
@@ -28,7 +28,7 @@ const setCardZoomLevel = (zoom: ZoomLevel) => {
   setUiStore("cardHeight", ZOOM_LEVEL_MAP[zoom]);
 };
 
-// Output: { 215: 'sm', 240: 'md', 265: 'lg', 290: 'xl' }
+// Output: { 215: 'sm', 240: 'md', 280: 'lg', 320: 'xl' }
 
 export { uiStore, setUiStore, setCardZoomLevel, ZOOM_LEVEL_MAP, HEIGHT_ZOOM_MAP };
 

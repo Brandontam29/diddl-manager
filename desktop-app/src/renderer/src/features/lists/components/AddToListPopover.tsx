@@ -3,7 +3,7 @@ import { Component, For, Show } from "solid-js";
 import { listStore } from "../createListsStore";
 import { Button } from "@renderer/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
-import CreateListDialog from "@renderer/pages/components/CreateListDialog";
+import CreateListDialog from "@renderer/features/lists/components/CreateListDialog";
 
 const AddToListPopover: Component<{
   open: boolean;

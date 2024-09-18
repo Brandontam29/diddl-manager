@@ -9,7 +9,7 @@ import {
 import type { TrackerListItem } from "@shared/index";
 import { BsCaretDown, BsCaretRight } from "solid-icons/bs";
 import { type Component, createMemo, createSignal, For } from "solid-js";
-import CreateListDialog from "./CreateListDialog";
+import CreateListDialog from "@renderer/features/lists/components/CreateListDialog";
 import { A, useLocation } from "@solidjs/router";
 import { Button } from "@kobalte/core/button";
 import { cn } from "@renderer/libs/cn";

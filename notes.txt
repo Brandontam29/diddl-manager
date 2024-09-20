@@ -1,0 +1,6 @@
+backlog
+
+1. check if button animations work
+2. test and publish windows version
+3. add filtering in list view
+4. change selected indices to Set

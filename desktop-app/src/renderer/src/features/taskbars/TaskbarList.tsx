@@ -3,7 +3,7 @@ import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { LibraryEntry } from "@shared/library-models";
 import { useParams } from "@solidjs/router";
-import { Plus, Minus } from "lucide-solid";
+import { Plus, Minus, Download } from "lucide-solid";
 import { HiOutlineXCircle } from "solid-icons/hi";
 import { Component, createSignal } from "solid-js";
 import { addListItems, updateListItems } from "../lists/listMethods";
@@ -126,13 +126,13 @@ const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
         <Minus />
         <span>Mark as Damaged</span>
       </button>
-      {/* <button
-          class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
-          onClick={async () => {}}
-        >
-          <TbDownload />
-          <span>Download Images</span>
-        </button> */}
+      <button
+        class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
+        onClick={async () => {}}
+      >
+        <Download size={16} />
+        <span>Download</span>
+      </button>
     </div>
   );
 };

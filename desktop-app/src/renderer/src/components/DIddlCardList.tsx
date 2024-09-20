@@ -12,7 +12,7 @@ import { uiStore } from "@renderer/features/ui-state";
 import FallbackNoDiddl from "./FallbackNoDiddl";
 import FallbackLoadingDiddl from "./FallbackLoadingDiddl";
 import { ListItem } from "@shared/item-models";
-import { CircleX, Minus, Plus, X } from "lucide-solid";
+import { Check, CheckCircle, Circle, CircleX, Minus, Plus, X } from "lucide-solid";
 import { Button } from "./ui/button";
 import { updateListItems } from "@renderer/features/lists/listMethods";
 
@@ -48,32 +48,51 @@ const DiddlCardList: Component<{
                 <div // full overlay
                   class={cn(
                     "h-[calc(100%-20px)] w-full absolute top-0 inset-x",
-                    selectedIndices().includes(index()) && "border-4 border-blue-300",
+
                     isSelectMode() &&
-                      "group hover:bg-gradient-to-t from-black/25 to-[48px] bg-gradient-to-t",
+                      "group/card hover:bg-gradient-to-t hover:from-black/25 hover:to-[48px]",
                   )}
                 >
                   <div // top black
                     class={cn(
-                      "absolute inset-0 bg-gradient-to-b from-black/25 w-full h-[48px] opacity-0 hover:opacity-100",
-                      isSelectMode() && "opacity-100",
+                      "absolute inset-0 bg-gradient-to-b from-black/35 w-full h-[48px] opacity-0 hover:opacity-100 text-transparent",
+                      !isSelectMode() && "hover:text-gray-200",
+                      isSelectMode() && "opacity-100", //show black top overlay in select mode
+                      selectedIndices().includes(index()) && "from-transparent", // do not show if selected
                     )}
                   >
                     <button // button
-                      class={cn(
-                        "absolute top-1.5 left-1.5 h-7 w-7 rounded-full bg-gray-400",
-                        !isSelectMode() && "hover:bg-gray-100",
-                        isSelectMode() && "group-hover:bg-gray-100",
-                        selectedIndices().includes(index()) && "bg-gray-100",
-                      )}
+                      class={cn("absolute top-1.5 left-1.5 h-7 w-7 rounded-full")}
                       onClick={(e) => handleClick(index(), e)}
-                    />
+                    >
+                      <Circle
+                        class={cn(
+                          "absolute inset-0 w-full h-full",
+                          !selectedIndices().includes(index()) && isSelectMode() && "text-gray-200",
+                        )}
+                      />
+                      <CheckCircle
+                        class={cn(
+                          "absolute inset-0 w-full h-full",
+                          !isSelectMode() && "hover:text-white",
+
+                          !selectedIndices().includes(index()) &&
+                            isSelectMode() &&
+                            "group-hover/card:text-white",
+                          selectedIndices().includes(index()) &&
+                            "rounded-full bg-blue-300 text-white",
+                        )}
+                      />
+                    </button>
                   </div>
                   <Show // full card button
                     when={isSelectMode()}
                   >
                     <button
-                      class={cn("absolute inset-0 w-full h-full")}
+                      class={cn(
+                        "absolute inset-0 w-full h-full rounded-t",
+                        selectedIndices().includes(index()) && "border-[5px] border-blue-300",
+                      )}
                       onClick={[handleClick, index()]}
                     />
                   </Show>
@@ -188,7 +207,7 @@ const Badge: Component<{ dotColor?: string; children: JSX.Element; onClick?: () 
     size={"none"}
     class={cn(
       "w-min flex items-center gap-px p-px rounded border border-gray-300 bg-gray-50 cursor-default",
-      props.onClick && "cursor-pointer group",
+      props.onClick && "cursor-pointer group/card",
     )}
     onClick={props.onClick}
   >
@@ -196,13 +215,13 @@ const Badge: Component<{ dotColor?: string; children: JSX.Element; onClick?: () 
       <div
         class={cn(
           "rounded-full h-2 aspect-square border border-gray-300",
-          props.onClick && "group-hover:hidden",
+          props.onClick && "group/card-hover:hidden",
           props.dotColor,
         )}
       />
       <CircleX
         size={8}
-        class={cn("h-2 aspect-square hidden", props.onClick && "group-hover:block")}
+        class={cn("h-2 aspect-square hidden", props.onClick && "group/card-hover:block")}
       />
     </Show>
     <div class="text-sm">{props.children}</div>

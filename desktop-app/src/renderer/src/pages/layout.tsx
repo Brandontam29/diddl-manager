@@ -1,11 +1,24 @@
+import { ToastRegion, ToastList } from "@renderer/components/ui/toast";
+import FallbackPageLoading from "@renderer/components/FallbackPageLoading";
 import { fetchTrackerList, listStore } from "@renderer/features/lists";
 import { fetchLibraryState, setLibraryStore } from "@renderer/features/library";
 import { A, RouteSectionProps } from "@solidjs/router";
-import { type Component, createEffect, For, type JSX, Match, Show, Switch } from "solid-js";
+import {
+  type Component,
+  createEffect,
+  For,
+  type JSX,
+  Match,
+  Show,
+  Suspense,
+  Switch,
+} from "solid-js";
 import { BiRegularHomeHeart } from "solid-icons/bi";
 import { cn } from "@renderer/libs/cn";
 import SettingsDialog from "./components/SettingsDialog";
 import ListLinks from "./components/ListLinks";
+import { AnimatedButton } from "@renderer/components/AnimatedButton";
+import { Button } from "@renderer/components/ui/button";
 
 const getParams = (params: { type?: string; from?: number; to?: number }) => {
   const paramsStrings = Object.fromEntries(
@@ -250,19 +263,12 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
           "scrollbar-thumb-pink-300 scrollbar-track-transparent scrollbar-thin",
         )}
       >
-        {/* <A
-          href="/"
-          class={cn(
-            'px-4 flex items-center gap-2',
-            location.pathname === '/' && location.search === '' ? 'bg-red-200' : 'hover:bg-red-100'
-          )}
-          end={true}
-        >
-          <div class="pb-0.5">
-            <BiRegularHomeHeart class="h-8 w-8" />
-          </div>
-          <span>Home</span>
-        </A> */}
+        <Button variant={"pink"} class="flex">
+          Click Me
+        </Button>
+        {/* <Button variant={"pink"} class="flex">
+          Click Normal
+        </Button> */}
         <For each={LINKS}>
           {(group) => (
             <div class="pt-3">
@@ -277,7 +283,7 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
                         <A
                           href={link.href!}
                           class={cn(
-                            "flex items-center gap-2 px-4",
+                            "flex items-center gap-2 px-3 mx-1 rounded",
                             `${location.pathname}${location.search}` === link.href && "bg-red-200",
                             `${location.pathname}${location.search}` !== link.href &&
                               "hover:bg-red-100",
@@ -298,7 +304,10 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
           <SettingsDialog />
         </div>
       </nav>
-      {props.children}
+      <Suspense fallback={<FallbackPageLoading />}>{props.children}</Suspense>
+      <ToastRegion>
+        <ToastList />
+      </ToastRegion>
     </>
   );
 };

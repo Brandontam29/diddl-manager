@@ -1,5 +1,4 @@
 import { cn } from "@renderer/libs/cn";
-
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type {
   ToastDescriptionProps,
@@ -134,6 +133,7 @@ export const ToastContent = (props: ComponentProps<"div">) => {
             stroke-width="2"
             d="M18 6L6 18M6 6l12 12"
           />
+          <title>Close</title>
         </svg>
       </ToastPrimitive.CloseButton>
     </div>

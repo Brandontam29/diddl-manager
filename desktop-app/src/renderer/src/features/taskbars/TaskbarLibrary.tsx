@@ -4,6 +4,7 @@ import AddToListPopover from "@renderer/features/lists/components/AddToListPopov
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import type { LibraryEntry } from "@shared/library-models";
+import { Download } from "lucide-solid";
 import { BsBookmarkPlus } from "solid-icons/bs";
 import { HiOutlineXCircle } from "solid-icons/hi";
 import { TbDownload } from "solid-icons/tb";
@@ -61,8 +62,8 @@ const TaskbarLibrary: Component<{ diddls: LibraryEntry[] }> = (props) => {
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
         onClick={async () => {}}
       >
-        <TbDownload />
-        <span>Download Images</span>
+        <Download size={16} />
+        <span>Download</span>
       </button>
     </div>
   );

@@ -1,15 +1,10 @@
 import { ipcRenderer } from "electron";
 
-import {
-  EDIT_FILE_CONTENT,
-  GET_FILE_CONTENT,
-  GET_FOLDER_STRUCTURE,
-} from "./fileSystemMainHandlers";
-import type { GetFolderStructureOptions } from "./getFolderStructure";
+import { EDIT_FILE_CONTENT, GET_FILE_CONTENT, ZIP_AND_DOWNLOAD } from "./fileSystemMainHandlers";
 
 const fileSystemPreloadApi = {
-  getFolderStructure: (path: string, option?: GetFolderStructureOptions) =>
-    ipcRenderer.invoke(GET_FOLDER_STRUCTURE, path, option),
+  downloadImages: (diddlIds: string[]): Promise<boolean> =>
+    ipcRenderer.invoke(ZIP_AND_DOWNLOAD, diddlIds),
   getFileContent: (path: string): Promise<string> => ipcRenderer.invoke(GET_FILE_CONTENT, path),
   editFileContent: (path: string, content: string): Promise<string> =>
     ipcRenderer.invoke(EDIT_FILE_CONTENT, path, content),

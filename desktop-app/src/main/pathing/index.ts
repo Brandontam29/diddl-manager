@@ -12,7 +12,7 @@ export const appPath = () =>
   isDev() ? path.join(app.getPath("appData"), DEV_DIRECTORY) : app.getPath("userData");
 
 export const relativeDiddlImagesDirectory = () => path.join("assets", "diddl-images");
-export const diddlImagesDirectory = () => path.join(app.getAppPath(), "diddl-images");
+export const rendererDirectory = () => path.join(app.getAppPath(), "src", "renderer");
 
 export const libraryPath = () => path.join(appPath(), "library.json");
 export const libraryMapPath = () => path.join(appPath(), "library-map.json");
@@ -26,5 +26,11 @@ export const listTrackerPath = () => path.join(appPath(), "lists", "list-tracker
 export const collectionListPath = () => path.join(appPath(), "lists", "collection.json");
 
 export const logDirectory = () => path.join(appPath(), "logs");
+
+export const defaultZipPath = (fileName: string = "haha.zip") => path.join(appPath(), fileName);
+
+export const downloadsFolder = () => app.getPath("downloads");
+
+export const assetsDirectory = () => path.join(app.getAppPath(), "../");
 
 export { logAllPaths };

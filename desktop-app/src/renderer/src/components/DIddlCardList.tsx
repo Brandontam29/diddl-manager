@@ -1,8 +1,8 @@
-import { libraryStore, setLibraryStore } from "@renderer/features/library";
+import { libraryStore } from "@renderer/features/library";
 import { cn } from "@renderer/libs/cn";
 import type { LibraryEntry } from "@shared/library-models";
-import { useParams, useSearchParams } from "@solidjs/router";
-import { type Component, createEffect, createMemo, For, JSX, Show } from "solid-js";
+import { useParams } from "@solidjs/router";
+import { type Component, createMemo, For, JSX, Show } from "solid-js";
 import DiddlCard from "./DiddlCard";
 import {
   addSelectedIndices,
@@ -12,7 +12,7 @@ import { uiStore } from "@renderer/features/ui-state";
 import FallbackNoDiddl from "./FallbackNoDiddl";
 import FallbackLoadingDiddl from "./FallbackLoadingDiddl";
 import { ListItem } from "@shared/item-models";
-import { Check, CheckCircle, Circle, CircleX, Minus, Plus, X } from "lucide-solid";
+import { CheckCircle, Circle, CircleX, Minus, Plus } from "lucide-solid";
 import { Button } from "./ui/button";
 import { updateListItems } from "@renderer/features/lists/listMethods";
 
@@ -55,8 +55,8 @@ const DiddlCardList: Component<{
                 >
                   <div // top black
                     class={cn(
-                      "absolute inset-0 bg-gradient-to-b from-black/35 w-full h-[48px] opacity-0 hover:opacity-100 text-transparent",
-                      !isSelectMode() && "hover:text-gray-200",
+                      "absolute inset-0 bg-gradient-to-b from-black/35 w-full h-[48px] opacity-0 hover:opacity-100 text-transparent", //default no show button
+                      !isSelectMode() && "hover:text-gray-200", // if non-select mode, hover shows gray check
                       isSelectMode() && "opacity-100", //show black top overlay in select mode
                       selectedIndices().includes(index()) && "from-transparent", // do not show if selected
                     )}
@@ -68,19 +68,20 @@ const DiddlCardList: Component<{
                       <Circle
                         class={cn(
                           "absolute inset-0 w-full h-full",
-                          !selectedIndices().includes(index()) && isSelectMode() && "text-gray-200",
+                          !selectedIndices().includes(index()) && isSelectMode() && "text-gray-200", // in select mode, show empty gray circle
                         )}
                       />
                       <CheckCircle
                         class={cn(
                           "absolute inset-0 w-full h-full",
-                          !isSelectMode() && "hover:text-white",
+                          !isSelectMode() && "hover:text-white", // if non-select mode, top hover is gray, then direct hover is white
 
                           !selectedIndices().includes(index()) &&
                             isSelectMode() &&
-                            "group-hover/card:text-white",
+                            "group-hover/card:text-white", // if select mode, hover shows white check
+
                           selectedIndices().includes(index()) &&
-                            "rounded-full bg-blue-300 text-white",
+                            "rounded-full bg-blue-300 text-white", // if selected, become blue
                         )}
                       />
                     </button>

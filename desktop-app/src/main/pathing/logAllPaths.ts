@@ -1,7 +1,7 @@
 import {
   appPath,
   relativeDiddlImagesDirectory,
-  diddlImagesDirectory,
+  rendererDirectory,
   libraryPath,
   libraryMapPath,
   defaultLibraryPath,
@@ -9,6 +9,8 @@ import {
   listTrackerPath,
   collectionListPath,
   logDirectory,
+  defaultZipPath,
+  downloadsFolder,
 } from ".";
 
 function logFunctionResult(func: (...args: any) => string, ...args: any) {
@@ -21,7 +23,7 @@ const logAllPaths = () => {
   const pathFunctions = [
     appPath,
     relativeDiddlImagesDirectory,
-    diddlImagesDirectory,
+    rendererDirectory,
     libraryPath,
     libraryMapPath,
     defaultLibraryPath,
@@ -29,6 +31,8 @@ const logAllPaths = () => {
     listTrackerPath,
     collectionListPath,
     logDirectory,
+    defaultZipPath,
+    downloadsFolder,
   ];
 
   pathFunctions.forEach((func) => logFunctionResult(func));

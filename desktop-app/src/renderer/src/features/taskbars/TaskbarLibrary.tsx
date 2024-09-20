@@ -1,18 +1,42 @@
+import { toaster } from "@kobalte/core/toast";
+import { Toast, ToastContent, ToastProgress, ToastTitle } from "@renderer/components/ui/toast";
 import { setLibraryStore, libraryStore } from "@renderer/features/library";
 import { addListItems } from "@renderer/features/lists";
 import AddToListPopover from "@renderer/features/lists/components/AddToListPopover";
+import useAsyncCallback from "@renderer/hooks/useAsyncCallback";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
+import { confettiStars } from "@renderer/libs/confetti";
 import type { LibraryEntry } from "@shared/library-models";
-import { Download } from "lucide-solid";
+import { Download, SplineIcon } from "lucide-solid";
 import { BsBookmarkPlus } from "solid-icons/bs";
 import { HiOutlineXCircle } from "solid-icons/hi";
-import { TbDownload } from "solid-icons/tb";
-import { createSignal, type Component } from "solid-js";
+import { createEffect, createSignal, type Component } from "solid-js";
 
 const TaskbarLibrary: Component<{ diddls: LibraryEntry[] }> = (props) => {
   const screenWidth = useScreenWidth();
   const [open, setOpen] = createSignal(false);
+
+  const onDownloadImages = async (e: MouseEvent & { target: HTMLButtonElement }) => {
+    const diddlIds = libraryStore.selectedIndices.map((index) => props.diddls[index]?.id || "");
+    const result = await window.api.downloadImages(diddlIds);
+
+    if (!result) return;
+
+    confettiStars(e);
+    toaster.show((props) => (
+      <Toast toastId={props.toastId}>
+        <ToastContent>
+          <ToastTitle>Toast</ToastTitle>
+        </ToastContent>
+        <ToastProgress />
+      </Toast>
+    ));
+  };
+  const { isLoading: downloadImagesIsLoading, handler: downloadImagesHandler } =
+    useAsyncCallback(onDownloadImages);
+
+  createEffect(() => console.log(downloadImagesIsLoading()));
 
   return (
     <div
@@ -60,9 +84,13 @@ const TaskbarLibrary: Component<{ diddls: LibraryEntry[] }> = (props) => {
       <div class="h-[24px] w-px bg-gray-200" />
       <button
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
-        onClick={async () => {}}
+        onClick={downloadImagesHandler}
       >
-        <Download size={16} />
+        {downloadImagesIsLoading() ? (
+          <SplineIcon size={16} class="animate-spin" />
+        ) : (
+          <Download size={16} />
+        )}
         <span>Download</span>
       </button>
     </div>

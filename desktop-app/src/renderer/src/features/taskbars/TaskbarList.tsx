@@ -3,11 +3,12 @@ import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { LibraryEntry } from "@shared/library-models";
 import { useParams } from "@solidjs/router";
-import { Plus, Minus, Download } from "lucide-solid";
+import { Plus, Minus, Download, SplineIcon } from "lucide-solid";
 import { HiOutlineXCircle } from "solid-icons/hi";
-import { Component, createSignal } from "solid-js";
+import { Component, createEffect, createSignal } from "solid-js";
 import { addListItems, updateListItems } from "../lists/listMethods";
 import AddToListPopover from "../lists/components/AddToListPopover";
+import useAsyncCallback from "@renderer/hooks/useAsyncCallback";
 
 const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
   const screenWidth = useScreenWidth();
@@ -15,6 +16,15 @@ const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
   const params = useParams();
   const selectedIndices = () => libraryStore.selectedIndices;
 
+  const onDownloadImages = async () => {
+    const diddlIds = libraryStore.selectedIndices.map((index) => props.diddls[index]?.id || "");
+    await window.api.downloadImages(diddlIds);
+  };
+  const { isLoading: downloadImagesIsLoading, handler: downloadImagesHandler } =
+    useAsyncCallback(onDownloadImages);
+
+  createEffect(() => console.log(downloadImagesIsLoading()));
+  console.log(downloadImagesIsLoading());
   return (
     <div
       class={cn(
@@ -128,9 +138,13 @@ const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
       </button>
       <button
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
-        onClick={async () => {}}
+        onClick={downloadImagesHandler}
       >
-        <Download size={16} />
+        {downloadImagesIsLoading() ? (
+          <SplineIcon size={16} class="animate-spin" />
+        ) : (
+          <Download size={16} />
+        )}
         <span>Download</span>
       </button>
     </div>

@@ -33,6 +33,7 @@ const DiddlCardList: Component<{
       >
         <For each={props.diddls}>
           {(diddl, index) => {
+            // if (index() > 0) return;
             const ratio =
               diddl.imageWidth && diddl.imageHeight ? diddl.imageWidth / diddl.imageHeight : null;
             return (

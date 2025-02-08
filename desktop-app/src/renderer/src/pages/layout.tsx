@@ -17,7 +17,6 @@ import { BiRegularHomeHeart } from "solid-icons/bi";
 import { cn } from "@renderer/libs/cn";
 import SettingsDialog from "./components/SettingsDialog";
 import ListLinks from "./components/ListLinks";
-import { AnimatedButton } from "@renderer/components/AnimatedButton";
 import { Button } from "@renderer/components/ui/button";
 
 const getParams = (params: { type?: string; from?: number; to?: number }) => {

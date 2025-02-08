@@ -35,7 +35,7 @@ const HomePage = () => {
         class={cn("relative grow px-4 pt-10 pb-4 flex flex-wrap gap-2 content-start")}
         style={{ width: `${screenWidth() - 256 - 32}px` }}
       >
-        <DiddlCardList diddls={filteredDiddls()} />
+        {/* <DiddlCardList diddls={filteredDiddls()} /> */}
       </div>
       <Show when={isSelectMode()}>
         <TaskbarLibrary diddls={filteredDiddls()} />

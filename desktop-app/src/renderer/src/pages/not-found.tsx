@@ -1,5 +1,5 @@
 import { Image, ImageFallback, ImageRoot } from "@renderer/components/ui/image";
-import diddlTongue from "../assets/diddl-tongue.gif";
+import diddlTongue from "../../assets/diddl-tongue.gif";
 import { Skeleton } from "@renderer/components/ui/skeleton";
 
 const NotFoundPage = () => {

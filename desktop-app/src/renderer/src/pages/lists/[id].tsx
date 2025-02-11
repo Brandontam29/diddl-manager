@@ -1,7 +1,7 @@
 import { libraryStore } from "@renderer/features/library";
 
 import { createEffect, createMemo, Show } from "solid-js";
-import DiddlCardList from "@renderer/components/DIddlCardList";
+import DiddlCardList from "@renderer/components/DiddlCardList";
 import { fetchListItems, listStore } from "@renderer/features/lists";
 import { useParams, useSearchParams } from "@solidjs/router";
 

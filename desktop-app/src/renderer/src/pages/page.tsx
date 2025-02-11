@@ -3,7 +3,7 @@ import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { useSearchParams } from "@solidjs/router";
 import { createMemo, Show } from "solid-js";
-import DiddlCardList from "@renderer/components/DIddlCardList";
+import DiddlCardList from "@renderer/components/DiddlCardList";
 import TaskbarLibrary from "@renderer/features/taskbars/TaskbarLibrary";
 
 const HomePage = () => {

@@ -6,6 +6,7 @@ import registerMainHandlers from "./registerMainHandlers";
 import { logAllPaths } from "./pathing";
 import { setupLibrary } from "./library";
 import { setupListTracker } from "./list";
+import isDev from "./utils/isDev";
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -17,6 +18,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.mjs"),
       sandbox: false,
+      webSecurity: isDev() ? false : true,
     },
   });
 

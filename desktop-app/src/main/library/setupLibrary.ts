@@ -17,7 +17,7 @@ const createDefaultLibrary = async () => {
   const libraryWithFullImagePaths = library.map((entry) => ({
     ...entry,
     imagePath: isDev()
-      ? path.join(__dirname, "..", "renderer", "assets", entry.imagePath)
+      ? path.join(__dirname, "..", "..", "resources", "diddl-images", entry.imagePath)
       : path.join(app.getAppPath(), "resources", "diddl-images", entry.imagePath),
   }));
 

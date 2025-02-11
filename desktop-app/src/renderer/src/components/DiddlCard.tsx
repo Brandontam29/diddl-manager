@@ -1,8 +1,7 @@
 import { cn } from "@renderer/libs/cn";
 import type { LibraryEntry } from "@shared";
 import { type Component } from "solid-js";
-// import.meta.glob("/src/assets/diddl-images/**");
-// file:///C:/Users/brand/AppData/Local/Programs/diddl-manager/resources/diddl-images/006_1-50/NBA60003.jpg
+
 const DiddlCard: Component<{ diddl: LibraryEntry; className?: string }> = (props) => {
   const baseUrl = new URL("", import.meta.url);
   const finalUrl = new URL(props.diddl.imagePath, baseUrl.origin);

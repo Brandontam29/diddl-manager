@@ -5,13 +5,24 @@ import isDev from "../utils/isDev";
 import logAllPaths from "./logAllPaths";
 
 const DEV_DIRECTORY = "diddl-manager-dev";
+
+/**
+ * RAW
+ */
+export const rawGet__dirname = () => __dirname;
+// /home/<username>/code/diddl-manager/desktop-app/out/main
+export const rawGetAppData = () => app.getAppPath(); // C:\Users\<username>\AppData\Roaming
+export const rawGetPathAppData = () => app.getPath("appData"); // C:\Users\<username>\AppData\Roaming
+export const rawGetPathUserData = () => app.getPath("userData"); // C:\Users\<username>\AppData\Roaming\diddl-manager
+export const rawGetPathDownloads = () => app.getPath("downloads"); // C:\Users\<username>\AppData\Roaming\diddl-manager
+
 /**
  * BASE
  */
 export const appPath = () =>
   isDev() ? path.join(app.getPath("appData"), DEV_DIRECTORY) : app.getPath("userData");
 
-export const relativeDiddlImagesDirectory = () => path.join("assets", "diddl-images");
+export const relativeDiddlImagesDirectory = () => path.join("src", "assets", "diddl-images");
 export const rendererDirectory = () => path.join(app.getAppPath(), "src", "renderer");
 
 export const libraryPath = () => path.join(appPath(), "library.json");

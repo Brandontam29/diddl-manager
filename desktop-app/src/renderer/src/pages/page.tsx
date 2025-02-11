@@ -8,7 +8,7 @@ import TaskbarLibrary from "@renderer/features/taskbars/TaskbarLibrary";
 
 const HomePage = () => {
   const screenWidth = useScreenWidth();
-  const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams<{ from: string; to: string; type: string }>();
 
   const filteredDiddls = createMemo(() => {
     let diddls = libraryStore.libraryState;
@@ -28,7 +28,7 @@ const HomePage = () => {
   });
 
   const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
-
+  console.log(filteredDiddls());
   return (
     <>
       <div

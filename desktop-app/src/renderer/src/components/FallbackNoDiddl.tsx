@@ -1,5 +1,5 @@
 import { Image, ImageFallback, ImageRoot } from "@renderer/components/ui/image";
-import diddlSad from "../../../renderer/assets/diddl-sad.gif";
+import diddlSad from "../assets/diddl-sad.gif";
 import { Skeleton } from "@renderer/components/ui/skeleton";
 const FallbackNoDiddl = () => {
   return (

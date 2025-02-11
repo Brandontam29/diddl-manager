@@ -1,15 +1,11 @@
 import { readFile, rename, writeFile } from "fs/promises";
 import { libraryEntrySchema } from "../../shared/library-models";
-import {
-  appPath,
-  defaultLibraryPath,
-  libraryPath,
-  libraryMapPath,
-  relativeDiddlImagesDirectory,
-} from "../pathing";
+import { appPath, defaultLibraryPath, libraryPath, libraryMapPath } from "../pathing";
 import isExists from "../utils/isExists";
 import path from "path";
 import { logging } from "../logging";
+import isDev from "../utils/isDev";
+import { app } from "electron";
 
 const libraryBackupPath = () => path.join(appPath(), `${new Date().toISOString()}-library.json`);
 
@@ -20,7 +16,9 @@ const createDefaultLibrary = async () => {
 
   const libraryWithFullImagePaths = library.map((entry) => ({
     ...entry,
-    imagePath: path.join(relativeDiddlImagesDirectory(), entry.imagePath),
+    imagePath: isDev()
+      ? path.join(__dirname, "..", "renderer", "assets", entry.imagePath)
+      : path.join(app.getAppPath(), "resources", "diddl-images", entry.imagePath),
   }));
 
   writeFile(libraryPath(), JSON.stringify(libraryWithFullImagePaths));

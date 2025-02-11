@@ -13,8 +13,7 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false,
-      webSecurity: false
+      sandbox: false
     }
   })
 
@@ -34,29 +33,6 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
-
-  const appDataPath = app.getPath('userData')
-
-  console.log(appDataPath)
-  const cspDirectives = [
-    "default-src 'self'",
-    "script-src 'self'",
-    "style-src 'self' 'unsafe-inline'",
-    `img-src 'self' 'file:///C:/Users/brand/AppData/Local/Programs/quantum-forge-simulators/*'`,
-    "font-src 'self'",
-    "connect-src 'self'",
-    "media-src 'self'",
-    "object-src 'none'"
-  ]
-
-  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Content-Security-Policy': [cspDirectives.join('; ')]
-      }
-    })
-  })
 }
 
 // This method will be called when Electron has finished

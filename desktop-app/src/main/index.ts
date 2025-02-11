@@ -1,5 +1,5 @@
 import { app, shell, BrowserWindow } from "electron";
-import { join } from "path";
+import path from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import registerMainHandlers from "./registerMainHandlers";
@@ -8,7 +8,6 @@ import { setupLibrary } from "./library";
 import { setupListTracker } from "./list";
 
 function createWindow() {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -16,7 +15,7 @@ function createWindow() {
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),
     webPreferences: {
-      preload: join(__dirname, "../preload/index.mjs"),
+      preload: path.join(__dirname, "../preload/index.mjs"),
       sandbox: false,
     },
   });
@@ -35,7 +34,7 @@ function createWindow() {
   if (is.dev && process.env.ELECTRON_RENDERER_URL) {
     mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
-    mainWindow.loadFile(join(__dirname, "../renderer/index.html?from=0&to=100"));
+    mainWindow.loadFile(path.join(__dirname, "..", "renderer", "index.html"));
   }
 
   return mainWindow;
@@ -46,7 +45,7 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId("com.electron");
+  electronApp.setAppUserModelId("com.manager.diddl");
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -60,7 +59,7 @@ app.whenReady().then(async () => {
    */
 
   logAllPaths();
-  await Promise.all([, setupLibrary(), setupListTracker()]);
+  await Promise.all([setupLibrary(), setupListTracker()]);
 
   const window = createWindow();
   registerMainHandlers(window);

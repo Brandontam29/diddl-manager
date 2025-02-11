@@ -17,7 +17,7 @@ import { BiRegularHomeHeart } from "solid-icons/bi";
 import { cn } from "@renderer/libs/cn";
 import SettingsDialog from "./components/SettingsDialog";
 import ListLinks from "./components/ListLinks";
-import { Button } from "@renderer/components/ui/button";
+import { BookMarkedIcon } from "lucide-solid";
 
 const getParams = (params: { type?: string; from?: number; to?: number }) => {
   const paramsStrings = Object.fromEntries(
@@ -65,25 +65,7 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
         {
           label: (
             <>
-              <div class="pb-0.5">
-                <svg
-                  fill="currentColor"
-                  stroke-width="0"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  height="1em"
-                  width="1em"
-                  style="overflow: visible; color: currentcolor;"
-                  class="h-8 w-8 "
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M6 8V1h1v6.117L8.743 6.07a.5.5 0 0 1 .514 0L11 7.117V1h1v7a.5.5 0 0 1-.757.429L9 7.083 6.757 8.43A.5.5 0 0 1 6 8z"
-                  ></path>
-                  <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"></path>
-                  <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"></path>
-                </svg>
-              </div>
+              <BookMarkedIcon />
               <span>My Collection </span>
             </>
           ),
@@ -262,12 +244,7 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
           "scrollbar-thumb-pink-300 scrollbar-track-transparent scrollbar-thin",
         )}
       >
-        <Button variant={"pink"} class="flex">
-          Click Me
-        </Button>
-        {/* <Button variant={"pink"} class="flex">
-          Click Normal
-        </Button> */}
+        <div></div>
         <For each={LINKS}>
           {(group) => (
             <div class="pt-3">

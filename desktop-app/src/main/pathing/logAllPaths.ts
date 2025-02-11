@@ -1,4 +1,9 @@
 import {
+  rawGet__dirname,
+  rawGetAppData,
+  rawGetPathAppData,
+  rawGetPathUserData,
+  rawGetPathDownloads,
   appPath,
   relativeDiddlImagesDirectory,
   rendererDirectory,
@@ -21,6 +26,11 @@ function logFunctionResult(func: (...args: any) => string, ...args: any) {
 
 const logAllPaths = () => {
   const pathFunctions = [
+    rawGet__dirname,
+    rawGetAppData,
+    rawGetPathAppData,
+    rawGetPathUserData,
+    rawGetPathDownloads,
     appPath,
     relativeDiddlImagesDirectory,
     rendererDirectory,

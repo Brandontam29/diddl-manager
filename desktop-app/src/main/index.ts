@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow } from "electron";
 import path from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
-import icon from "../../resources/icon.png?asset";
+import icon from "../../resources/diddl-manager-icon-square-256.ico?asset";
 import registerMainHandlers from "./registerMainHandlers";
 import { logAllPaths } from "./pathing";
 import { setupLibrary } from "./library";
@@ -14,7 +14,7 @@ function createWindow() {
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === "linux" ? { icon } : {}),
+    icon,
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.mjs"),
       sandbox: false,

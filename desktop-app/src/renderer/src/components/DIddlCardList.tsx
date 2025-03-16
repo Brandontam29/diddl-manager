@@ -44,7 +44,7 @@ const DiddlCardList: Component<{
                   width: ratio ? `${uiStore.cardHeight * ratio}px` : undefined,
                 }}
               >
-                <DiddlCard className={cn("w-full h-full")} diddl={diddl} />
+                <DiddlCard class={cn("w-full h-full")} diddl={diddl} />
 
                 <div // full overlay
                   class={cn(

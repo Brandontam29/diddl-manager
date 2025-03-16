@@ -11,12 +11,7 @@ const DiddlCard: Component<{ diddl: LibraryEntry; className?: string }> = (props
   return (
     <div class={cn(props.className)}>
       <div class="h-[calc(100%-20px)] w-full border-t border-x border-black/20 rounded-t">
-        <ImageRoot class="h-full w-full">
-          <Image loading="lazy" src={finalUrl.href} />
-          <ImageFallback>
-            <ImageOffIcon />
-          </ImageFallback>
-        </ImageRoot>
+        <Image loading="lazy" src={finalUrl.href} />
       </div>
       <div class="text-purple-950 bg-purple-200 h-5 w-full grid place-content-center rounded-b">
         {props.diddl.name}

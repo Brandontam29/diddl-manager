@@ -244,7 +244,7 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
           "scrollbar-thumb-pink-300 scrollbar-track-transparent scrollbar-thin",
         )}
       >
-        <div></div>
+        <div />
         <For each={LINKS}>
           {(group) => (
             <div class="pt-3">

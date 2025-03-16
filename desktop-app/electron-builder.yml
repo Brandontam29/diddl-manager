@@ -38,6 +38,7 @@ linux:
 appImage:
   artifactName: ${name}-${version}-setup.${ext}
 npmRebuild: false
-# publish:
-#   provider: generic
-#   url: https://example.com/auto-updates
+publish:
+  provider: github
+  owner: Brandontam29
+  repo: https://github.com/Brandontam29/diddl-manager/

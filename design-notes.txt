@@ -1,0 +1,8 @@
+diddl
+diddl_list
+diddl_images
+
+
+
+
+images_path

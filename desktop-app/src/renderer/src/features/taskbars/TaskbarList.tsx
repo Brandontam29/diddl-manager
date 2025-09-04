@@ -3,8 +3,7 @@ import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { LibraryEntry } from "@shared/library-models";
 import { useParams } from "@solidjs/router";
-import { Plus, Minus, Download, SplineIcon } from "lucide-solid";
-import { HiOutlineXCircle } from "solid-icons/hi";
+import { Plus, Minus, Download, SplineIcon, CircleX } from "lucide-solid";
 import { Component, createEffect, createSignal } from "solid-js";
 import { addListItems, updateListItems } from "../lists/listMethods";
 import AddToListPopover from "../lists/components/AddToListPopover";
@@ -37,9 +36,9 @@ const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
         onClick={async () => setLibraryStore("selectedIndices", [])}
       >
-        <HiOutlineXCircle /> <span>{libraryStore.selectedIndices.length} Selected</span>
+        <CircleX size={15} /> <span>{libraryStore.selectedIndices.length} Selected</span>
       </button>
-      <div class="h-[24px] w-px bg-gray-200" />
+      <div class="h-[24px] w-0.5 bg-gray-200" />
       <AddToListPopover
         open={open()}
         onOpenChange={setOpen}
@@ -52,7 +51,7 @@ const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
           setOpen(false);
         }}
       />
-      <div class="h-[24px] w-px bg-gray-200" />
+      <div class="h-[24px] w-0.5 bg-gray-200" />
       <button
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
         onClick={() => {
@@ -66,7 +65,7 @@ const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
         <Plus />
         <span>Add 1</span>
       </button>
-      <div class="h-[24px] w-px bg-gray-200" />
+      <div class="h-[24px] w-0.5 bg-gray-200" />
       <button
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
         onClick={() => {
@@ -80,7 +79,7 @@ const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
         <Minus />
         <span>Remove 1</span>
       </button>
-      <div class="h-[24px] w-px bg-gray-200" />{" "}
+      <div class="h-[24px] w-0.5 bg-gray-200" />{" "}
       <button
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
         onClick={() => {
@@ -91,10 +90,9 @@ const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
           );
         }}
       >
-        <Plus />
-        <span>Mark as Complete</span>
+        <span>Set as Complete</span>
       </button>
-      <div class="h-[24px] w-px bg-gray-200" />{" "}
+      <div class="h-[24px] w-0.5 bg-gray-200" />{" "}
       <button
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
         onClick={() => {
@@ -105,10 +103,9 @@ const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
           );
         }}
       >
-        <Minus />
-        <span>Mark as Incomplete</span>
+        <span>Set as Incomplete</span>
       </button>
-      <div class="h-[24px] w-px bg-gray-200" />{" "}
+      <div class="h-[24px] w-0.5 bg-gray-200" />{" "}
       <button
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
         onClick={() => {
@@ -119,10 +116,9 @@ const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
           );
         }}
       >
-        <Plus />
-        <span>Mark as Mint</span>
+        <span>Set as Mint</span>
       </button>
-      <div class="h-[24px] w-px bg-gray-200" />{" "}
+      <div class="h-[24px] w-0.5 bg-gray-200" />{" "}
       <button
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
         onClick={() => {
@@ -133,8 +129,7 @@ const TaskbarList: Component<{ diddls: LibraryEntry[] }> = (props) => {
           );
         }}
       >
-        <Minus />
-        <span>Mark as Damaged</span>
+        <span>Set as Damaged</span>
       </button>
       <button
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"

@@ -8,7 +8,7 @@ import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { confettiStars } from "@renderer/libs/confetti";
 import type { LibraryEntry } from "@shared/library-models";
-import { Download, SplineIcon } from "lucide-solid";
+import { CircleX, Download, SplineIcon } from "lucide-solid";
 import { BsBookmarkPlus } from "solid-icons/bs";
 import { HiOutlineXCircle } from "solid-icons/hi";
 import { createEffect, createSignal, type Component } from "solid-js";
@@ -50,7 +50,7 @@ const TaskbarLibrary: Component<{ diddls: LibraryEntry[] }> = (props) => {
         class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
         onClick={async () => setLibraryStore("selectedIndices", [])}
       >
-        <HiOutlineXCircle /> <span>{libraryStore.selectedIndices.length} Selected</span>
+        <CircleX size={15} /> <span>{libraryStore.selectedIndices.length} Selected</span>
       </button>
       <div class="h-[24px] w-px bg-gray-200" />
       <button

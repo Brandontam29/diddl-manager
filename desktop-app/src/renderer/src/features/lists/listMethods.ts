@@ -1,5 +1,7 @@
 import type { ListItem } from "@shared";
 import { listStore, setListStore } from "./createListsStore";
+import { produce } from "solid-js/store";
+import { batch } from "solid-js";
 
 export const fetchListItems = async (listId: string) => {
   const listItems = await window.api.getListItems(listId);
@@ -51,20 +53,25 @@ export const updateListItems = async (
 ) => {
   if (!listStore.listItems) return;
 
-  const newListItems = listStore.listItems.map((listItem) => {
-    const item = { ...listItem };
-    const itemIdIndex = itemIds.indexOf(item.id);
-    if (itemIdIndex === -1) return item; // Item not in itemIds, no changes
+  const newListItems = listStore.listItems
+    .map((listItem) => {
+      const item = { ...listItem };
+      const itemIdIndex = itemIds.indexOf(item.id);
+      if (itemIdIndex === -1) return item; // Item not in itemIds, no changes
 
-    if (action.addCount !== undefined) item.count += action.addCount;
-    if (action.isDamaged !== undefined) item.isDamaged = action.isDamaged;
-    if (action.isIncomplete !== undefined) item.isIncomplete = action.isIncomplete;
+      if (action.addCount !== undefined) item.count += action.addCount;
 
-    // Remove the processed item from itemIds
-    itemIds.splice(itemIdIndex, 1);
+      if (item.count <= 0) return null;
 
-    return item;
-  });
+      if (action.isDamaged !== undefined) item.isDamaged = action.isDamaged;
+      if (action.isIncomplete !== undefined) item.isIncomplete = action.isIncomplete;
+
+      // Remove the processed item from itemIds
+      itemIds.splice(itemIdIndex, 1);
+
+      return item;
+    })
+    .filter((item) => item !== null);
 
   setListStore("listItems", newListItems);
   window.api.setList(listId, newListItems);

@@ -1,12 +1,13 @@
-import { app, shell, BrowserWindow } from "electron";
+import { app, shell, BrowserWindow, protocol } from "electron";
 import path from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import registerMainHandlers from "./registerMainHandlers";
-import { logAllPaths } from "./pathing";
+import { appPath, logAllPaths } from "./pathing";
 import { setupLibrary } from "./library";
 import { setupListTracker } from "./list";
 import isDev from "./utils/isDev";
+import setupDevDiddlImages from "./library/setupDiddlImages";
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -61,7 +62,8 @@ app.whenReady().then(async () => {
    */
 
   logAllPaths();
-  await Promise.all([setupLibrary(), setupListTracker()]);
+
+  await Promise.all([setupLibrary(), setupListTracker(), setupDevDiddlImages()]);
 
   const window = createWindow();
   registerMainHandlers(window);
@@ -70,6 +72,20 @@ app.whenReady().then(async () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+
+  protocol.registerFileProtocol("app", (request, callback) => {
+    // 1. Get the requested file path from the URL
+    // e.g., for "app://images/photo.png", url will be "images/photo.png"
+    const url = request.url.slice("app://".length);
+
+    // 2. Construct the absolute path to the image in your AppData
+    const filePath = path.join(appPath(), url);
+
+    // 3. Pass the file path back to Electron
+
+    // console.log("image:", filePath);
+    callback({ path: filePath });
   });
 });
 

@@ -4,8 +4,6 @@ import { appPath, defaultLibraryPath, libraryPath, libraryMapPath } from "../pat
 import isExists from "../utils/isExists";
 import path from "path";
 import { logging } from "../logging";
-import isDev from "../utils/isDev";
-import { app } from "electron";
 
 const libraryBackupPath = () => path.join(appPath(), `${new Date().toISOString()}-library.json`);
 
@@ -14,15 +12,13 @@ const createDefaultLibrary = async () => {
 
   const library = JSON.parse(rawLibrary);
 
-  const libraryWithFullImagePaths = library.map((entry) => ({
+  const libraryWithImagePath = library.map((entry) => ({
     ...entry,
-    imagePath: isDev()
-      ? path.join(__dirname, "..", "..", "resources", "diddl-images", entry.imagePath)
-      : path.join(app.getAppPath(), "resources", "diddl-images", entry.imagePath),
+    imagePath: `app://diddl-images/${entry.imagePath}`,
   }));
 
-  writeFile(libraryPath(), JSON.stringify(libraryWithFullImagePaths));
-  setupLibraryMap(libraryWithFullImagePaths);
+  writeFile(libraryPath(), JSON.stringify(libraryWithImagePath));
+  setupLibraryMap(libraryWithImagePath);
 };
 
 const setupLibrary = async () => {

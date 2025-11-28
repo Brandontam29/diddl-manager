@@ -19,13 +19,13 @@ export const projectRoot = () => {
 
     return dir;
 };
-export const libraryPath = () => path.join(projectRoot(), "json-files", "library.json");
+export const diddlsPath = () => path.join(projectRoot(), "json-files", "diddls.json");
 
 export const libaryMapPath = () =>
     path.join(projectRoot(), "json-files", "library-map.json");
 
 export const libraryItemTypeMapPath = () =>
-    path.join(projectRoot(), "json-files", "keys-map.json");
+    path.join(projectRoot(), "json-files", "key-type-map.json");
 
 export const structurePath = () =>
     path.join(projectRoot(), "json-files", "structure.json");

@@ -1,30 +1,20 @@
-import type { ListItem } from "@shared";
+import type { AddListItem } from "@shared";
 import { listStore, setListStore } from "./createListsStore";
-import { produce } from "solid-js/store";
-import { batch } from "solid-js";
 
-export const fetchListItems = async (listId: string) => {
-  const listItems = await window.api.getListItems(listId);
+export const fetchListItems = async (listId: number) => {
+  try {
+    const listItems = await window.api.getListItems(listId);
 
-  setListStore("listItems", listItems);
+    if (listItems === null) return;
+
+    setListStore("listItems", listItems);
+  } catch (e) {
+    console.error(e);
+  }
 };
 
-export const setListItems = (listId: string, listItems: ListItem[]) => {
-  setListStore("listItems", listItems);
-  window.api.setList(listId, listItems);
-};
-
-export const addListItems = async (
-  listId: string,
-  diddlIds: string[],
-  state?: Partial<Omit<ListItem, "id">>,
-) => {
-  const defaultState = { isDamaged: false, isIncomplete: false, count: 1 } satisfies Omit<
-    ListItem,
-    "id"
-  >;
-
-  const listItemsToAdd = diddlIds.map((id) => ({ id: id, ...defaultState, ...state }));
+export const addListItems = async (listId: number, diddlIds: number[], state?: AddListItem[]) => {
+  const listItemsToAdd = diddlIds.map((id) => ({ diddlId: id, ...state }));
 
   const completeListItems = await window.api.addListItems(listId, listItemsToAdd);
 
@@ -33,46 +23,26 @@ export const addListItems = async (
   }
 };
 
-export const removeListItems = async (listId: string, idsToRemove: string[]) => {
+export const removeListItems = async (listId: number, idsToRemove: number[]) => {
   if (listStore.listItems === undefined) return; //toast
 
-  const listItems = listStore.listItems.filter((diddl) => !idsToRemove.includes(diddl.id));
-
-  setListStore("listItems", listItems);
-  window.api.setList(listId, listItems);
+  return await window.api.removeListItems(listId, idsToRemove);
 };
 
 export const updateListItems = async (
-  listId: string,
-  itemIds: string[],
+  listId: number,
+  listItemIds: number[],
   action: {
-    addCount?: number;
+    addQuantity?: number;
     isDamaged?: boolean;
     isIncomplete?: boolean;
   },
 ) => {
-  if (!listStore.listItems) return;
+  const result = await window.api.updateListItems(listId, listItemIds, action);
 
-  const newListItems = listStore.listItems
-    .map((listItem) => {
-      const item = { ...listItem };
-      const itemIdIndex = itemIds.indexOf(item.id);
-      if (itemIdIndex === -1) return item; // Item not in itemIds, no changes
+  if (result.success) {
+    fetchListItems(listId);
+  }
 
-      if (action.addCount !== undefined) item.count += action.addCount;
-
-      if (item.count <= 0) return null;
-
-      if (action.isDamaged !== undefined) item.isDamaged = action.isDamaged;
-      if (action.isIncomplete !== undefined) item.isIncomplete = action.isIncomplete;
-
-      // Remove the processed item from itemIds
-      itemIds.splice(itemIdIndex, 1);
-
-      return item;
-    })
-    .filter((item) => item !== null);
-
-  setListStore("listItems", newListItems);
-  window.api.setList(listId, newListItems);
+  return result;
 };

@@ -10,8 +10,8 @@ files:
   - "!{.env,.env.*,.npmrc,pnpm-lock.yaml}"
   - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
 extraResources:
-  - from: /resources/diddl-images.zip
-    to: diddl-images.zip
+  - from: ./resources/diddl-images.zip
+    to: ./diddl-images.zip
 win:
   executableName: diddl-manager
 nsis:

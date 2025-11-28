@@ -8,7 +8,7 @@ const setupDiddlImages = async () => {
   const outputFolder = diddlImagesPath();
 
   if (await isExists(outputFolder)) {
-    logging.info("diddl-images directory already exists. Aborting setup diddl images");
+    logging.info("diddl-images directory already exists. No need to setup images");
     return;
   }
   try {

@@ -1,20 +1,19 @@
 import { app, shell, BrowserWindow, protocol } from "electron";
 import path from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
-import icon from "../../resources/icon.png?asset";
+import icon from "../../resources/icon.jpg?asset";
 import registerMainHandlers from "./registerMainHandlers";
 import { appPath, logAllPaths } from "./pathing";
-import { setupLibrary } from "./library";
-import { setupListTracker } from "./list";
 import isDev from "./utils/isDev";
-import setupDevDiddlImages from "./library/setupDiddlImages";
+import setupDiddlImages from "./diddl/setupDiddlImages";
+import { initDb, migrateToLatest } from "./database";
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
-    autoHideMenuBar: true,
+    // autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.mjs"),
@@ -60,13 +59,15 @@ app.whenReady().then(async () => {
   /**
    * MY STUFF
    */
-
   logAllPaths();
+  const db = await initDb();
 
-  await Promise.all([setupLibrary(), setupListTracker(), setupDevDiddlImages()]);
+  if (db) await migrateToLatest(db);
+
+  await Promise.all([setupDiddlImages()]);
 
   const window = createWindow();
-  registerMainHandlers(window);
+  if (db) registerMainHandlers(window, db);
 
   app.on("activate", () => {
     // On macOS it's common to re-create a window in the app when the

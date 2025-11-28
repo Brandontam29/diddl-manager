@@ -8,7 +8,7 @@ import CreateListDialog from "@renderer/features/lists/components/CreateListDial
 const AddToListPopover: Component<{
   open: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onListClick: (listId: string) => void;
+  onListClick: (listId: number) => void;
 }> = (props) => {
   return (
     <Popover>
@@ -18,21 +18,17 @@ const AddToListPopover: Component<{
       </PopoverTrigger>
 
       <PopoverContent class="min-w-96">
-        <CreateListDialog callback={(trackerListItem) => props.onListClick(trackerListItem.id)}>
+        <CreateListDialog callback={(list) => props.onListClick(list.id)}>
           <Button as="div" variant="pink">
             Create New List
           </Button>
         </CreateListDialog>
-        <Show when={listStore.trackerListItems}>
+        <Show when={listStore.lists}>
           <div class="mt-2 grid grid-cols-2 gap-2">
-            <For each={listStore.trackerListItems}>
-              {(trackerListItem) => (
-                <Button
-                  variant="outline"
-                  onClick={() => props.onListClick(trackerListItem.id)}
-                  class="block"
-                >
-                  {trackerListItem.name}
+            <For each={listStore.lists}>
+              {(list) => (
+                <Button variant="outline" onClick={() => props.onListClick(list.id)} class="block">
+                  {list.name}
                 </Button>
               )}
             </For>

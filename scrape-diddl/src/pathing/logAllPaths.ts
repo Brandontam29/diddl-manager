@@ -1,6 +1,5 @@
 import {
     projectRoot,
-    libraryPath,
     libaryMapPath,
     libraryItemTypeMapPath,
     structurePath,
@@ -16,7 +15,6 @@ function logFunctionResult(func: (...args: any) => string, ...args: any) {
 export const logAllPaths = () => {
     const pathFunctions = [
         projectRoot,
-        libraryPath,
         libaryMapPath,
         libraryItemTypeMapPath,
         structurePath,

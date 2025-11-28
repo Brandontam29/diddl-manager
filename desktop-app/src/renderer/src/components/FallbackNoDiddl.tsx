@@ -11,10 +11,8 @@ const FallbackNoDiddl = () => {
         </ImageFallback>
       </ImageRoot>
 
-      <h1 class="text-lg font-semibold">Collection is empty!</h1>
-      <p>
-        You can add some by clicking on the top left corner of Diddl, then click "Add to Collection"
-      </p>
+      <h1 class="text-lg font-semibold">List is empty!</h1>
+      <p>You can add some by clicking on the top left corner of Diddl, then click "Add to List"</p>
     </div>
   );
 };

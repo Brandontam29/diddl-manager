@@ -1,21 +1,19 @@
 import { ipcMain } from "electron";
-import { readFile, rename, writeFile } from "fs/promises";
+import { rename } from "fs/promises";
 
-import getFileContent from "./getFileContent";
 import AdmZip from "adm-zip";
 import path from "path";
-import { idsToIndexes } from "../library";
-import { defaultZipPath, downloadsFolder, libraryPath, rendererDirectory } from "../pathing";
-import { LibraryEntry } from "../../shared";
+import { defaultZipPath, downloadsFolder } from "../pathing";
 import { log } from "../logging";
 import isExists from "../utils/isExists";
+import { MyDatabase } from "../database";
 
 export const GET_FILE_CONTENT = "get-file-content";
 export const EDIT_FILE_CONTENT = "edit-file-content";
 export const ZIP_AND_DOWNLOAD = "zip-and-download";
 
 const zipFiles = async (filePaths: string[], outputZipPath: string) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<boolean>((resolve, reject) => {
     const zip = new AdmZip();
 
     filePaths.forEach(async (filePath) => {
@@ -36,30 +34,29 @@ const zipFiles = async (filePaths: string[], outputZipPath: string) => {
   });
 };
 
-const fileSystemMainHandlers = () => {
-  ipcMain.handle(GET_FILE_CONTENT, (_event, path: string) => {
-    return getFileContent(path);
-  });
+const fileSystemMainHandlers = (db: MyDatabase) => {
+  // ipcMain.handle(GET_FILE_CONTENT, (_event, path: string) => {
+  //   return getFileContent(path);
+  // });
 
-  ipcMain.handle(EDIT_FILE_CONTENT, (_event, path: string, content: string) => {
-    writeFile(path, content);
-  });
+  // ipcMain.handle(EDIT_FILE_CONTENT, (_event, path: string, content: string) => {
+  //   writeFile(path, content);
+  // });
 
-  ipcMain.handle(ZIP_AND_DOWNLOAD, async (_event, diddlIds: string[]) => {
-    const rawLibrary = await readFile(libraryPath(), "utf8");
-
-    const libraryEntries = JSON.parse(rawLibrary) as LibraryEntry[];
-
-    const imagePaths = idsToIndexes(diddlIds)
-      .filter((index) => index !== undefined)
-      .map((index) => path.join(rendererDirectory(), libraryEntries[index].imagePath));
+  ipcMain.handle(ZIP_AND_DOWNLOAD, async (_event, diddlIds: number[]) => {
+    const imagePaths = await db
+      .selectFrom("diddl")
+      .select(["diddl.imagePath"])
+      .where("diddl.id", "in", diddlIds)
+      .execute();
 
     const zipFilename = `diddl-images-${imagePaths.length}.zip`;
     const zipFilePath = defaultZipPath(zipFilename);
 
-    console.log(imagePaths);
-
-    const result = await zipFiles(imagePaths, zipFilePath);
+    const result = await zipFiles(
+      imagePaths.map((imgPath) => imgPath.imagePath),
+      zipFilePath,
+    );
 
     await rename(zipFilePath, path.join(downloadsFolder(), zipFilename));
 

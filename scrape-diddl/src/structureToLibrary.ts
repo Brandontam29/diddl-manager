@@ -1,19 +1,25 @@
 import fs from "fs";
 import path from "path";
-import { nanoid } from "nanoid";
 import sizeOf from "image-size";
 import writeJsonToFile from "./utils/writeJsonToFile";
+import {
+    diddlsPath,
+    libraryItemTypeMapPath,
+    projectRoot,
+    structurePath,
+} from "./pathing";
+import fixDiddlsUnicode from "./fixLibraryUnicode";
 // Synchronous method
 try {
-    const keys = JSON.parse(fs.readFileSync("keys-map.json", "utf8"));
+    const keys = JSON.parse(fs.readFileSync(libraryItemTypeMapPath(), "utf8"));
 
-    const rawData = fs.readFileSync("structure.json", "utf8");
+    const rawData = fs.readFileSync(structurePath(), "utf8");
     const jsonData = JSON.parse(rawData) as Record<string, string[]>;
     console.log(keys);
 
-    const idIndexMap: Record<string, number> = {};
+    // const idIndexMap: Record<string, number> = {};
 
-    const pictureData = Object.keys(jsonData)
+    const diddls = Object.keys(jsonData)
         .map((directoryName) => {
             const value = jsonData[directoryName];
 
@@ -25,9 +31,7 @@ try {
                     }
                     const hasExt = path.extname(pictureName) === ".jpg";
 
-                    const id = nanoid();
-
-                    idIndexMap[id] = i;
+                    // idIndexMap[id] = i;
 
                     let imageData: {
                         width: number | null | undefined;
@@ -38,7 +42,13 @@ try {
                     };
                     try {
                         const data = sizeOf(
-                            path.join("diddl-images", directoryName, pictureName)
+                            path.join(
+                                projectRoot(),
+                                "static",
+                                "diddl-images",
+                                directoryName,
+                                pictureName
+                            )
                         );
 
                         imageData = data;
@@ -47,22 +57,23 @@ try {
                     }
 
                     return {
-                        id: id,
+                        // id: id,
                         name: path.basename(pictureName),
                         type: keys[directoryName],
-                        imagePath: path.join(
+                        image_path: path.join(
                             directoryName,
                             hasExt ? pictureName : `${pictureName}.jpg`
                         ),
-                        imageWidth: imageData?.width || null,
-                        imageHeight: imageData?.height || null,
+                        image_width: imageData?.width || null,
+                        image_height: imageData?.height || null,
                     };
                 })
                 .filter((element) => element !== null);
         })
         .flat();
-    writeJsonToFile("library.json", pictureData);
-    writeJsonToFile("library-index-map.json", idIndexMap);
+    writeJsonToFile(diddlsPath(), diddls);
+    fixDiddlsUnicode();
+    // writeJsonToFile("library-index-map.json", idIndexMap);
 } catch (error) {
     console.error("Error reading or parsing the JSON file:", error);
 }

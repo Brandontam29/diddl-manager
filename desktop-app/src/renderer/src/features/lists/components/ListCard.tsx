@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@renderer/components/ui/card";
 import { cn } from "@renderer/libs/cn";
-import { TrackerListItem } from "@shared/item-models";
+import { List } from "@shared";
 import { CalendarDays, FileText } from "lucide-solid";
 import { Component } from "solid-js";
 
-const ListCard: Component<{ trackerListItem: TrackerListItem }> = (props) => {
+const ListCard: Component<{ list: List }> = (props) => {
   return (
     <Card
       class={cn(
@@ -13,20 +13,20 @@ const ListCard: Component<{ trackerListItem: TrackerListItem }> = (props) => {
       )}
     >
       <CardHeader>
-        <CardTitle class="text-2xl font-bold">{props.trackerListItem.name}</CardTitle>
+        <CardTitle class="text-2xl font-bold">{props.list.name}</CardTitle>
       </CardHeader>
       <CardContent>
         <div class="space-y-4">
           <div class="flex items-center space-x-2">
             <CalendarDays class="h-5 w-5 text-muted-foreground" />
             <span class="text-sm text-muted-foreground">
-              Last modified: {displayDate(props.trackerListItem.lastModified)}
+              Last modified: {displayDate(props.list.lastModifiedAt)}
             </span>
           </div>
           <div class="flex items-center space-x-2">
             <FileText class="h-5 w-5 text-muted-foreground" />
             <span class="text-sm text-muted-foreground">
-              Created: {displayDate(props.trackerListItem.createdAt)}
+              Created: {displayDate(props.list.createdAt)}
             </span>
           </div>
         </div>

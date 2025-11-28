@@ -1,5 +1,5 @@
 import { listStore } from "./createListsStore";
-import fetchTrackerList from "./fetchTrackerList";
-import { fetchListItems, setListItems, addListItems } from "./listMethods";
+import fetchLists from "./fetchLists";
+import { fetchListItems, addListItems } from "./listMethods";
 
-export { listStore, fetchTrackerList, fetchListItems, setListItems, addListItems };
+export { listStore, fetchLists as fetchTrackerList, fetchListItems, addListItems };

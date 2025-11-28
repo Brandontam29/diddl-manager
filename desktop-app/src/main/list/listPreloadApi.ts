@@ -1,36 +1,49 @@
 import { ipcRenderer } from "electron";
 
 import {
-  GET_TRACKER_LIST,
-  SET_LIST_ITEMS,
+  GET_LISTS,
   ADD_LIST_ITEMS,
   REMOVE_LIST_ITEMS,
-  GET_LIST,
+  GET_LIST_ITEMS,
   CREATE_LIST,
   DELETE_LIST,
   UPDATE_LIST_NAME,
+  UPDATE_LIST_ITEMS,
 } from "./listMainHandlers";
-import type { ListItem, TrackerListItem } from "../../shared";
+import type { AddListItem, List, ListItem } from "../../shared";
 
 const listPreloadApi = {
-  getLists: (): Promise<TrackerListItem[]> => ipcRenderer.invoke(GET_TRACKER_LIST),
+  //List
+  createList: (listName: string, ddidlIds: number[]): Promise<List> =>
+    ipcRenderer.invoke(CREATE_LIST, listName, ddidlIds),
 
-  setListItems: (listId: string, items: ListItem[]): Promise<ListItem[] | undefined> =>
-    ipcRenderer.invoke(SET_LIST_ITEMS, listId, items),
-  addListItems: (listId: string, items: ListItem[]): Promise<ListItem[] | undefined> =>
-    ipcRenderer.invoke(ADD_LIST_ITEMS, listId, items),
-  removeListItems: (listId: string, idsToRemove: string[]): Promise<ListItem[] | undefined> =>
+  getLists: (): Promise<List[]> => ipcRenderer.invoke(GET_LISTS),
+
+  deleteList: (listId: number): Promise<void> => ipcRenderer.invoke(DELETE_LIST, listId),
+
+  updateListName: (listId: number, newListName: string): Promise<void> =>
+    ipcRenderer.invoke(UPDATE_LIST_NAME, listId, newListName),
+
+  // List Items
+  getListItems: (listId: number): Promise<ListItem[] | null> =>
+    ipcRenderer.invoke(GET_LIST_ITEMS, listId),
+
+  addListItems: (listId: number, payload: AddListItem[]): Promise<{ success: boolean }> =>
+    ipcRenderer.invoke(ADD_LIST_ITEMS, listId, payload),
+
+  removeListItems: (listId: number, idsToRemove: number[]): Promise<void> =>
     ipcRenderer.invoke(REMOVE_LIST_ITEMS, listId, idsToRemove),
 
-  getListItems: (listId: string): Promise<ListItem[] | undefined> =>
-    ipcRenderer.invoke(GET_LIST, listId),
-  createList: (listName: string, ddidlIds: string[]): Promise<TrackerListItem> =>
-    ipcRenderer.invoke(CREATE_LIST, listName, ddidlIds),
-  deleteList: (listId: string): Promise<TrackerListItem> => ipcRenderer.invoke(DELETE_LIST, listId),
-  setList: (listId: string, content: ListItem[]): Promise<ListItem[] | undefined> =>
-    ipcRenderer.invoke(SET_LIST_ITEMS, listId, content),
-  updateListName: (listId: string, newListName: string): Promise<ListItem | undefined> =>
-    ipcRenderer.invoke(UPDATE_LIST_NAME, listId, newListName),
+  updateListItems: (
+    listId: number,
+    listItemIds: number[],
+    action: {
+      addQuantity?: number;
+      isDamaged?: boolean;
+      isIncomplete?: boolean;
+    },
+  ): Promise<{ success: boolean; data?: { numUpdatedRows: number } }> =>
+    ipcRenderer.invoke(UPDATE_LIST_ITEMS, listId, listItemIds, action),
 };
 
 export default listPreloadApi;

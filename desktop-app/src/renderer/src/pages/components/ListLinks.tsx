@@ -6,7 +6,7 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "@renderer/components/ui/popover";
-import type { TrackerListItem } from "@shared/index";
+import type { List } from "@shared/index";
 import { BsCaretDown, BsCaretRight } from "solid-icons/bs";
 import { type Component, createMemo, createSignal, For } from "solid-js";
 import CreateListDialog from "@renderer/features/lists/components/CreateListDialog";
@@ -15,17 +15,17 @@ import { Button } from "@kobalte/core/button";
 import { cn } from "@renderer/libs/cn";
 import { ListPlus } from "lucide-solid";
 
-const ListLinks: Component<{ trackerListItems: TrackerListItem[] | undefined }> = (props) => {
+const ListLinks: Component<{ lists: List[] | undefined }> = (props) => {
   const location = useLocation();
   const [open, setOpen] = createSignal(false);
 
   const first4List = createMemo(() => {
-    if (!props.trackerListItems) return [];
+    if (!props.lists) return [];
 
-    const newList = [...props.trackerListItems];
+    const newList = [...props.lists];
 
     return newList
-      .sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime())
+      .sort((a, b) => new Date(b.lastModifiedAt).getTime() - new Date(a.lastModifiedAt).getTime())
       .slice(0, 4);
   });
 

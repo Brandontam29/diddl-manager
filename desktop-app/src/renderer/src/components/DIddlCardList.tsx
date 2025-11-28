@@ -1,13 +1,13 @@
-import { libraryStore } from "@renderer/features/library";
+import { diddlStore } from "@renderer/features/diddl";
 import { cn } from "@renderer/libs/cn";
-import type { LibraryEntry } from "@shared/library-models";
+import type { Diddl } from "@shared";
 import { useParams } from "@solidjs/router";
 import { type Component, createMemo, For, JSX, Show } from "solid-js";
 import DiddlCard from "./DiddlCard";
 import {
   addSelectedIndices,
   removeSelectedIndices,
-} from "@renderer/features/library/selectedIndicesMethods";
+} from "@renderer/features/diddl/selectedIndicesMethods";
 import { uiStore } from "@renderer/features/ui-state";
 import FallbackNoDiddl from "./FallbackNoDiddl";
 import FallbackLoadingDiddl from "./FallbackLoadingDiddl";
@@ -17,12 +17,13 @@ import { Button } from "./ui/button";
 import { updateListItems } from "@renderer/features/lists/listMethods";
 
 const DiddlCardList: Component<{
-  diddls?: (LibraryEntry & Partial<ListItem>)[];
+  diddls?: (Diddl & { listItem?: ListItem })[];
   isListItem?: boolean;
 }> = (props) => {
   const params = useParams();
-
-  const selectedIndices = () => libraryStore.selectedIndices;
+  const isListItem = createMemo(() => props?.diddls?.[0]?.hasOwnProperty("listItem") || false);
+  const listId = createMemo(() => parseInt(params.id));
+  const selectedIndices = () => diddlStore.selectedIndices;
   const isSelectMode = createMemo(() => selectedIndices().length !== 0);
 
   return (
@@ -100,90 +101,102 @@ const DiddlCardList: Component<{
                   </Show>
                 </div>
 
-                <Show when={props.isListItem}>
+                <Show when={isListItem()}>
                   <div class="absolute bottom-5 -left-1 space-y-px">
-                    <Show when={diddl?.isDamaged}>
+                    <Show when={diddl?.listItem?.isDamaged}>
                       <Badge
                         dotColor="bg-red-400"
-                        onClick={() => {
-                          if (isSelectMode()) {
-                            if (!selectedIndices().includes(index())) addSelectedIndices(index());
+                        // onClick={() => {
+                        //   if (!diddl?.listItem) return;
 
-                            updateListItems(
-                              params.id,
-                              selectedIndices().map((i) => props.diddls![i].id),
-                              { isDamaged: false },
-                            );
-                            return;
-                          }
+                        //   if (!isSelectMode()) {
+                        //     updateListItems(listId(), [diddl.listItem.id], { isDamaged: false });
 
-                          updateListItems(params.id, [diddl.id], { isDamaged: false });
-                        }}
+                        //     return;
+                        //   }
+
+                        //   if (!selectedIndices().includes(index())) addSelectedIndices(index());
+
+                        //   updateListItems(
+                        //     listId(),
+                        //     selectedIndices().map((i) => props.diddls![i]?.listItem?.id || -1),
+                        //     { isDamaged: false },
+                        //   );
+                        // }}
                       >
                         Damaged
                       </Badge>
                     </Show>
-                    <Show when={diddl?.isIncomplete}>
+                    <Show when={diddl?.listItem?.isIncomplete}>
                       <Badge
                         dotColor="bg-yellow-400"
                         onClick={() => {
-                          if (isSelectMode()) {
-                            if (!selectedIndices().includes(index())) addSelectedIndices(index());
+                          if (!diddl?.listItem) return;
 
-                            updateListItems(
-                              params.id,
-                              selectedIndices().map((i) => props.diddls![i].id),
-                              { isIncomplete: false },
-                            );
+                          if (!isSelectMode()) {
+                            updateListItems(listId(), [diddl.listItem.id], {
+                              isIncomplete: false,
+                            });
                             return;
                           }
 
-                          updateListItems(params.id, [diddl.id], { isIncomplete: false });
+                          if (!selectedIndices().includes(index())) addSelectedIndices(index());
+
+                          updateListItems(
+                            listId(),
+                            selectedIndices().map((i) => props.diddls![i]?.listItem?.id || -1),
+                            { isIncomplete: false },
+                          );
                         }}
                       >
                         Incomplete
                       </Badge>
                     </Show>
-                    <Show when={diddl?.count}>
+                    <Show when={diddl?.listItem?.quantity}>
                       <div class="w-min flex items-center rounded border border-gray-300 bg-gray-50 divide-x">
                         <Button
                           variant="none"
                           size="none"
                           class="hover:bg-pink-200 h-5"
                           onClick={() => {
-                            if (isSelectMode()) {
-                              if (!selectedIndices().includes(index())) addSelectedIndices(index());
+                            if (!diddl?.listItem) return;
 
-                              updateListItems(
-                                params.id,
-                                selectedIndices().map((i) => props.diddls![i].id),
-                                { addCount: -1 },
-                              );
+                            if (!isSelectMode()) {
+                              updateListItems(listId(), [diddl.listItem.id], { addQuantity: -1 });
                               return;
                             }
 
-                            updateListItems(params.id, [diddl.id], { addCount: -1 });
+                            if (!selectedIndices().includes(index())) addSelectedIndices(index());
+
+                            updateListItems(
+                              listId(),
+                              selectedIndices().map((i) => props.diddls![i]?.listItem?.id || -1),
+                              { addQuantity: -1 },
+                            );
                           }}
                         >
                           <Minus size={15} />
                         </Button>
-                        <div class="w-8 px-1 text-sm">{diddl.count}</div>
+                        <div class="w-8 px-1 text-sm">{diddl?.listItem?.quantity}</div>
                         <Button
                           variant="none"
                           size="none"
                           class="hover:bg-pink-200 h-5"
                           onClick={() => {
-                            if (isSelectMode()) {
-                              if (!selectedIndices().includes(index())) addSelectedIndices(index());
-                              updateListItems(
-                                params.id,
-                                selectedIndices().map((i) => props.diddls![i].id),
-                                { addCount: 1 },
-                              );
+                            if (!diddl?.listItem) return;
+
+                            if (!isSelectMode()) {
+                              updateListItems(listId(), [diddl.listItem.id], { addQuantity: 1 });
                               return;
                             }
 
-                            updateListItems(params.id, [diddl.id], { addCount: 1 });
+                            if (!selectedIndices().includes(index())) addSelectedIndices(index());
+
+                            updateListItems(
+                              listId(),
+                              selectedIndices().map((i) => props.diddls![i]?.listItem?.id || -1),
+                              { addQuantity: 1 },
+                            );
                           }}
                         >
                           <Plus size={15} />
@@ -231,7 +244,7 @@ const Badge: Component<{ dotColor?: string; children: JSX.Element; onClick?: () 
 );
 
 const handleClick = (index: number, event: MouseEvent) => {
-  const selectedIndices = libraryStore.selectedIndices;
+  const selectedIndices = diddlStore.selectedIndices;
   if (event.shiftKey) {
     const lastClicked = selectedIndices[selectedIndices.length - 1];
     const numbersBetween = getNumbersBetween(lastClicked, index);

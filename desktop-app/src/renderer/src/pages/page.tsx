@@ -1,17 +1,17 @@
-import { libraryStore } from "@renderer/features/library";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { useSearchParams } from "@solidjs/router";
 import { createMemo, Show } from "solid-js";
 import DiddlCardList from "@renderer/components/DiddlCardList";
-import TaskbarLibrary from "@renderer/features/taskbars/TaskbarLibrary";
+import Taskbar from "@renderer/features/taskbars/Taskbar";
+import { diddlStore } from "@rendererfeatures/diddl";
 
 const HomePage = () => {
   const screenWidth = useScreenWidth();
   const [searchParams] = useSearchParams<{ from: string; to: string; type: string }>();
 
   const filteredDiddls = createMemo(() => {
-    let diddls = libraryStore.libraryState;
+    let diddls = diddlStore.diddlState;
 
     if (searchParams.type !== undefined) {
       diddls = diddls.filter((diddl) => searchParams.type === diddl.type);
@@ -27,8 +27,8 @@ const HomePage = () => {
     return diddls;
   });
 
-  const isSelectMode = createMemo(() => libraryStore.selectedIndices.length !== 0);
-  console.log(filteredDiddls());
+  const isSelectMode = createMemo(() => diddlStore.selectedIndices.length !== 0);
+
   return (
     <>
       <div
@@ -38,7 +38,7 @@ const HomePage = () => {
         <DiddlCardList diddls={filteredDiddls()} />
       </div>
       <Show when={isSelectMode()}>
-        <TaskbarLibrary diddls={filteredDiddls()} />
+        <Taskbar diddls={filteredDiddls()} />
       </Show>
     </>
   );

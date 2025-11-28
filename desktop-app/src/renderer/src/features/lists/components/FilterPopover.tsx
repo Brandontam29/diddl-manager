@@ -49,7 +49,7 @@ const FilterPopover = () => {
  *
  * type
  *
- * min count
- * max count
+ * min quantity
+ * max quantity
  */
 export default FilterPopover;

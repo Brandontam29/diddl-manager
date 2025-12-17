@@ -18,7 +18,6 @@ import { BiRegularHomeHeart } from "solid-icons/bi";
 import { cn } from "@renderer/libs/cn";
 import SettingsDialog from "./components/SettingsDialog";
 import ListLinks from "./components/ListLinks";
-import { BookMarkedIcon } from "lucide-solid";
 
 const getParams = (params: { type?: string; from?: number; to?: number }) => {
   const paramsStrings = Object.fromEntries(
@@ -235,7 +234,7 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
           "scrollbar-thumb-pink-300 scrollbar-track-transparent scrollbar-thin",
         )}
       >
-        <div></div>
+        <div>{JSON.stringify(location)}</div>
         <For each={links()}>
           {(group) => (
             <div class="pt-3">

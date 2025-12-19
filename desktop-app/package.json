@@ -1,6 +1,6 @@
 {
   "name": "diddl-manager",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "An Electron application with Solid and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",

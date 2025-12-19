@@ -29,9 +29,13 @@ function getQuarter(date: Date) {
 //     warn: 'font-size: 1rem; color: yellow;',
 //     error: 'font-size: 1rem; color: red;',
 //     fatal: 'font-size: 1rem; color: red; padding: 4px; font-weight: bold;',
+//     debug: 'font-size: 1rem; color: green;',
 // } as const;
 
-const logHandler = async (type: "info" | "warn" | "error" | "fatal", ...messages: any[]) => {
+const logHandler = async (
+  type: "info" | "warn" | "error" | "fatal" | "debug",
+  ...messages: any[]
+) => {
   const date = new Date();
 
   const quarter = getQuarter(date);
@@ -89,7 +93,8 @@ const log = {
   info: (...messages: (string | unknown)[]) => logHandler("info", ...messages),
   warn: (...messages: (string | unknown)[]) => logHandler("warn", ...messages),
   error: (...messages: (string | Error | unknown)[]) => logHandler("error", ...messages),
-  fatal: (...messages: (string | unknown)[]) => logHandler("fatal", ...messages),
+  fatal: (...messages: (string | Error | unknown)[]) => logHandler("fatal", ...messages),
+  debug: (...messages: (string | unknown)[]) => logHandler("debug", ...messages),
 };
 
 export default log;

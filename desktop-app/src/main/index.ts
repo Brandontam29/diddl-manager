@@ -7,6 +7,12 @@ import { appPath, logAllPaths } from "./pathing";
 import isDev from "./utils/isDev";
 import setupDiddlImages from "./diddl/setupDiddlImages";
 import { initDb, migrateToLatest } from "./database";
+import { logging } from "./logging";
+import { autoUpdater } from "electron-updater";
+
+// Configure logging
+// autoUpdater.logger = logging.info;
+// autoUpdater.logger.transports.file.level = "info";
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -88,6 +94,8 @@ app.whenReady().then(async () => {
     // console.log("image:", filePath);
     callback({ path: filePath });
   });
+
+  autoUpdater.checkForUpdatesAndNotify();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -99,5 +107,13 @@ app.on("window-all-closed", () => {
   }
 });
 
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
+// Optional: Listen for events to show custom UI/Notifications
+autoUpdater.on("update-available", () => {
+  logging.info("Update available.");
+});
+
+autoUpdater.on("update-downloaded", () => {
+  logging.info("Update downloaded; will install now");
+  // You can prompt the user to restart here
+  // autoUpdater.quitAndInstall();
+});

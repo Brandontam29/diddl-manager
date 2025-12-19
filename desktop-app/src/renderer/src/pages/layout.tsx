@@ -226,6 +226,10 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
         links: { label: string | JSX.Element; href?: string }[];
       }[],
   );
+
+  createEffect(() => {
+    console.log("Version 1.8");
+  });
   return (
     <>
       <nav

@@ -1,7 +1,7 @@
 import "./styles/index.css";
 
 import { render } from "solid-js/web";
-import { Route, Router } from "@solidjs/router";
+import { Route, HashRouter } from "@solidjs/router";
 import { lazy } from "solid-js";
 import BaseLayout from "./pages/layout";
 import { ToastList, ToastRegion } from "./components/ui/toast";
@@ -13,7 +13,7 @@ const ListIdPage = lazy(() => import("./pages/lists/[id]"));
 
 render(
   () => (
-    <Router root={BaseLayout}>
+    <HashRouter root={BaseLayout}>
       <Route path="/" component={HomePage} />
       <Route path="/lists" component={ListsPage} />
       <Route path="/lists/:id" component={ListIdPage} />
@@ -22,7 +22,7 @@ render(
       <ToastRegion>
         <ToastList />
       </ToastRegion>
-    </Router>
+    </HashRouter>
   ),
   document.getElementById("root") as HTMLElement,
 );

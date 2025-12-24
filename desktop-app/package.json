@@ -1,6 +1,6 @@
 {
   "name": "diddl-manager",
-  "version": "1.10.1",
+  "version": "1.10.3",
   "description": "App to manage your Diddls",
   "main": "./out/main/index.js",
   "author": "Brandontam29",

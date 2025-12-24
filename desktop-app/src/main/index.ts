@@ -8,7 +8,9 @@ import isDev from "./utils/isDev";
 import setupDiddlImages from "./diddl/setupDiddlImages";
 import { initDb, migrateToLatest } from "./database";
 import { logging } from "./logging";
-import { autoUpdater } from "electron-updater";
+import electronUpdater from "electron-updater";
+
+const { autoUpdater } = electronUpdater;
 
 // Configure logging
 // autoUpdater.logger = logging.info;

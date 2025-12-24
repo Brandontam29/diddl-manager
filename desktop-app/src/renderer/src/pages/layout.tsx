@@ -70,15 +70,7 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
             },
           ],
         },
-        {
-          title: undefined,
-          links: [
-            {
-              label: <span class="text-transparent">I love Diddl</span>,
-              href: "/catherine-is-my-wife",
-            },
-          ],
-        },
+
         {
           title: "A7",
           links: [{ label: "1-100", href: getParams({ type: "A7", from: 0, to: 99 }) }],
@@ -229,16 +221,17 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
 
   createEffect(() => {
     console.log("Version 1.8");
+    console.log(links());
   });
+
   return (
     <>
       <nav
         class={cn(
           "py-4 flex flex-col border-r border-gray-200 h-screen sticky top-0 overflow-y-auto min-w-64 w-64",
-          "scrollbar-thumb-pink-300 scrollbar-track-transparent scrollbar-thin",
+          "scrollbar-thumb-pink-200 scrollbar-track-transparent scrollbar-thin",
         )}
       >
-        <div>{JSON.stringify(location)}</div>
         <For each={links()}>
           {(group) => (
             <div class="pt-3">
@@ -247,24 +240,7 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
               </Show>
               <div class="flex flex-col">
                 <For each={group.links}>
-                  {(link) => (
-                    <Switch fallback={<p>???</p>}>
-                      <Match when={link.href}>
-                        <A
-                          href={link.href!}
-                          class={cn(
-                            "flex items-center gap-2 px-3 mx-1 rounded",
-                            `${location.pathname}${location.search}` === link.href && "bg-red-200",
-                            `${location.pathname}${location.search}` !== link.href &&
-                              "hover:bg-red-100",
-                          )}
-                        >
-                          {link.label}
-                        </A>
-                      </Match>
-                      <Match when={!link.href}>{link.label}</Match>
-                    </Switch>
-                  )}
+                  {(link) => <SidebarLink location={props.location} link={link} />}
                 </For>
               </div>
             </div>
@@ -279,6 +255,31 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
         <ToastList />
       </ToastRegion>
     </>
+  );
+};
+
+const SidebarLink: Component<{
+  location: { pathname: string; search: string };
+  link: { label: string | JSX.Element; href?: string };
+}> = (props) => {
+  const currentPath = createMemo(() => `${props.location.pathname}${props.location.search}`);
+
+  return (
+    <Switch fallback={<p>???</p>}>
+      <Match when={props.link.href}>
+        <A
+          href={props.link.href!}
+          class={cn(
+            "flex items-center gap-2 px-3 mx-1 rounded",
+            `${currentPath()}` === props.link.href && "bg-pink-200/50",
+            `${currentPath()}` !== props.link.href && "hover:bg-pink-200",
+          )}
+        >
+          {props.link.label}
+        </A>
+      </Match>
+      <Match when={!props.link.href}>{props.link.label}</Match>
+    </Switch>
   );
 };
 

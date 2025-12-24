@@ -1,0 +1,39 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "jsx-a11y"],
+  "jsPlugins": [
+    "eslint-plugin-solid",
+    "@electron-toolkit/eslint-config-prettier",
+    "@electron-toolkit/eslint-config-ts"
+  ],
+  "rules": {
+    // --- TypeScript Rules ---
+    "typescript/no-explicit-any": "warn",
+    "typescript/no-unused-vars": "error",
+
+    // --- SolidJS specific rules ---
+    "solid/reactivity": "error",
+    "solid/no-destructure": "error",
+    "solid/jsx-no-undef": "error",
+
+    // --- Unicorn (Modern Best Practices) ---
+    "unicorn/filename-case": ["error", { "case": "kebabCase" }],
+    "unicorn/no-null": "off", // Often disabled as React/TS users prefer null
+
+    // --- Accessibility (JSX-A11Y) ---
+    "jsx-a11y/alt-text": "error",
+    "jsx-a11y/anchor-has-content": "error"
+  },
+  "env": {
+    "browser": true,
+    "es2024": true
+  },
+  "overrides": [
+    {
+      "files": ["*.test.ts", "*.test.tsx"],
+      "rules": {
+        "typescript/no-explicit-any": "off"
+      }
+    }
+  ]
+}

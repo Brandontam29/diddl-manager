@@ -1,11 +1,21 @@
 {
   "name": "diddl-manager",
   "version": "1.8.0",
-  "description": "An Electron application with Solid and TypeScript",
+  "description": "App to manage your Diddls",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "Brandontam29",
   "homepage": "https://electron-vite.org",
   "type": "module",
+  "build": {
+    "appId": "com.diddl.manager",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Brandontam29",
+        "repo": "diddl-manager"
+      }
+    ]
+  },
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
@@ -18,7 +28,7 @@
     "build": "electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "bun run build && electron-builder --dir",
-    "build:win": "bun run build && electron-builder --win",
+    "build:win": "bun run build && electron-builder --win --publish always",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux"
   },
@@ -46,7 +56,6 @@
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@electron-toolkit/eslint-config-ts": "^3.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
-    "@stylistic/eslint-plugin": "^5.2.3",
     "@types/adm-zip": "^0.5.7",
     "@types/better-sqlite3": "^7.6.13",
     "@types/canvas-confetti": "^1.9.0",
@@ -56,14 +65,16 @@
     "electron-builder": "^25.1.8",
     "electron-vite": "^4.0.0",
     "eslint": "^9.33.0",
+    "eslint-plugin-oxlint": "^1.35.0",
     "eslint-plugin-solid": "^0.14.5",
     "kysely-codegen": "^0.19.0",
+    "oxlint": "^1.35.0",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "solid-js": "^1.9.7",
     "tailwind-scrollbar": "^3.1.0",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.3",
     "vite": "^6.3.5",
     "vite-plugin-solid": "^2.11.7",
     "vite-tsconfig-paths": "^5.1.4"

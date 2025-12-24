@@ -40,5 +40,6 @@ appImage:
   artifactName: ${name}-${version}-setup.${ext}
 npmRebuild: false
 publish:
-  provider: generic
-  url: https://github.com/Brandontam29/diddl-manager.git
+  provider: github
+  owner: Brandontam29
+  repo: diddl-manager

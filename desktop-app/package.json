@@ -1,21 +1,11 @@
 {
   "name": "diddl-manager",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "App to manage your Diddls",
   "main": "./out/main/index.js",
   "author": "Brandontam29",
   "homepage": "https://electron-vite.org",
   "type": "module",
-  "build": {
-    "appId": "com.diddl.manager",
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "Brandontam29",
-        "repo": "diddl-manager"
-      }
-    ]
-  },
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",

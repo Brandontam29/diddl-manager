@@ -1,4 +1,4 @@
-name: Build and Release Electron App
+name: Build and Release
 
 on:
     push:
@@ -16,7 +16,7 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-global-version: 20
+                  node-version: v20.17.0
                   cache: "npm"
 
             - name: Install Dependencies

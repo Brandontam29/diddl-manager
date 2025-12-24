@@ -26,6 +26,8 @@
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@kobalte/core": "^0.13.8",
+    "@solid-primitives/intersection-observer": "^2.2.2",
+    "@solid-primitives/media": "^2.3.3",
     "@solidjs/router": "^0.14.10",
     "adm-zip": "^0.5.16",
     "better-sqlite3": "^12.4.5",

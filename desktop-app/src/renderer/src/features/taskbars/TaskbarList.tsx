@@ -7,7 +7,7 @@
 // import { Component, createMemo, createSignal } from "solid-js";
 // import { addListItems, updateListItems } from "../lists/listMethods";
 // import AddToListPopover from "../lists/components/AddToListPopover";
-// import useAsyncCallback from "@renderer/hooks/useAsyncCallback";
+// import createAsyncCallback from "@renderer/hooks/createAsyncCallback";
 // import { Toast, ToastContent, ToastProgress, ToastTitle } from "@renderer/components/ui/toast";
 // import { confettiStars } from "@rendererlibs/confetti";
 // import { toaster } from "@kobalte/core/toast";
@@ -37,7 +37,7 @@
 //     ));
 //   };
 //   const { isLoading: downloadImagesIsLoading, handler: downloadImagesHandler } =
-//     useAsyncCallback(onDownloadImages);
+//     createAsyncCallback(onDownloadImages);
 
 //   return (
 //     <div

@@ -1,6 +1,8 @@
 import { createSignal } from "solid-js";
 
-const useAsyncCallback = <TReturn>(activeFunction: (...args: any) => Promise<TReturn | null>) => {
+const createAsyncCallback = <TReturn>(
+  activeFunction: (...args: any) => Promise<TReturn | null>,
+) => {
   const [isLoading, setIsLoading] = createSignal(false);
   const [isError, setIsError] = createSignal(false);
   const [data, setData] = createSignal<any>(null);
@@ -35,4 +37,4 @@ const useAsyncCallback = <TReturn>(activeFunction: (...args: any) => Promise<TRe
   return { handler, isLoading, isError, data, allSettled, hasExecuted, resetState };
 };
 
-export default useAsyncCallback;
+export default createAsyncCallback;

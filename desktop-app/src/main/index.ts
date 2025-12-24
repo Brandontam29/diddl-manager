@@ -27,6 +27,7 @@ function createWindow() {
       preload: path.join(__dirname, "../preload/index.mjs"),
       sandbox: false,
       webSecurity: isDev() ? false : true,
+      allowRunningInsecureContent: false,
     },
   });
 

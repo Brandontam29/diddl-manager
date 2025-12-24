@@ -5,11 +5,13 @@ import { fetchDiddlState, setDiddlStore } from "@renderer/features/diddl";
 import { A, RouteSectionProps } from "@solidjs/router";
 import {
   type Component,
+  createComputed,
   createEffect,
   createMemo,
   For,
   type JSX,
   Match,
+  on,
   Show,
   Suspense,
   Switch,
@@ -35,12 +37,11 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
     fetchDiddlState();
   });
 
-  createEffect(() => {
-    props.location.pathname;
-    props.location.search;
-
-    setDiddlStore("selectedIndices", []);
-  });
+  createComputed(
+    on([() => props.location.pathname, () => props.location.search], () =>
+      setDiddlStore("selectedIndices", []),
+    ),
+  );
 
   const links = createMemo(
     () =>
@@ -266,8 +267,8 @@ const SidebarLink: Component<{
           href={props.link.href!}
           class={cn(
             "flex items-center gap-2 px-3 mx-1 rounded",
-            `${currentPath()}` === props.link.href && "bg-pink-200/50",
-            `${currentPath()}` !== props.link.href && "hover:bg-pink-200",
+            currentPath() === props.link.href && "bg-pink-200/50",
+            currentPath() !== props.link.href && "hover:bg-pink-200",
           )}
         >
           {props.link.label}

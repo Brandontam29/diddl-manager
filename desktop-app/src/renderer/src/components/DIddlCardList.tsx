@@ -34,9 +34,9 @@ const DiddlCardList: Component<{
       >
         <For each={props.diddls}>
           {(diddl, index) => {
-            // if (index() > 0) return;
             const ratio =
               diddl.imageWidth && diddl.imageHeight ? diddl.imageWidth / diddl.imageHeight : null;
+
             return (
               <div
                 class={cn("relative rounded")}
@@ -104,53 +104,10 @@ const DiddlCardList: Component<{
                 <Show when={isListItem()}>
                   <div class="absolute bottom-5 -left-1 space-y-px">
                     <Show when={diddl?.listItem?.isDamaged}>
-                      <Badge
-                        dotColor="bg-red-400"
-                        // onClick={() => {
-                        //   if (!diddl?.listItem) return;
-
-                        //   if (!isSelectMode()) {
-                        //     updateListItems(listId(), [diddl.listItem.id], { isDamaged: false });
-
-                        //     return;
-                        //   }
-
-                        //   if (!selectedIndices().includes(index())) addSelectedIndices(index());
-
-                        //   updateListItems(
-                        //     listId(),
-                        //     selectedIndices().map((i) => props.diddls![i]?.listItem?.id || -1),
-                        //     { isDamaged: false },
-                        //   );
-                        // }}
-                      >
-                        Damaged
-                      </Badge>
+                      <Badge dotColor="bg-red-400">Damaged</Badge>
                     </Show>
                     <Show when={diddl?.listItem?.isIncomplete}>
-                      <Badge
-                        dotColor="bg-yellow-400"
-                        onClick={() => {
-                          if (!diddl?.listItem) return;
-
-                          if (!isSelectMode()) {
-                            updateListItems(listId(), [diddl.listItem.id], {
-                              isIncomplete: false,
-                            });
-                            return;
-                          }
-
-                          if (!selectedIndices().includes(index())) addSelectedIndices(index());
-
-                          updateListItems(
-                            listId(),
-                            selectedIndices().map((i) => props.diddls![i]?.listItem?.id || -1),
-                            { isIncomplete: false },
-                          );
-                        }}
-                      >
-                        Incomplete
-                      </Badge>
+                      <Badge dotColor="bg-yellow-400">Incomplete</Badge>
                     </Show>
                     <Show when={diddl?.listItem?.quantity}>
                       <div class="w-min flex items-center rounded border border-gray-300 bg-gray-50 divide-x">

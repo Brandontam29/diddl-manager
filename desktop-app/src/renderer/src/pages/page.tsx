@@ -2,9 +2,9 @@ import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { useSearchParams } from "@solidjs/router";
 import { createMemo, Show } from "solid-js";
-import DiddlCardList from "@renderer/components/DiddlCardList";
 import Taskbar from "@renderer/features/taskbars/Taskbar";
 import { diddlStore } from "@rendererfeatures/diddl";
+import DiddlCardListLimiter from "@renderercomponents/DiddlCardListLimiter";
 
 const HomePage = () => {
   const screenWidth = useScreenWidth();
@@ -35,7 +35,7 @@ const HomePage = () => {
         class={cn("relative grow px-4 pt-10 pb-4 flex flex-wrap gap-2 content-start")}
         style={{ width: `${screenWidth() - 256 - 32}px` }}
       >
-        <DiddlCardList diddls={filteredDiddls()} />
+        <DiddlCardListLimiter diddls={filteredDiddls()} />
       </div>
       <Show when={isSelectMode()}>
         <Taskbar diddls={filteredDiddls()} />

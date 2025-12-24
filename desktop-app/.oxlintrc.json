@@ -9,7 +9,7 @@
   "rules": {
     // --- TypeScript Rules ---
     "typescript/no-explicit-any": "warn",
-    "typescript/no-unused-vars": "error",
+    "typescript/no-unused-vars": "warn",
 
     // --- SolidJS specific rules ---
     "solid/reactivity": "error",
@@ -17,7 +17,10 @@
     "solid/jsx-no-undef": "error",
 
     // --- Unicorn (Modern Best Practices) ---
-    "unicorn/filename-case": ["error", { "case": "kebabCase" }],
+    "unicorn/filename-case": [
+      "error",
+      { "cases": { "camelCase": true, "kebabCase": true, "pascalCase": true } }
+    ],
     "unicorn/no-null": "off", // Often disabled as React/TS users prefer null
 
     // --- Accessibility (JSX-A11Y) ---

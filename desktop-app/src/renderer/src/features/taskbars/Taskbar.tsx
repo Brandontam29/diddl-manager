@@ -3,7 +3,7 @@ import { Toast, ToastContent, ToastProgress, ToastTitle } from "@renderer/compon
 import { setDiddlStore, diddlStore } from "@renderer/features/diddl";
 import { addListItems } from "@renderer/features/lists";
 import AddToListPopover from "@renderer/features/lists/components/AddToListPopover";
-import useAsyncCallback from "@renderer/hooks/useAsyncCallback";
+import createAsyncCallback from "@renderer/hooks/createAsyncCallback";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { confettiStars } from "@renderer/libs/confetti";
@@ -41,7 +41,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
     ));
   };
   const { isLoading: downloadImagesIsLoading, handler: downloadImagesHandler } =
-    useAsyncCallback(onDownloadImages);
+    createAsyncCallback(onDownloadImages);
 
   const isHome = useMatch(() => "/");
 

@@ -219,11 +219,6 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
       }[],
   );
 
-  createEffect(() => {
-    console.log("Version 1.8");
-    console.log(links());
-  });
-
   return (
     <>
       <nav

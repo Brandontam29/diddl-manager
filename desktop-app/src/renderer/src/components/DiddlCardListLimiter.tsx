@@ -73,8 +73,6 @@ const DiddlCardListLimiter: Component<{
     return props.diddls.slice(0, maxShown());
   });
 
-  createEffect(() => console.log(maxShown()));
-
   return (
     <InfiniteScroll
       callback={(idNumber) => {

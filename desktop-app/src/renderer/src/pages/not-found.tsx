@@ -6,7 +6,7 @@ const NotFoundPage = () => {
   return (
     <div class="max-w-lg mx-auto text-center space-y-2">
       <ImageRoot>
-        <Image src={diddlTongue} />
+        <Image src={diddlTongue} alt="Diddl sticking his tongue out laughing" />
         <ImageFallback>
           <Skeleton class="rounded h-[390px] aspect-square" />
         </ImageFallback>

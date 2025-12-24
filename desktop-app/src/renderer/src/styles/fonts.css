@@ -1,0 +1,142 @@
+/* 
+Value	Common weight name
+100 	Thin (Hairline)
+200 	Extra Light (Ultra Light)
+300 	Light
+400 	Normal (Regular)
+500 	Medium
+600 	Semi Bold (Demi Bold)
+700 	Bold
+800 	Extra Bold (Ultra Bold)
+900 	Black (Heavy)
+950 	Extra Black (Ultra Black)
+ */
+
+/*
+ *  SNIGLET   
+ */
+
+@font-face {
+  font-family: "Sniglet";
+  src: url("../assets/fonts/Sniglet/Sniglet-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sniglet";
+  src: url("../assets/fonts/Sniglet/Sniglet-ExtraBold.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/*
+ *  Andika
+ */
+
+@font-face {
+  font-family: "Andika";
+  font-weight: 400;
+  src: url("../assets/fonts/Andika/Andika-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Andika";
+  font-weight: 500;
+  src: url("../assets/fonts/Andika/Andika-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Andika";
+  font-weight: 600;
+  src: url("../assets/fonts/Andika/Andika-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Andika";
+  font-weight: 700;
+  src: url("../assets/fonts/Andika/Andika-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Andika";
+  font-weight: 400;
+  font-style: italic;
+  src: url("../assets/fonts/Andika/Andika-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Andika";
+  font-weight: 500;
+  font-style: italic;
+  src: url("../assets/fonts/Andika/Andika-MediumItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Andika";
+  font-weight: 600;
+  font-style: italic;
+  src: url("../assets/fonts/Andika/Andika-SemiBoldItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Andika";
+  font-weight: 700;
+  font-style: italic;
+  src: url("../assets/fonts/Andika/Andika-BoldItalic.woff2") format("woff2");
+}
+
+/*
+ *  Comic Neue
+ */
+@font-face {
+  src: url("../assets/fonts/Comic_Neue/ComicNeue-Bold.ttf") format("ttf");
+  font-family: "Comic Neue";
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Comic Neue";
+  src: url("../assets/fonts/Comic_Neue/ComicNeue-BoldItalic.ttf") format("ttf");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Comic Neue";
+  src: url("../assets/fonts/Comic_Neue/ComicNeue-Italic.ttf") format("ttf");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Comic Neue";
+  src: url("../assets/fonts/Comic_Neue/ComicNeue-Light.ttf") format("ttf");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Comic Neue";
+  src: url("../assets/fonts/Comic_Neue/ComicNeue-LightItalic.ttf") format("ttf");
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Comic Neue";
+  src: url("../assets/fonts/Comic_Neue/ComicNeue-Regular.ttf") format("ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/*
+*  Patrick Hand
+*/
+
+@font-face {
+  font-family: "Patrick Hand";
+  src: url("../assets/fonts/Patrick_Hand/PatrickHand-Regular.ttf") format("ttf");
+  font-weight: 400;
+  font-style: normal;
+}

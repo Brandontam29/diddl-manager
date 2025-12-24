@@ -10,6 +10,7 @@ const HomePage = lazy(() => import("./pages/page"));
 const NotFoundPage = lazy(() => import("./pages/not-found"));
 const ListsPage = lazy(() => import("./pages/lists/page"));
 const ListIdPage = lazy(() => import("./pages/lists/[id]"));
+const SettingsPage = lazy(() => import("./pages/settings/page"));
 
 render(
   () => (
@@ -17,6 +18,7 @@ render(
       <Route path="/" component={HomePage} />
       <Route path="/lists" component={ListsPage} />
       <Route path="/lists/:id" component={ListIdPage} />
+      <Route path="/settings" component={SettingsPage} />
 
       <Route path="*" component={NotFoundPage} />
       <ToastRegion>

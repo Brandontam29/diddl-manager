@@ -9,7 +9,7 @@ import {
 } from "solid-js";
 import { createIntersectionObserver } from "@solid-primitives/intersection-observer";
 import { Diddl, ListItem } from "@shared";
-import DiddlCardList from "./DiddlCardList";
+import DiddlListCard from "./DiddlListCard";
 import { useSearchParams } from "@solidjs/router";
 
 const InfiniteScroll: Component<{
@@ -79,7 +79,7 @@ const DiddlCardListLimiter: Component<{
         setMaxShown(DEFAULT_SHOWN + idNumber * INCREMENT_SHOWN);
       }}
     >
-      <DiddlCardList diddls={limitedDiddls()} isListItem={props.isListItem} />
+      <DiddlListCard diddls={limitedDiddls()} isListItem={props.isListItem} />
     </InfiniteScroll>
   );
 };

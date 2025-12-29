@@ -182,7 +182,7 @@ const Sidebar: Component<{ location: Location }> = (props) => {
       class={cn(
         "py-4 flex flex-col gap-4 border-r border-gray-200 ",
         "h-screen sticky top-0 overflow-y-auto min-w-64 w-64",
-        "scrollbar-thumb-pink-200 scrollbar-track-transparent scrollbar-thin",
+        "scrollbar-thumb-purple-200 scrollbar-track-transparent scrollbar-thin",
       )}
     >
       <TopLinkContainer>
@@ -229,7 +229,7 @@ const TopLinkContainer: Component<{ children: JSXElement }> = (props) => {
 };
 
 const SubLinkContainer: Component<{ children: JSXElement }> = (props) => {
-  return <div class={cn("ml-5 border-l-2 border-gray-400/30")}>{props.children}</div>;
+  return <div class={cn("ml-5 border-l-2 border-gray-400/20")}>{props.children}</div>;
 };
 
 const SidebarLink: Component<{
@@ -246,8 +246,9 @@ const SidebarLink: Component<{
         <A
           href={props.href}
           class={cn(
-            "flex items-center gap-2 px-3 mx-1 rounded",
-            currentPath() === props.href && "bg-pink-200/50",
+            "flex items-center gap-2 px-3 mx-1 rounded py-0.5",
+            currentPath() === props.href &&
+              "border border-white backdrop-blur-md bg-linear-to-br from-purple-300/70 via-purple-300/10 to-purple-300/70",
             currentPath() !== props.href && "hover:bg-pink-200",
           )}
         >

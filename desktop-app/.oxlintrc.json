@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "unicorn", "jsx-a11y"],
+  "plugins": ["typescript", "unicorn"],
   "jsPlugins": [
     "eslint-plugin-solid",
     "@electron-toolkit/eslint-config-prettier",
@@ -21,11 +21,18 @@
       "error",
       { "cases": { "camelCase": true, "kebabCase": true, "pascalCase": true } }
     ],
-    "unicorn/no-null": "off", // Often disabled as React/TS users prefer null
+    "unicorn/no-null": "off" // Often disabled as React/TS users prefer null
 
     // --- Accessibility (JSX-A11Y) ---
-    "jsx-a11y/alt-text": "error",
-    "jsx-a11y/anchor-has-content": "error"
+    // "jsx-a11y/alt-text": "error",
+    // "jsx-a11y/anchor-has-content": "error",
+    // "jsx_a11y/autocomplete-valid": ["warn", {}],
+    // "jsx-a11y/label-has-associated-control": [
+    //   "warn",
+    //   {
+    //     "labelAttribute": ["alt", "aria-label", "aria-labelledby", "for"]
+    //   }
+    // ]
   },
   "env": {
     "browser": true,

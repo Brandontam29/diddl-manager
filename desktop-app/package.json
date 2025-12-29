@@ -29,6 +29,8 @@
     "@solid-primitives/intersection-observer": "^2.2.2",
     "@solid-primitives/media": "^2.3.3",
     "@solidjs/router": "^0.14.10",
+    "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/solid-form": "^1.27.6",
     "adm-zip": "^0.5.16",
     "better-sqlite3": "^12.4.5",
     "canvas-confetti": "^1.9.3",
@@ -42,7 +44,7 @@
     "solid-icons": "^1.1.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^4.1.12"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
@@ -63,9 +65,9 @@
     "oxlint": "^1.35.0",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
-    "solid-js": "^1.9.7",
-    "tailwind-scrollbar": "^3.1.0",
-    "tailwindcss": "^3.4.17",
+    "solid-js": "^1.9.10",
+    "tailwind-scrollbar": "^4.0.2",
+    "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
     "vite": "^6.3.5",
     "vite-plugin-solid": "^2.11.7",

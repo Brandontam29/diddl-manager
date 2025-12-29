@@ -7,7 +7,14 @@ export const Card = (props: ComponentProps<"div">) => {
 
   return (
     <div
-      class={cn("rounded-xl border bg-card text-card-foreground shadow", local.class)}
+      class={cn(
+        "shadow-xs rounded-xl",
+        "border border-white",
+        "backdrop-blur-md bg-linear-to-br from-purple-200/70 via-purple-200/10 to-purple-200/70 ",
+        "dark:bg-gray-800/50 dark:shadow-none dark:-outline-offset-1",
+        "text-card-foreground",
+        local.class,
+      )}
       {...rest}
     />
   );

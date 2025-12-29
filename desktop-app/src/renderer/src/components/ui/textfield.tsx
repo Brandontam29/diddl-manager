@@ -26,11 +26,11 @@ export const TextFieldRoot = <T extends ValidComponent = "div">(
 };
 
 export const textfieldLabel = cva(
-  "text-sm data-[disabled]:cursor-not-allowed data-[disabled]:opacity-70 font-medium",
+  "text-sm data-disabled:cursor-not-allowed data-disabled:opacity-70 font-medium",
   {
     variants: {
       label: {
-        true: "data-[invalid]:text-destructive",
+        true: "data-invalid:text-destructive",
       },
       error: {
         true: "text-destructive text-xs",

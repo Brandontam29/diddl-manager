@@ -8,7 +8,7 @@ import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 
 import Taskbar from "@renderer/features/taskbars/Taskbar";
-import DiddlCardList from "@renderer/components/DiddlCardList";
+import DiddlListCard from "@renderer/components/DiddlListCard";
 
 const ListIdPage = () => {
   const screenWidth = useScreenWidth();
@@ -90,7 +90,7 @@ const ListIdPage = () => {
           </Show>
         </div>
         <div class={cn("relative grow px-4 pt-8 pb-4 flex flex-wrap gap-2")}>
-          <DiddlCardList diddls={filteredDiddls()} isListItem={true} />
+          <DiddlListCard diddls={filteredDiddls()} isListItem={true} />
         </div>
       </div>
       <Show when={isSelectMode()}>

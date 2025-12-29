@@ -5,10 +5,8 @@ import { Button as ButtonPrimitive } from "@kobalte/core/button";
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import type { Component, ValidComponent } from "solid-js";
-import { onCleanup, onMount, splitProps } from "solid-js";
-import { animate, spring } from "motion";
-import { insert } from "solid-js/web";
+import type { ValidComponent } from "solid-js";
+import { splitProps } from "solid-js";
 
 export const buttonVariants = cva("", {
   variants: {
@@ -51,57 +49,13 @@ type buttonProps<T extends ValidComponent = "button"> = ButtonRootProps<T> &
     class?: string;
   };
 
-const Circle: Component<{ ref: (el: HTMLSpanElement) => void; diameter: number }> = (props) => {
-  return (
-    <span ref={props.ref} class="absolute inset-0 overflow-hidden h-full w-full">
-      <span
-        class="w-full animate-ripple rounded-[50%] absolute inset-0 bg-purple-300/50"
-        style={{
-          height: `${props.diameter}px`,
-        }}
-      />
-    </span>
-  );
-};
-function createRipple(event) {
-  console.log("createRipple");
-  const button = event.currentTarget;
-  const diameter = Math.max(button.clientWidth, button.clientHeight);
-
-  let circleRef;
-  console.log(button);
-
-  insert(button, <Circle ref={circleRef} diameter={diameter} />);
-
-  setTimeout(() => button.removeChild(circleRef), 600);
-}
-
 export const Button = <T extends ValidComponent = "button">(
   props: PolymorphicProps<T, buttonProps<T>>,
 ) => {
   const [local, rest] = splitProps(props as buttonProps, ["class", "variant", "size"]);
-  let buttonRef;
-
-  const animateClick = () => {
-    animate(
-      buttonRef,
-      { y: [10, 0] },
-      {
-        duration: 2, // Total duration is not required with spring animations but can be set
-        easing: spring({ stiffness: 150, damping: 15 }),
-      },
-    );
-  };
-
-  onMount(() => buttonRef.addEventListener("click", createRipple));
-
-  onCleanup(() => {
-    buttonRef.removeEventListener("click", createRipple);
-  });
 
   return (
     <ButtonPrimitive
-      ref={buttonRef}
       class={cn(
         buttonVariants({
           size: local.size,

@@ -7,7 +7,7 @@ import createAsyncCallback from "@renderer/hooks/createAsyncCallback";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { confettiStars } from "@renderer/libs/confetti";
-import { updateListItems } from "@rendererfeatures/lists/listMethods";
+import { updateListItems } from "@renderer/features/lists/listMethods";
 import type { Diddl, ListItem } from "@shared";
 import { useMatch, useParams } from "@solidjs/router";
 import { CircleX, Download, Minus, Plus, SplineIcon } from "lucide-solid";

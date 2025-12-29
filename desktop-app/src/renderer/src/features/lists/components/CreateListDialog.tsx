@@ -12,7 +12,7 @@ import {
 import { type Component, createSignal, JSX } from "solid-js";
 import { TextField, TextFieldLabel, TextFieldRoot } from "@renderer/components/ui/textfield";
 import { fetchTrackerList } from "@renderer/features/lists";
-import { List } from "@shared*";
+import { List } from "@shared";
 
 const CreateListDialog: Component<{
   children: JSX.Element;

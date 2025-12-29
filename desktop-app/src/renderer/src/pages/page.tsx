@@ -3,8 +3,8 @@ import { cn } from "@renderer/libs/cn";
 import { useSearchParams } from "@solidjs/router";
 import { createMemo, Show } from "solid-js";
 import Taskbar from "@renderer/features/taskbars/Taskbar";
-import { diddlStore } from "@rendererfeatures/diddl";
-import DiddlCardListLimiter from "@renderercomponents/DiddlCardListLimiter";
+import DiddlCardListLimiter from "@renderer/components/DiddlCardListLimiter";
+import { diddlStore } from "@renderer/features/diddl";
 
 const HomePage = () => {
   const screenWidth = useScreenWidth();

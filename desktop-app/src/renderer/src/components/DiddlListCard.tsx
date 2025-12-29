@@ -11,12 +11,12 @@ import {
 import { uiStore } from "@renderer/features/ui-state";
 import FallbackNoDiddl from "./FallbackNoDiddl";
 import FallbackLoadingDiddl from "./FallbackLoadingDiddl";
-import { ListItem } from "@shared/item-models";
+import { ListItem } from "@shared";
 import { CheckCircle, Circle, CircleX, Minus, Plus } from "lucide-solid";
 import { Button } from "./ui/button";
 import { updateListItems } from "@renderer/features/lists/listMethods";
 
-const DiddlCardList: Component<{
+const DiddlListCard: Component<{
   diddls?: (Diddl & { listItem?: ListItem })[];
   isListItem?: boolean;
 }> = (props) => {
@@ -52,12 +52,12 @@ const DiddlCardList: Component<{
                     "h-[calc(100%-20px)] w-full absolute top-0 inset-x",
 
                     isSelectMode() &&
-                      "group/card hover:bg-gradient-to-t hover:from-black/25 hover:to-[48px]",
+                      "group/card hover:bg-linear-to-t hover:from-black/25 hover:to-[48px]",
                   )}
                 >
                   <div // top black
                     class={cn(
-                      "absolute inset-0 bg-gradient-to-b from-black/35 w-full h-[48px] opacity-0 hover:opacity-100 text-transparent", //default no show button
+                      "absolute inset-0 bg-linear-to-b from-black/35 w-full h-12 opacity-0 hover:opacity-100 text-transparent", //default no show button
                       !isSelectMode() && "hover:text-gray-200", // if non-select mode, hover shows gray check
                       isSelectMode() && "opacity-100", //show black top overlay in select mode
                       selectedIndices().includes(index()) && "from-transparent", // do not show if selected
@@ -237,18 +237,13 @@ const isAdd = (arr: number[], shiftClickIndex: number) => {
   return !arrayHasAllSetElements(arr, numbersBetweenSet);
 };
 
-function arrayHasAllSetElements(array: any[], set: Set<any>) {
+const arrayHasAllSetElements = <T,>(array: T[], set: Set<T>) => {
   const arraySet = new Set(array);
 
-  for (const item of set) {
-    if (!arraySet.has(item)) {
-      return false;
-    }
-  }
-  return true;
-}
+  return set.isSubsetOf(arraySet);
+};
 
-function getNumbersBetween(a: number, b: number) {
+const getNumbersBetween = (a: number, b: number) => {
   const numbers: number[] = [];
 
   if (a < b) {
@@ -264,6 +259,6 @@ function getNumbersBetween(a: number, b: number) {
   }
 
   return numbers;
-}
+};
 
-export default DiddlCardList;
+export default DiddlListCard;

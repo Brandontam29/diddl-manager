@@ -6,7 +6,7 @@ const FallbackNoList = () => {
   return (
     <div class="max-w-lg mx-auto text-center space-y-2">
       <ImageRoot>
-        <Image src={diddlSad} alt="Sad Diddl" />
+        <Image src={diddlSad} alt="Sad Diddl" loading="eager" />
         <ImageFallback>
           <Skeleton class="rounded h-[340px] aspect-square" />
         </ImageFallback>

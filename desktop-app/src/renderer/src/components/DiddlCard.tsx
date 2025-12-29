@@ -2,7 +2,7 @@ import { cn } from "@renderer/libs/cn";
 import type { Diddl } from "@shared";
 import { type Component } from "solid-js";
 import { Image, ImageFallback, ImageRoot } from "./ui/image";
-import diddlTransparent from "@renderer/assets/diddl-transparent.jpg";
+import { ImageOffIcon } from "lucide-solid";
 
 const DiddlCard: Component<{ diddl: Diddl; className?: string }> = (props) => {
   return (
@@ -15,7 +15,7 @@ const DiddlCard: Component<{ diddl: Diddl; className?: string }> = (props) => {
             alt="Diddl image corresponding to the collectible"
           />
           <ImageFallback>
-            <img src={diddlTransparent} alt="Diddl welcoming you to wait a little longer." />
+            <ImageOffIcon />
           </ImageFallback>
         </ImageRoot>
       </div>

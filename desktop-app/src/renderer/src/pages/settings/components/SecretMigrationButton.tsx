@@ -59,8 +59,8 @@ const SecretMigrationButton = () => {
               }
 
               const list = await window.api.createList(
-                "listName",
-                COLLECTION_LIST.map((item) => item.id),
+                listname(),
+                Array.from(new Set(COLLECTION_LIST.map((item) => item.id))),
               );
 
               const promises = COLLECTION_LIST.map((item) => {

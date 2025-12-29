@@ -1,6 +1,6 @@
 {
   "name": "diddl-manager",
-  "version": "1.10.3",
+  "version": "1.11.0",
   "description": "App to manage your Diddls",
   "main": "./out/main/index.js",
   "author": "Brandontam29",
@@ -17,10 +17,12 @@
     "dev": "electron-vite dev --watch",
     "build": "electron-vite build",
     "postinstall": "electron-builder install-app-deps",
-    "build:unpack": "bun run build && electron-builder --dir",
+    "build-local:win": "bun run build && electron-builder --win",
+    "build-local:mac": "electron-vite build && electron-builder --mac",
+    "build-local:linux": "electron-vite build && electron-builder --linux",
     "build:win": "bun run build && electron-builder --win --publish always",
-    "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:mac": "electron-vite build && electron-builder --mac --publish always",
+    "build:linux": "electron-vite build && electron-builder --linux --publish always"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
@@ -40,7 +42,7 @@
     "kysely": "^0.28.8",
     "kysely-plugin-serialize": "^0.8.2",
     "lucide-solid": "^0.441.0",
-    "motion": "^10.18.0",
+    "motion": "^12.23.26",
     "solid-icons": "^1.1.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
@@ -56,7 +58,7 @@
     "@types/node": "^22.16.5",
     "autoprefixer": "^10.4.21",
     "electron": "^37.2.3",
-    "electron-builder": "^25.1.8",
+    "electron-builder": "^26.0.12",
     "electron-vite": "^4.0.0",
     "eslint": "^9.33.0",
     "eslint-plugin-oxlint": "^1.35.0",

@@ -25,7 +25,7 @@ const getParams = (params: { type?: string; from?: number; to?: number }) => {
   return `/?${searchParams.toString()}`;
 };
 
-const Sidebar: Component<{ location: Location }> = (props) => {
+const Sidebar: Component<{ currentPath: string }> = (props) => {
   const links = createMemo(
     () =>
       [
@@ -186,10 +186,15 @@ const Sidebar: Component<{ location: Location }> = (props) => {
       )}
     >
       <TopLinkContainer>
-        <SidebarLink href="/" location={location} icon={BiRegularHomeHeart} size={24}>
+        <SidebarLink href="/" currentPath={props.currentPath} icon={BiRegularHomeHeart} size={24}>
           Home
         </SidebarLink>
-        <SidebarLink href="lists" location={location} icon={SquareLibraryIcon} size={18}>
+        <SidebarLink
+          href="lists"
+          currentPath={props.currentPath}
+          icon={SquareLibraryIcon}
+          size={18}
+        >
           Lists
         </SidebarLink>
       </TopLinkContainer>
@@ -205,7 +210,7 @@ const Sidebar: Component<{ location: Location }> = (props) => {
               <SubLinkContainer>
                 <For each={group.links}>
                   {(link) => (
-                    <SidebarLink location={props.location} href={link.href}>
+                    <SidebarLink currentPath={props.currentPath} href={link.href}>
                       {link.label}
                     </SidebarLink>
                   )}
@@ -216,7 +221,7 @@ const Sidebar: Component<{ location: Location }> = (props) => {
         </For>
       </TopLinkContainer>
       <div>
-        <SidebarLink href="/settings" location={location} icon={CogIcon}>
+        <SidebarLink href="/settings" currentPath={props.currentPath} icon={CogIcon}>
           Settings
         </SidebarLink>
       </div>
@@ -229,27 +234,27 @@ const TopLinkContainer: Component<{ children: JSXElement }> = (props) => {
 };
 
 const SubLinkContainer: Component<{ children: JSXElement }> = (props) => {
-  return <div class={cn("ml-5 border-l-2 border-gray-400/20")}>{props.children}</div>;
+  return <div class={cn("ml-5 border-l-2 border-gray-400/20 space-y-0.5")}>{props.children}</div>;
 };
 
 const SidebarLink: Component<{
-  location: { pathname: string; search: string };
+  currentPath: string;
   href: string;
   children: JSXElement;
   icon?: IconTypes;
   size?: number;
 }> = (props) => {
-  const currentPath = createMemo(() => `${props.location.pathname}${props.location.search}`);
   return (
     <Switch fallback={<p>???</p>}>
       <Match when={props.href}>
         <A
           href={props.href}
           class={cn(
-            "flex items-center gap-2 px-3 mx-1 rounded py-0.5",
-            currentPath() === props.href &&
+            "gradient-border flex items-center gap-2 px-3 mx-1 rounded",
+            "bg-sidebar",
+            props.currentPath === props.href &&
               "border border-white backdrop-blur-md bg-linear-to-br from-purple-300/70 via-purple-300/10 to-purple-300/70",
-            currentPath() !== props.href && "hover:bg-pink-200",
+            // currentPath() !== props.href && "",
           )}
         >
           <Dynamic component={props.icon} size={props.size || 20} />

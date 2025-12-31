@@ -34,7 +34,9 @@ const SettingsSectionUx = () => {
       <SectionHeader>
         <SectionTitle>Settings</SectionTitle>
       </SectionHeader>
-      <SectionContent>
+
+      <SectionContent class="space-y-2">
+        <label class="block">Card Sizes</label>
         <Select
           options={ZOOM_OPTIONS as DeepMutable<typeof ZOOM_OPTIONS>}
           optionTextValue="label"

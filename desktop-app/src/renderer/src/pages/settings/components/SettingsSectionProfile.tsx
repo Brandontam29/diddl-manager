@@ -50,18 +50,6 @@ export default function SettingsSectionProfile() {
             handleSubmit();
           }}
         >
-          <div
-            class={cn(
-              "relative items-center justify-center rounded-xl p-1",
-              "after:absolute after:inset-[-10%] after:animate-border-spin",
-              "after:bg-[radial-gradient(18%_28%_at_24%_50%,#CEFAFFFF_7%,#073AFF00_100%),radial-gradient(18%_28%_at_18%_71%,#FFFFFF59_6%,#073AFF00_100%),radial-gradient(70%_53%_at_36%_76%,#73F2FFFF_0%,#073AFF00_100%),radial-gradient(42%_53%_at_15%_94%,#FFFFFFFF_7%,#073AFF00_100%),radial-gradient(42%_53%_at_34%_72%,#FFFFFFFF_7%,#073AFF00_100%),radial-gradient(18%_28%_at_35%_87%,#FFFFFFFF_7%,#073AFF00_100%),radial-gradient(31%_43%_at_7%_98%,#FFFFFFFF_24%,#073AFF00_100%),radial-gradient(21%_37%_at_72%_23%,#D3FF6D9C_24%,#073AFF00_100%),radial-gradient(35%_56%_at_91%_74%,#8A4FFFF5_9%,#073AFF00_100%),radial-gradient(74%_86%_at_67%_38%,#6DFFAEF5_24%,#073AFF00_100%),linear-gradient(125deg,#4EB5FFFF_1%,#4C00FCFF_100%)]",
-              "after:content-[''] overflow-hidden",
-            )}
-          >
-            <div class="bg-gray-200 relative z-10 flex h-full w-full items-center justify-center rounded-xl">
-              Pseudo-element Border
-            </div>
-          </div>
           {/* Name Field */}
           <Field name="name">
             {(field) => (
@@ -77,15 +65,6 @@ export default function SettingsSectionProfile() {
               </div>
             )}
           </Field>
-
-          <div
-            class="box-gradient-border animate-bg-spin hover:paused 
-              flex h-[50vmin] w-[60vmin] items-center justify-center 
-              rounded-[2em] border-5 border-transparent text-white 
-              shadow-[0_1px_0_#000]"
-          >
-            <span class="text-xl font-medium">Hover to Pause</span>
-          </div>
 
           {/* Description Field */}
           <Field name="description">

@@ -1,5 +1,5 @@
 import { cn } from "@renderer/libs/cn";
-import { Component, JSXElement } from "solid-js";
+import { Component, ComponentProps, JSXElement, splitProps } from "solid-js";
 
 export const Section: Component<{ children?: JSXElement }> = (props) => {
   return (
@@ -20,16 +20,21 @@ export const SectionDescription: Component<{ children?: JSXElement }> = (props) 
   return <p class="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">{props.children}</p>;
 };
 
-export const SectionContent: Component<{ children?: JSXElement }> = (props) => {
+export const SectionContent: Component<ComponentProps<"div">> = (props) => {
+  const [local, rest] = splitProps(props, ["class", "children"]);
+
   return (
     <div
       class={cn(
+        "px-4 py-6 sm:p-8",
         "shadow-xs sm:rounded-xl md:col-span-2 dark:bg-gray-800/50 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10",
         "border border-white",
-        "backdrop-blur-md bg-gradient-to-br from-purple-200/70 via-purple-200/10 to-purple-200/70",
+        "backdrop-blur-md bg-linear-to-br from-purple-200/70 via-purple-200/10 to-purple-200/70",
+        local.class,
       )}
+      {...rest}
     >
-      <div class="px-4 py-6 sm:p-8">{props.children}</div>
+      {local.children}
     </div>
   );
 };

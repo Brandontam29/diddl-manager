@@ -1,5 +1,6 @@
 import type { AddListItem } from "@shared";
 import { listStore, setListStore } from "./createListsStore";
+import { reconcile } from "solid-js/store";
 
 export const fetchListItems = async (listId: number) => {
   try {
@@ -7,7 +8,7 @@ export const fetchListItems = async (listId: number) => {
 
     if (listItems === null) return;
 
-    setListStore("listItems", listItems);
+    setListStore("listItems", reconcile(listItems));
   } catch (e) {
     console.error(e);
   }
@@ -39,6 +40,8 @@ export const updateListItems = async (
   },
 ) => {
   const result = await window.api.updateListItems(listId, listItemIds, action);
+
+  // setListStore("users", [2, 7, 10], "loggedIn", false)
 
   if (result.success) {
     fetchListItems(listId);

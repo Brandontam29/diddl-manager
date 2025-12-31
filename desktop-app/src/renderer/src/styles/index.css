@@ -32,7 +32,7 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
+  --sidebar: oklch(0.9694 0.0152 12.42);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -136,59 +136,45 @@
 }
 
 @theme {
-  /* Define the animation utility */
-  --animate-border-spin: border-spin 7s linear infinite;
-
-  /* Define the keyframes */
-  @keyframes border-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(-360deg);
-    }
-  }
-}
-
-/* 1. Register the property at the top level (Standard CSS) */
-@property --border-angle {
-  syntax: "<angle>";
-  inherits: true;
-  initial-value: 0turn;
-}
-
-@theme {
-  /* 2. Link the animation name to the keyframes */
-  --animate-bg-spin: bg-spin 3s linear infinite;
-
-  @keyframes bg-spin {
-    to {
-      --border-angle: 1turn;
+  @keyframes move-gradient {
+    50% {
+      background-position: 100% 0%;
     }
   }
 }
 
 @layer utilities {
-  .box-gradient-border {
-    /* 3. Use the variable within the utility */
-    --main-bg: conic-gradient(from var(--border-angle), #213, #112 5%, #112 60%, #213 95%);
+  .gradient-border {
+    --border-width: 2px;
 
-    --gradient-border: conic-gradient(
-      from var(--border-angle),
-      transparent 25%,
-      #08f,
-      #f03 99%,
-      transparent
-    );
+    position: relative;
 
-    background:
-      var(--main-bg) padding-box,
-      var(--gradient-border) border-box,
-      var(--main-bg) border-box;
+    &::before {
+      opacity: 0;
+      position: absolute;
+      content: "";
+      top: calc(-1 * var(--border-width));
+      left: calc(-1 * var(--border-width));
+      z-index: -1;
+      width: calc(100% + var(--border-width) * 2);
+      height: calc(100% + var(--border-width) * 2);
+      background: linear-gradient(
+        90deg,
+        rgba(255, 99, 234, 1) 0%,
+        rgba(255, 128, 128, 1) 24%,
+        rgba(183, 163, 255, 1) 43%,
+        rgba(243, 79, 255, 1) 62%,
+        rgba(255, 112, 124, 1) 81%,
+        rgba(224, 153, 255, 1) 100%
+      );
+      background-size: 300% 300%;
+      background-position: 0 50%;
+      border-radius: 4px;
+      animation: move-gradient 2s linear infinite;
+    }
 
-    background-position: center center;
-
-    /* Ensure the border is transparent so the background shows through */
-    border: 5px solid transparent;
+    &:hover::before {
+      opacity: 1;
+    }
   }
 }

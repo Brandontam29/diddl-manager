@@ -1,3 +1,6 @@
+// oxlint-disable
+// typescript-eslint-disable
+
 export function except<
   T extends Record<string, any>,
   K extends Array<keyof T>,
@@ -5,7 +8,7 @@ export function except<
 >(value: T, ...exceptions: K): R {
   const copy: Record<string, any> = {};
   for (const key in value) {
-    if (!value.hasOwnProperty(key) || exceptions.includes(key)) continue;
+    if (!value.proptype.hasOwnProperty.call(key) || exceptions.includes(key)) continue;
 
     copy[key] = value[key];
   }

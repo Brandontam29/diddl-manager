@@ -1,7 +1,8 @@
-import { contextBridge } from "electron";
 import { electronAPI } from "@electron-toolkit/preload";
-import { fileSystemPreloadApi } from "../main/file-system";
+import { contextBridge } from "electron";
+
 import { diddlPreloadApi } from "../main/diddl";
+import { fileSystemPreloadApi } from "../main/file-system";
 import { listPreloadApi } from "../main/list";
 
 // Custom APIs for renderer
@@ -25,8 +26,8 @@ if (process.contextIsolated) {
     console.error(error);
   }
 } else {
-  // @ts-ignore (define in dts)
+  // @ts-expect-error (define in dts)
   window.electron = electronAPI;
-  // @ts-ignore (define in dts)
+  // @ts-expect-error (define in dts)
   window.api = api;
 }

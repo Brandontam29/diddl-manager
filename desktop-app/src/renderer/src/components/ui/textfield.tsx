@@ -1,5 +1,3 @@
-import { cn } from "@renderer/libs/cn";
-
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type {
   TextFieldDescriptionProps,
@@ -12,6 +10,8 @@ import { TextField as TextFieldPrimitive } from "@kobalte/core/text-field";
 import { cva } from "class-variance-authority";
 import type { ValidComponent, VoidProps } from "solid-js";
 import { splitProps } from "solid-js";
+
+import { cn } from "@renderer/libs/cn";
 
 type textFieldProps<T extends ValidComponent = "div"> = TextFieldRootProps<T> & {
   class?: string;
@@ -106,7 +106,7 @@ export const TextField = <T extends ValidComponent = "input">(
   return (
     <TextFieldPrimitive.Input
       class={cn(
-        "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-shadow file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+        "border-input placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-shadow file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-[1.5px] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
         local.class,
       )}
       {...rest}

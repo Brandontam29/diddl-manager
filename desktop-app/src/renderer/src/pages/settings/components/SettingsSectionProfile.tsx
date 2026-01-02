@@ -1,6 +1,7 @@
-import { AnyFieldApi, createForm, FieldApi } from "@tanstack/solid-form";
+import { AnyFieldApi, createForm } from "@tanstack/solid-form";
+import { Component, For, Show, createEffect, createMemo } from "solid-js";
 import { z } from "zod";
-import { Component, createEffect, createMemo, For, Show } from "solid-js";
+
 import {
   Section,
   SectionContent,
@@ -9,20 +10,17 @@ import {
   SectionTitle,
 } from "@renderer/components/section/two-column";
 import { Button } from "@renderer/components/ui/button";
-import { cn } from "@renderer/libs/cn";
 
-// 1. Define your validation schema with Zod
 const userProfileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   description: z.string().min(10, "Description must be at least 10 characters").max(200),
-  // For file uploads, we validate that it's an instance of File
   picture: z.instanceof(File, { message: "Please upload a valid image" }).nullable(),
 });
 
-type UserProfile = z.infer<typeof userProfileSchema>;
+// type UserProfile = z.infer<typeof userProfileSchema>;
 
 export default function SettingsSectionProfile() {
-  const { Field, handleSubmit, state, Subscribe, ...rest } = createForm(() => ({
+  const { Field, handleSubmit, Subscribe } = createForm(() => ({
     defaultValues: {
       name: "",
       description: "",
@@ -31,7 +29,7 @@ export default function SettingsSectionProfile() {
     validators: {
       onChange: userProfileSchema,
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: ({ value }) => {
       console.log("Form Submitted:", value);
       alert("Profile updated successfully!");
     },
@@ -121,7 +119,7 @@ const FieldInfo: Component<{ field: AnyFieldApi }> = (props) => {
   createEffect(() => console.log("meta", meta()));
   return (
     <div style={{ "font-size": "0.8rem", color: "red", "margin-top": "4px" }}>
-      <Show when={meta().isTouched && meta().errors.length}>
+      <Show when={meta().isTouched && meta().errors.length > 0}>
         <For each={meta().errors}>{(error) => <div>{error.message}</div>}</For>
       </Show>
     </div>

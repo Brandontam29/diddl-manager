@@ -1,100 +1,68 @@
-import { appendFile } from "fs/promises";
-import path from "path";
+// oxlint-disable no-explicit-any
+import { appendFile } from "node:fs/promises";
+import path from "node:path";
 
 import { logDirectory } from "../pathing";
-import isExists from "../utils/isExists";
 import ensureFileExists from "../utils/ensureFileExists";
 
-const formatDate = (date: Date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
-  const milliseconds = String(date.getMilliseconds()).padStart(3, "0");
+type LogLevel = "info" | "warn" | "error" | "fatal" | "debug";
 
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+const pad = (n: number, l = 2) => String(n).padStart(l, "0");
+
+const formatDate = (date: Date): string => {
+  return (
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+    `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}.${pad(date.getMilliseconds(), 3)}`
+  );
 };
 
-function getQuarter(date: Date) {
-  const month = date.getMonth();
-  const quarter = Math.floor(month / 3) + 1;
-  return quarter;
-}
+const getQuarter = (date: Date): number => Math.floor(date.getMonth() / 3) + 1;
 
-// https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
-// const LOG_STYLE_MAP = {
-//     info: 'font-size: 1rem; color: blue;',
-//     warn: 'font-size: 1rem; color: yellow;',
-//     error: 'font-size: 1rem; color: red;',
-//     fatal: 'font-size: 1rem; color: red; padding: 4px; font-weight: bold;',
-//     debug: 'font-size: 1rem; color: green;',
-// } as const;
+const formatMessage = (msg: any): string => {
+  if (msg instanceof Error) {
+    return `${msg.message}${msg.stack ? `\n${msg.stack}` : ""}`;
+  }
+  return typeof msg === "object" ? JSON.stringify(msg, null, 2) : String(msg);
+};
 
-const logHandler = async (
-  type: "info" | "warn" | "error" | "fatal" | "debug",
-  ...messages: any[]
-) => {
-  const date = new Date();
+const writeLog = async (type: LogLevel, ...messages: any[]) => {
+  const now = new Date();
+  const timestamp = formatDate(now);
+  const prefix = `[${timestamp}] [${type.toUpperCase()}]`;
 
-  const quarter = getQuarter(date);
+  // oxlint-disable-next-line no-array-callback-reference
+  const content = messages.map(formatMessage).join(" ");
+  const fullLogLine = `${prefix} ${content}\n`;
 
-  const fileName = `LOGGING-Q${quarter}.log`;
+  console[type](fullLogLine.trim());
 
-  const filePath = path.join(logDirectory(), fileName);
-
-  const isExist = await isExists(filePath);
-
-  if (!isExist) await ensureFileExists(filePath);
-
-  const prefix = `\n${formatDate(date)} [${type.toUpperCase()}]`;
-  // Append text to the file
   try {
-    const errIndices = messages.reduce<number[]>((acc, curr, index) => {
-      if (curr instanceof Error) {
-        acc.push(index);
-      }
-      return acc;
-    }, []);
+    const fileName = `LOGGING-Q${getQuarter(now)}.log`;
+    const filePath = path.join(logDirectory(), fileName);
 
-    for (let i = 0; i < messages.length; i++) {
-      if (errIndices.includes(i) && i === 0) {
-        appendFile(filePath, `${prefix} ${messages[i].message} ${messages[i].stack}`);
-        console.log(`${prefix} ${messages[i].message} ${messages[i].stack}`);
-        continue;
-      }
-
-      if (errIndices.includes(i)) {
-        appendFile(filePath, `${messages[i].message} ${messages[i].stack}`);
-        console.log(`${messages[i].message} ${messages[i].stack}`);
-
-        continue;
-      }
-
-      if (i === 0) {
-        appendFile(filePath, `${prefix} ${messages[i]}`);
-        console.log(`${prefix} ${messages[i]}`);
-
-        continue;
-      }
-
-      appendFile(filePath, `${messages[i]}`);
-      console.log(`${messages[i]}`);
-    }
+    await ensureFileExists(filePath);
+    await appendFile(filePath, fullLogLine, "utf8");
   } catch (err) {
-    if (err) {
-      console.error("Error appending text to file:", err);
-    }
+    console.error("Failed to write to log file:", err);
   }
 };
 
 const log = {
-  info: (...messages: (string | unknown)[]) => logHandler("info", ...messages),
-  warn: (...messages: (string | unknown)[]) => logHandler("warn", ...messages),
-  error: (...messages: (string | Error | unknown)[]) => logHandler("error", ...messages),
-  fatal: (...messages: (string | Error | unknown)[]) => logHandler("fatal", ...messages),
-  debug: (...messages: (string | unknown)[]) => logHandler("debug", ...messages),
+  info: (...args: any[]) => {
+    writeLog("info", ...args);
+  },
+  warn: (...args: any[]) => {
+    writeLog("warn", ...args);
+  },
+  error: (...args: any[]) => {
+    writeLog("error", ...args);
+  },
+  fatal: (...args: any[]) => {
+    writeLog("fatal", ...args);
+  },
+  debug: (...args: any[]) => {
+    writeLog("debug", ...args);
+  },
 };
 
 export default log;

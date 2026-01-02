@@ -1,6 +1,6 @@
-import { cn } from "@renderer/libs/cn";
-
 import { type ComponentProps, splitProps } from "solid-js";
+
+import { cn } from "@renderer/libs/cn";
 
 export const Table = (props: ComponentProps<"table">) => {
   const [local, rest] = splitProps(props, ["class"]);
@@ -28,7 +28,7 @@ export const TableFooter = (props: ComponentProps<"tfoot">) => {
   const [local, rest] = splitProps(props, ["class"]);
 
   return (
-    <tbody class={cn("bg-primary font-medium text-primary-foreground", local.class)} {...rest} />
+    <tbody class={cn("bg-primary text-primary-foreground font-medium", local.class)} {...rest} />
   );
 };
 
@@ -38,7 +38,7 @@ export const TableRow = (props: ComponentProps<"tr">) => {
   return (
     <tr
       class={cn(
-        "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+        "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",
         local.class,
       )}
       {...rest}
@@ -52,7 +52,7 @@ export const TableHead = (props: ComponentProps<"th">) => {
   return (
     <th
       class={cn(
-        "h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "text-muted-foreground h-10 px-2 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         local.class,
       )}
       {...rest}
@@ -77,5 +77,5 @@ export const TableCell = (props: ComponentProps<"td">) => {
 export const TableCaption = (props: ComponentProps<"caption">) => {
   const [local, rest] = splitProps(props, ["class"]);
 
-  return <caption class={cn("mt-4 text-sm text-muted-foreground", local.class)} {...rest} />;
+  return <caption class={cn("text-muted-foreground mt-4 text-sm", local.class)} {...rest} />;
 };

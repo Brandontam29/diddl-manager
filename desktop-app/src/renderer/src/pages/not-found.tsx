@@ -1,14 +1,14 @@
-import { Image, ImageFallback, ImageRoot } from "@renderer/components/ui/image";
 import diddlTongue from "@renderer/assets/diddl-tongue.gif";
+import { Image, ImageFallback, ImageRoot } from "@renderer/components/ui/image";
 import { Skeleton } from "@renderer/components/ui/skeleton";
 
 const NotFoundPage = () => {
   return (
-    <div class="max-w-lg mx-auto text-center space-y-2">
+    <div class="mx-auto max-w-lg space-y-2 text-center">
       <ImageRoot>
         <Image src={diddlTongue} alt="Diddl sticking his tongue out laughing" />
         <ImageFallback>
-          <Skeleton class="rounded h-[390px] aspect-square" />
+          <Skeleton class="aspect-square h-[390px] rounded" />
         </ImageFallback>
       </ImageRoot>
 

@@ -1,15 +1,15 @@
 import { createSignal } from "solid-js";
 
-const createAsyncCallback = <TReturn>(
-  activeFunction: (...args: any) => Promise<TReturn | null>,
+const createAsyncCallback = <TArgs extends unknown[], TReturn>(
+  activeFunction: (...args: TArgs) => TReturn | null | Promise<TReturn | null>,
 ) => {
   const [isLoading, setIsLoading] = createSignal(false);
   const [isError, setIsError] = createSignal(false);
-  const [data, setData] = createSignal<any>(null);
+  const [data, setData] = createSignal<Awaited<TReturn> | null>(null);
   const [allSettled, setAllSettled] = createSignal(false);
   const [hasExecuted, setHasExecuted] = createSignal(false);
 
-  const handler = async (...someArgs: any) => {
+  const handler = async (...someArgs: TArgs) => {
     setIsLoading(true);
     setAllSettled(false);
     setHasExecuted(true);
@@ -20,6 +20,7 @@ const createAsyncCallback = <TReturn>(
       setIsError(false);
       setData(() => response);
     } catch (e) {
+      console.error(e);
       setIsError(true);
     } finally {
       setIsLoading(false);

@@ -1,5 +1,6 @@
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
+
 import { logging } from "../logging";
 
 const ensureFileExists = async (filePath: string, defaultContent = "") => {
@@ -8,16 +9,23 @@ const ensureFileExists = async (filePath: string, defaultContent = "") => {
   try {
     await mkdir(dir, { recursive: true });
   } catch (err) {
-    if (!(err instanceof Error)) return logging.error(`Error creating directories: ${err}`);
+    if (!(err instanceof Error)) {
+      logging.error(`Error creating directories: ${err}`);
+      return;
+    }
 
-    return logging.error(`Error creating directories: ${err.message}`);
+    logging.error(`Error creating directories: ${err.message}`);
+    return;
   }
   try {
     await writeFile(filePath, defaultContent);
   } catch (err) {
-    if (!(err instanceof Error)) return logging.error(`Error creating file: ${err}`);
+    if (!(err instanceof Error)) {
+      logging.error(`Error creating file: ${err}`);
+      return;
+    }
 
-    return logging.error(`Error creating file: ${err.message}`);
+    logging.error(`Error creating file: ${err.message}`);
   }
 };
 

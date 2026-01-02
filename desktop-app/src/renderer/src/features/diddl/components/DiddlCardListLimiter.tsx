@@ -1,16 +1,9 @@
-import {
-  Component,
-  createComputed,
-  createEffect,
-  createMemo,
-  createSignal,
-  JSX,
-  on,
-} from "solid-js";
-import { createIntersectionObserver } from "@solid-primitives/intersection-observer";
 import { Diddl, ListItem } from "@shared";
-import DiddlListCard from "./DiddlListCard";
+import { createIntersectionObserver } from "@solid-primitives/intersection-observer";
 import { useSearchParams } from "@solidjs/router";
+import { Component, JSX, createComputed, createMemo, createSignal, on } from "solid-js";
+
+import DiddlListCard from "./DiddlListCard";
 
 const InfiniteScroll: Component<{
   children: JSX.Element;

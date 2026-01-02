@@ -1,9 +1,9 @@
-import { cn } from "@renderer/libs/cn";
-
 import type { ContentProps, DescriptionProps, DynamicProps, LabelProps } from "@corvu/drawer";
 import DrawerPrimitive from "@corvu/drawer";
 import type { ComponentProps, ParentProps, ValidComponent } from "solid-js";
 import { splitProps } from "solid-js";
+
+import { cn } from "@renderer/libs/cn";
 
 export const Drawer = DrawerPrimitive;
 export const DrawerTrigger = DrawerPrimitive.Trigger;
@@ -31,12 +31,12 @@ export const DrawerContent = <T extends ValidComponent = "div">(
       />
       <DrawerPrimitive.Content
         class={cn(
-          "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-xl border bg-background after:absolute after:inset-x-0 after:top-full after:h-[50%] after:bg-inherit data-[transitioning]:transition-transform data-[transitioning]:duration-200 md:select-none",
+          "bg-background fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-xl border after:absolute after:inset-x-0 after:top-full after:h-[50%] after:bg-inherit data-[transitioning]:transition-transform data-[transitioning]:duration-200 md:select-none",
           local.class,
         )}
         {...rest}
       >
-        <div class="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
+        <div class="bg-muted mx-auto mt-4 h-2 w-[100px] rounded-full" />
         {local.children}
       </DrawerPrimitive.Content>
     </DrawerPrimitive.Portal>
@@ -66,7 +66,7 @@ export const DrawerLabel = <T extends ValidComponent = "h2">(
 
   return (
     <DrawerPrimitive.Label
-      class={cn("text-lg font-semibold leading-none tracking-tight", local.class)}
+      class={cn("text-lg leading-none font-semibold tracking-tight", local.class)}
       {...rest}
     />
   );
@@ -83,7 +83,7 @@ export const DrawerDescription = <T extends ValidComponent = "p">(
 
   return (
     <DrawerPrimitive.Description
-      class={cn("text-sm text-muted-foreground", local.class)}
+      class={cn("text-muted-foreground text-sm", local.class)}
       {...rest}
     />
   );

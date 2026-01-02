@@ -1,30 +1,33 @@
-import { diddlStore } from "@renderer/features/diddl";
-import { cn } from "@renderer/libs/cn";
+import { useAction, useParams } from "@solidjs/router";
+import { CheckCircle, Circle, CircleX, Minus, Plus } from "lucide-solid";
+import { type Component, For, JSX, Show, createMemo } from "solid-js";
+
 import type { Diddl } from "@shared";
-import { useParams } from "@solidjs/router";
-import { type Component, createMemo, For, JSX, Show } from "solid-js";
-import DiddlCard from "./DiddlCard";
+import { ListItem } from "@shared";
+
+import FallbackLoadingDiddl from "@renderer/components/fallback/FallbackLoadingDiddl";
+import FallbackNoDiddl from "@renderer/components/fallback/FallbackNoDiddl";
+import { Button } from "@renderer/components/ui/button";
+import { diddlStore, setDiddlStore } from "@renderer/features/diddl";
 import {
   addSelectedIndices,
   removeSelectedIndices,
 } from "@renderer/features/diddl/selectedIndicesMethods";
+import { updateListItemsAction } from "@renderer/features/lists";
 import { uiStore } from "@renderer/features/ui-state";
-import FallbackNoDiddl from "./FallbackNoDiddl";
-import FallbackLoadingDiddl from "./FallbackLoadingDiddl";
-import { ListItem } from "@shared";
-import { CheckCircle, Circle, CircleX, Minus, Plus } from "lucide-solid";
-import { Button } from "./ui/button";
-import { updateListItems } from "@renderer/features/lists/listMethods";
+import { cn } from "@renderer/libs/cn";
+
+import DiddlCard from "./DiddlCard";
 
 const DiddlListCard: Component<{
   diddls?: (Diddl & { listItem?: ListItem })[];
   isListItem?: boolean;
 }> = (props) => {
   const params = useParams();
-  const isListItem = createMemo(() => props?.diddls?.[0]?.hasOwnProperty("listItem") || false);
-  const listId = createMemo(() => parseInt(params.id));
+  const listId = createMemo(() => (params.id === undefined ? null : parseInt(params.id)));
   const selectedIndices = () => diddlStore.selectedIndices;
-  const isSelectMode = createMemo(() => selectedIndices().length !== 0);
+  const isSelectMode = createMemo(() => selectedIndices().length > 0);
+  const updateListItems = useAction(updateListItemsAction);
 
   return (
     <Show when={Array.isArray(props.diddls)} fallback={<FallbackLoadingDiddl />}>
@@ -45,63 +48,76 @@ const DiddlListCard: Component<{
                   width: ratio ? `${uiStore.cardHeight * ratio}px` : undefined,
                 }}
               >
-                <DiddlCard className={cn("w-full h-full")} diddl={diddl} />
-
-                <div // full overlay
+                <DiddlCard className={cn("h-full w-full")} diddl={diddl} />
+                <div
+                  // full overlay
                   class={cn(
-                    "h-[calc(100%-20px)] w-full absolute top-0 inset-x",
+                    "inset-x absolute top-0 h-[calc(100%-20px)] w-full",
 
                     isSelectMode() &&
                       "group/card hover:bg-linear-to-t hover:from-black/25 hover:to-[48px]",
                   )}
                 >
-                  <div // top black
+                  <div
+                    // top black
                     class={cn(
-                      "absolute inset-0 bg-linear-to-b from-black/35 w-full h-12 opacity-0 hover:opacity-100 text-transparent", //default no show button
-                      !isSelectMode() && "hover:text-gray-200", // if non-select mode, hover shows gray check
-                      isSelectMode() && "opacity-100", //show black top overlay in select mode
-                      selectedIndices().includes(index()) && "from-transparent", // do not show if selected
+                      // default no show button
+                      "absolute inset-0 h-12 w-full bg-linear-to-b from-black/35 text-transparent opacity-0 hover:opacity-100",
+                      // if non-select mode, hover shows gray check
+                      !isSelectMode() && "hover:text-gray-200",
+                      // show black top overlay in select mode
+                      isSelectMode() && "opacity-100",
+                      // do not show if selected
+                      selectedIndices().includes(index()) && "from-transparent",
                     )}
                   >
-                    <button // button
+                    <button
+                      // button
                       class={cn("absolute top-1.5 left-1.5 h-7 w-7 rounded-full")}
                       onClick={(e) => handleClick(index(), e)}
                     >
                       <Circle
                         class={cn(
-                          "absolute inset-0 w-full h-full",
-                          !selectedIndices().includes(index()) && isSelectMode() && "text-gray-200", // in select mode, show empty gray circle
+                          "absolute inset-0 h-full w-full",
+                          // in select mode, show empty gray circle
+                          !selectedIndices().includes(index()) && isSelectMode() && "text-gray-200",
                         )}
                       />
                       <CheckCircle
                         class={cn(
-                          "absolute inset-0 w-full h-full",
-                          !isSelectMode() && "hover:text-white", // if non-select mode, top hover is gray, then direct hover is white
+                          // if non-select mode, top hover is gray, then direct hover is white
+
+                          "absolute inset-0 h-full w-full",
+                          !isSelectMode() && "hover:text-white",
 
                           !selectedIndices().includes(index()) &&
+                            // if select mode, hover shows white check
+
                             isSelectMode() &&
-                            "group-hover/card:text-white", // if select mode, hover shows white check
+                            "group-hover/card:text-white",
+
+                          // if selected, become blue
 
                           selectedIndices().includes(index()) &&
-                            "rounded-full bg-blue-300 text-white", // if selected, become blue
+                            "rounded-full bg-blue-300 text-white",
                         )}
                       />
                     </button>
                   </div>
-                  <Show // full card button
+                  <Show
+                    // full card button
                     when={isSelectMode()}
                   >
                     <button
                       class={cn(
-                        "absolute inset-0 w-full h-full rounded-t",
+                        "absolute inset-0 h-full w-full rounded-t",
                         selectedIndices().includes(index()) && "border-[5px] border-blue-300",
                       )}
                       onClick={[handleClick, index()]}
                     />
                   </Show>
                 </div>
-
-                <Show when={isListItem()}>
+                <Show when={props.isListItem}>
                   <div class="absolute bottom-5 -left-1 space-y-px">
                     <Show when={diddl?.listItem?.isDamaged}>
                       <Badge dotColor="bg-red-400">Damaged</Badge>
@@ -110,26 +126,34 @@ const DiddlListCard: Component<{
                       <Badge dotColor="bg-yellow-400">Incomplete</Badge>
                     </Show>
                     <Show when={diddl?.listItem?.quantity}>
-                      <div class="w-min flex items-center rounded border border-gray-300 bg-gray-50 divide-x">
+                      <div class="flex w-min items-center divide-x rounded border border-gray-300 bg-gray-50">
                         <Button
                           variant="none"
                           size="none"
-                          class="hover:bg-pink-200 h-5"
-                          onClick={() => {
+                          class="h-5 hover:bg-pink-200"
+                          onClick={async () => {
                             if (!diddl?.listItem) return;
+                            const localListId = listId();
+
+                            if (localListId === null) return;
 
                             if (!isSelectMode()) {
-                              updateListItems(listId(), [diddl.listItem.id], { addQuantity: -1 });
+                              updateListItems(localListId, [diddl.listItem.id], {
+                                addQuantity: -1,
+                              });
                               return;
                             }
 
                             if (!selectedIndices().includes(index())) addSelectedIndices(index());
 
-                            updateListItems(
-                              listId(),
+                            const result = await updateListItems(
+                              localListId,
                               selectedIndices().map((i) => props.diddls![i]?.listItem?.id || -1),
                               { addQuantity: -1 },
                             );
+
+                            console.log(result);
+                            if (result?.data?.numDeletedRows) setDiddlStore("selectedIndices", []);
                           }}
                         >
                           <Minus size={15} />
@@ -138,19 +162,22 @@ const DiddlListCard: Component<{
                         <Button
                           variant="none"
                           size="none"
-                          class="hover:bg-pink-200 h-5"
+                          class="h-5 hover:bg-pink-200"
                           onClick={() => {
                             if (!diddl?.listItem) return;
+                            const localListId = listId();
+
+                            if (localListId === null) return;
 
                             if (!isSelectMode()) {
-                              updateListItems(listId(), [diddl.listItem.id], { addQuantity: 1 });
+                              updateListItems(localListId, [diddl.listItem.id], { addQuantity: 1 });
                               return;
                             }
 
                             if (!selectedIndices().includes(index())) addSelectedIndices(index());
 
                             updateListItems(
-                              listId(),
+                              localListId,
                               selectedIndices().map((i) => props.diddls![i]?.listItem?.id || -1),
                               { addQuantity: 1 },
                             );
@@ -178,22 +205,22 @@ const Badge: Component<{ dotColor?: string; children: JSX.Element; onClick?: () 
     variant={"none"}
     size={"none"}
     class={cn(
-      "w-min flex items-center gap-px p-px rounded border border-gray-300 bg-gray-50 cursor-default",
-      props.onClick && "cursor-pointer group/card",
+      "flex w-min cursor-default items-center gap-px rounded border border-gray-300 bg-gray-50 p-px",
+      props.onClick && "group/card cursor-pointer",
     )}
     onClick={props.onClick}
   >
     <Show when={props.dotColor}>
       <div
         class={cn(
-          "rounded-full h-2 aspect-square border border-gray-300",
+          "aspect-square h-2 rounded-full border border-gray-300",
           props.onClick && "group/card-hover:hidden",
           props.dotColor,
         )}
       />
       <CircleX
         size={8}
-        class={cn("h-2 aspect-square hidden", props.onClick && "group/card-hover:block")}
+        class={cn("hidden aspect-square h-2", props.onClick && "group/card-hover:block")}
       />
     </Show>
     <div class="text-sm">{props.children}</div>
@@ -203,7 +230,10 @@ const Badge: Component<{ dotColor?: string; children: JSX.Element; onClick?: () 
 const handleClick = (index: number, event: MouseEvent) => {
   const selectedIndices = diddlStore.selectedIndices;
   if (event.shiftKey) {
-    const lastClicked = selectedIndices[selectedIndices.length - 1];
+    const lastClicked = selectedIndices.at(-1);
+
+    if (lastClicked === undefined) return;
+
     const numbersBetween = getNumbersBetween(lastClicked, index);
     const isAdding = isAdd(selectedIndices, index);
     if (isAdding) {
@@ -223,12 +253,12 @@ const handleClick = (index: number, event: MouseEvent) => {
   }
   if (!isAdding) {
     removeSelectedIndices(index);
-    return;
   }
 };
 
 const isAdd = (arr: number[], shiftClickIndex: number) => {
-  const lastClicked = arr[arr.length - 1];
+  const lastClicked = arr.at(-1);
+  if (lastClicked === undefined) return;
 
   const numbersBetween = [lastClicked, ...getNumbersBetween(lastClicked, shiftClickIndex)];
 

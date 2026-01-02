@@ -1,4 +1,5 @@
 import type { Diddl } from "@shared";
+import { createStore } from "solid-js/store";
 
 type Store = {
   diddlState: Diddl[];
@@ -6,8 +7,6 @@ type Store = {
   selectedIndices: number[];
   indicesCount: number[];
 };
-
-import { createStore } from "solid-js/store";
 
 const [diddlStore, setDiddlStore] = createStore<Store>({
   diddlState: [],

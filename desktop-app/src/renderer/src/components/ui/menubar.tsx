@@ -1,4 +1,3 @@
-import { cn } from "@renderer/libs/cn";
 import type {
   MenubarCheckboxItemProps,
   MenubarContentProps,
@@ -17,6 +16,8 @@ import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type { ComponentProps, ParentProps, ValidComponent } from "solid-js";
 import { mergeProps, splitProps } from "solid-js";
 
+import { cn } from "@renderer/libs/cn";
+
 export const MenubarSub = MenubarPrimitive.Sub;
 export const MenubarRadioGroup = MenubarPrimitive.RadioGroup;
 
@@ -32,7 +33,7 @@ export const Menubar = <T extends ValidComponent = "div">(
   return (
     <MenubarPrimitive
       class={cn(
-        "flex h-9 items-center space-x-1 rounded-md border bg-background p-1 shadow-sm",
+        "bg-background flex h-9 items-center space-x-1 rounded-md border p-1 shadow-sm",
         local.class,
       )}
       {...rest}
@@ -58,7 +59,7 @@ export const MenubarTrigger = <T extends ValidComponent = "button">(
   return (
     <MenubarPrimitive.Trigger
       class={cn(
-        "flex cursor-default select-none items-center rounded-sm px-3 py-1 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[expanded]:bg-accent data-[expanded]:text-accent-foreground",
+        "focus:bg-accent focus:text-accent-foreground data-[expanded]:bg-accent data-[expanded]:text-accent-foreground flex cursor-default items-center rounded-sm px-3 py-1 text-sm font-medium outline-none select-none",
         local.class,
       )}
       {...rest}
@@ -81,7 +82,7 @@ export const MenubarSubTrigger = <T extends ValidComponent = "button">(
   return (
     <MenubarPrimitive.SubTrigger
       class={cn(
-        "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[expanded]:bg-accent data-[expanded]:text-accent-foreground",
+        "focus:bg-accent focus:text-accent-foreground data-[expanded]:bg-accent data-[expanded]:text-accent-foreground flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none",
         local.inset && "pl-8",
         local.class,
       )}
@@ -124,7 +125,7 @@ export const MenubarSubContent = <T extends ValidComponent = "div">(
     <MenubarPrimitive.Portal>
       <MenubarPrimitive.SubContent
         class={cn(
-          "z-50 min-w-[8rem] origin-[--kb-menu-content-transform-origin] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg outline-none data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95",
+          "bg-popover text-popover-foreground data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95 z-50 min-w-[8rem] origin-[--kb-menu-content-transform-origin] overflow-hidden rounded-md border p-1 shadow-lg outline-none",
           local.class,
         )}
         {...rest}
@@ -150,7 +151,7 @@ export const MenubarContent = <T extends ValidComponent = "div">(
     <MenubarPrimitive.Portal>
       <MenubarPrimitive.Content
         class={cn(
-          "z-50 min-w-[12rem] origin-[--kb-menu-content-transform-origin] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none data-[expanded]:animate-in data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95",
+          "bg-popover text-popover-foreground data-[expanded]:animate-in data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95 z-50 min-w-[12rem] origin-[--kb-menu-content-transform-origin] overflow-hidden rounded-md border p-1 shadow-md outline-none",
           local.class,
         )}
         {...rest}
@@ -174,7 +175,7 @@ export const MenubarItem = <T extends ValidComponent = "div">(
   return (
     <MenubarPrimitive.Item
       class={cn(
-        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         local.inset && "pl-8",
         local.class,
       )}
@@ -211,7 +212,7 @@ export const MenubarSeparator = <T extends ValidComponent = "hr">(
   const [local, rest] = splitProps(props as menubarSeparatorProps, ["class"]);
 
   return (
-    <MenubarPrimitive.Separator class={cn("-mx-1 my-1 h-px bg-muted", local.class)} {...rest} />
+    <MenubarPrimitive.Separator class={cn("bg-muted -mx-1 my-1 h-px", local.class)} {...rest} />
   );
 };
 
@@ -229,7 +230,7 @@ export const MenubarCheckboxItem = <T extends ValidComponent = "div">(
   return (
     <MenubarPrimitive.CheckboxItem
       class={cn(
-        "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         local.class,
       )}
       {...rest}
@@ -266,7 +267,7 @@ export const MenubarRadioItem = <T extends ValidComponent = "div">(
   return (
     <MenubarPrimitive.RadioItem
       class={cn(
-        "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         local.class,
       )}
       {...rest}
@@ -293,7 +294,7 @@ export const MenubarShortcut = (props: ComponentProps<"span">) => {
 
   return (
     <span
-      class={cn("ml-auto text-xs tracking-widest text-muted-foreground", local.class)}
+      class={cn("text-muted-foreground ml-auto text-xs tracking-widest", local.class)}
       {...rest}
     />
   );

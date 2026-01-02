@@ -1,15 +1,22 @@
-import { ToastRegion, ToastList } from "@renderer/components/ui/toast";
-import FallbackPageLoading from "@renderer/components/FallbackPageLoading";
-import { fetchTrackerList } from "@renderer/features/lists";
-import { fetchDiddlState, setDiddlStore } from "@renderer/features/diddl";
 import { RouteSectionProps } from "@solidjs/router";
-import { type Component, createComputed, createEffect, createMemo, on, Suspense } from "solid-js";
+import {
+  type Component,
+  Suspense,
+  createComputed,
+  createEffect,
+  createMemo,
+  on,
+  onMount,
+} from "solid-js";
+
+import FallbackPageLoading from "@renderer/components/fallback/FallbackPageLoading";
+import { ToastList, ToastRegion } from "@renderer/components/ui/toast";
+import { fetchDiddlState, setDiddlStore } from "@renderer/features/diddl";
 
 import Sidebar from "./components/Sidebar";
 
 const BaseLayout: Component<RouteSectionProps> = (props) => {
-  createEffect(() => {
-    fetchTrackerList();
+  onMount(() => {
     fetchDiddlState();
   });
 

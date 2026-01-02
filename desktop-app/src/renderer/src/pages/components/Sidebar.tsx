@@ -1,19 +1,20 @@
 import { A } from "@solidjs/router";
+import { CogIcon, SquareLibraryIcon } from "lucide-solid";
+import { IconTypes } from "solid-icons";
+import { BiRegularHomeHeart } from "solid-icons/bi";
 import {
   type Component,
-  createMemo,
   For,
   type JSX,
   JSXElement,
   Match,
   Show,
   Switch,
+  createMemo,
 } from "solid-js";
-import { BiRegularHomeHeart } from "solid-icons/bi";
-import { cn } from "@renderer/libs/cn";
-import { IconTypes } from "solid-icons";
 import { Dynamic } from "solid-js/web";
-import { CogIcon, SquareLibraryIcon } from "lucide-solid";
+
+import { cn } from "@renderer/libs/cn";
 
 const getParams = (params: { type?: string; from?: number; to?: number }) => {
   const paramsStrings = Object.fromEntries(
@@ -180,8 +181,8 @@ const Sidebar: Component<{ currentPath: string }> = (props) => {
   return (
     <nav
       class={cn(
-        "py-4 flex flex-col gap-4 border-r border-gray-200 ",
-        "h-screen sticky top-0 overflow-y-auto min-w-64 w-64",
+        "flex flex-col gap-4 border-r border-gray-200 py-4",
+        "sticky top-0 h-screen w-64 min-w-64 overflow-y-auto",
         "scrollbar-thumb-purple-200 scrollbar-track-transparent scrollbar-thin",
       )}
     >
@@ -204,7 +205,7 @@ const Sidebar: Component<{ currentPath: string }> = (props) => {
             <div>
               <Show when={group.title} keyed>
                 {(title) => (
-                  <div class="px-4 font-semibold text-gray-800 text-sm mb-1">{title}</div>
+                  <div class="mb-1 px-4 text-sm font-semibold text-gray-800">{title}</div>
                 )}
               </Show>
               <SubLinkContainer>
@@ -234,7 +235,7 @@ const TopLinkContainer: Component<{ children: JSXElement }> = (props) => {
 };
 
 const SubLinkContainer: Component<{ children: JSXElement }> = (props) => {
-  return <div class={cn("ml-5 border-l-2 border-gray-400/20 space-y-0.5")}>{props.children}</div>;
+  return <div class={cn("ml-5 space-y-0.5 border-l-2 border-gray-400/20")}>{props.children}</div>;
 };
 
 const SidebarLink: Component<{
@@ -250,10 +251,10 @@ const SidebarLink: Component<{
         <A
           href={props.href}
           class={cn(
-            "gradient-border flex items-center gap-2 px-3 mx-1 rounded",
+            "gradient-border mx-1 flex items-center gap-2 rounded px-3",
             "bg-sidebar",
             props.currentPath === props.href &&
-              "border border-white backdrop-blur-md bg-linear-to-br from-purple-300/70 via-purple-300/10 to-purple-300/70",
+              "border border-white bg-linear-to-br from-purple-300/70 via-purple-300/10 to-purple-300/70 backdrop-blur-md",
             // currentPath() !== props.href && "",
           )}
         >

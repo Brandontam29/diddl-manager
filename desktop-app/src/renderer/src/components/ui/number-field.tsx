@@ -1,5 +1,3 @@
-import { cn } from "@renderer/libs/cn";
-
 import type {
   NumberFieldDecrementTriggerProps,
   NumberFieldDescriptionProps,
@@ -13,6 +11,9 @@ import { NumberField as NumberFieldPrimitive } from "@kobalte/core/number-field"
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type { ComponentProps, ValidComponent, VoidProps } from "solid-js";
 import { splitProps } from "solid-js";
+
+import { cn } from "@renderer/libs/cn";
+
 import { textfieldLabel } from "./textfield";
 
 export const NumberFieldHiddenInput = NumberFieldPrimitive.HiddenInput;
@@ -88,7 +89,7 @@ export const NumberFieldGroup = (props: ComponentProps<"div">) => {
   return (
     <div
       class={cn(
-        "relative rounded-md transition-shadow focus-within:outline-none focus-within:ring-[1.5px] focus-within:ring-ring",
+        "focus-within:ring-ring relative rounded-md transition-shadow focus-within:ring-[1.5px] focus-within:outline-none",
         local.class,
       )}
       {...rest}
@@ -108,7 +109,7 @@ export const NumberFieldInput = <T extends ValidComponent = "input">(
   return (
     <NumberFieldPrimitive.Input
       class={cn(
-        "flex h-9 w-full rounded-md border border-input bg-transparent px-10 py-1 text-center text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "border-input placeholder:text-muted-foreground flex h-9 w-full rounded-md border bg-transparent px-10 py-1 text-center text-sm shadow-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
         local.class,
       )}
       {...rest}
@@ -130,7 +131,7 @@ export const NumberFieldDecrementTrigger = <T extends ValidComponent = "button">
   return (
     <NumberFieldPrimitive.DecrementTrigger
       class={cn(
-        "absolute left-0 top-1/2 -translate-y-1/2 p-3 disabled:cursor-not-allowed disabled:opacity-20",
+        "absolute top-1/2 left-0 -translate-y-1/2 p-3 disabled:cursor-not-allowed disabled:opacity-20",
         local.class,
       )}
       {...rest}
@@ -163,7 +164,7 @@ export const NumberFieldIncrementTrigger = <T extends ValidComponent = "button">
   return (
     <NumberFieldPrimitive.IncrementTrigger
       class={cn(
-        "absolute right-0 top-1/2 -translate-y-1/2 p-3 disabled:cursor-not-allowed disabled:opacity-20",
+        "absolute top-1/2 right-0 -translate-y-1/2 p-3 disabled:cursor-not-allowed disabled:opacity-20",
         local.class,
       )}
       {...rest}

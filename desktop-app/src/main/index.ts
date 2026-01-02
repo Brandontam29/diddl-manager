@@ -1,20 +1,20 @@
-import { app, shell, BrowserWindow, protocol } from "electron";
-import path from "path";
-import { electronApp, optimizer, is } from "@electron-toolkit/utils";
-import icon from "../../resources/icon.jpg?asset";
-import registerMainHandlers from "./registerMainHandlers";
-import { appPath, logAllPaths } from "./pathing";
-import isDev from "./utils/isDev";
-import setupDiddlImages from "./diddl/setupDiddlImages";
-import { initDb, migrateToLatest } from "./database";
-import { logging } from "./logging";
+import path from "node:path";
+
+import { electronApp, is, optimizer } from "@electron-toolkit/utils";
+import { BrowserWindow, app, protocol, shell } from "electron";
 import electronUpdater from "electron-updater";
+
+import icon from "../../resources/icon.jpg?asset";
+import { initDb, migrateToLatest } from "./database";
+import setupDiddlImages from "./diddl/setupDiddlImages";
+import { log, logging } from "./logging";
+import { appPath, logAllPaths } from "./pathing";
+import registerMainHandlers from "./registerMainHandlers";
+import isDev from "./utils/isDev";
 
 const { autoUpdater } = electronUpdater;
 
-// Configure logging
-// autoUpdater.logger = logging.info;
-// autoUpdater.logger.transports.file.level = "info";
+autoUpdater.logger = logging;
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -26,7 +26,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.mjs"),
       sandbox: false,
-      webSecurity: isDev() ? false : true,
+      webSecurity: !isDev(),
       allowRunningInsecureContent: false,
     },
   });
@@ -40,8 +40,6 @@ function createWindow() {
     return { action: "deny" };
   });
 
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env.ELECTRON_RENDERER_URL) {
     mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
@@ -51,11 +49,7 @@ function createWindow() {
   return mainWindow;
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
-  // Set app user model id for windows
   electronApp.setAppUserModelId("com.manager.diddl");
 
   // Default open or close DevTools by F12 in development
@@ -69,11 +63,11 @@ app.whenReady().then(async () => {
    * MY STUFF
    */
   logAllPaths();
-  const db = await initDb();
+  const db = initDb();
 
   if (db) await migrateToLatest(db);
 
-  await Promise.all([setupDiddlImages()]);
+  await setupDiddlImages();
 
   const window = createWindow();
   if (db) registerMainHandlers(window, db);
@@ -98,7 +92,9 @@ app.whenReady().then(async () => {
     callback({ path: filePath });
   });
 
-  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.checkForUpdatesAndNotify().catch((err) => {
+    log.error("Update check failed", err);
+  });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

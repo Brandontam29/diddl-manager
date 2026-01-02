@@ -1,4 +1,3 @@
-import { cn } from "@renderer/libs/cn";
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type {
   ToastDescriptionProps,
@@ -13,6 +12,8 @@ import { cva } from "class-variance-authority";
 import type { ComponentProps, ValidComponent, VoidComponent, VoidProps } from "solid-js";
 import { mergeProps, splitProps } from "solid-js";
 import { Portal } from "solid-js/web";
+
+import { cn } from "@renderer/libs/cn";
 
 export const toastVariants = cva(
   "group pointer-events-auto relative flex flex-col gap-3 w-full items-center justify-between overflow-hidden rounded-md border p-4 pr-6 shadow-lg transition-all data-[swipe=cancel]:translate-y-0 data-[swipe=end]:translate-y-[var(--kb-toast-swipe-end-y)] data-[swipe=move]:translate-y-[--kb-toast-swipe-move-y] data-[swipe=move]:transition-none data-[opened]:animate-in data-[closed]:animate-out data-[swipe=end]:animate-out data-[closed]:fade-out-80 data-[closed]:slide-out-to-top-full data-[closed]:sm:slide-out-to-bottom-full data-[opened]:slide-in-from-top-full data-[opened]:sm:slide-in-from-bottom-full",
@@ -109,7 +110,7 @@ export const ToastList = <T extends ValidComponent = "ol">(
   return (
     <ToastPrimitive.List
       class={cn(
-        "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse gap-2 p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+        "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse gap-2 p-4 sm:top-auto sm:right-0 sm:bottom-0 sm:flex-col md:max-w-[420px]",
         local.class,
       )}
       {...rest}
@@ -123,7 +124,7 @@ export const ToastContent = (props: ComponentProps<"div">) => {
   return (
     <div class={cn("flex w-full flex-col", local.class)} {...rest}>
       <div>{local.children}</div>
-      <ToastPrimitive.CloseButton class="absolute right-1 top-1 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50">
+      <ToastPrimitive.CloseButton class="text-foreground/50 hover:text-foreground absolute top-1 right-1 rounded-md p-1 opacity-0 transition-opacity group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 focus:opacity-100 focus:outline-none">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24">
           <path
             fill="none"
@@ -142,8 +143,8 @@ export const ToastContent = (props: ComponentProps<"div">) => {
 
 export const ToastProgress: VoidComponent = () => {
   return (
-    <ToastPrimitive.ProgressTrack class="h-1 w-full overflow-hidden rounded-xl bg-primary/20 group-[.destructive]:bg-background/20">
-      <ToastPrimitive.ProgressFill class="h-full w-[--kb-toast-progress-fill-width] bg-primary transition-all duration-150 ease-linear group-[.destructive]:bg-destructive-foreground" />
+    <ToastPrimitive.ProgressTrack class="bg-primary/20 group-[.destructive]:bg-background/20 h-1 w-full overflow-hidden rounded-xl">
+      <ToastPrimitive.ProgressFill class="bg-primary group-[.destructive]:bg-destructive-foreground h-full w-[--kb-toast-progress-fill-width] transition-all duration-150 ease-linear" />
     </ToastPrimitive.ProgressTrack>
   );
 };

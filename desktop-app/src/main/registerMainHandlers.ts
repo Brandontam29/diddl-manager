@@ -1,8 +1,9 @@
 import type { BrowserWindow } from "electron";
-import { fileSystemMainHandlers } from "./file-system";
-import { diddlMainHandlers } from "./diddl";
-import { listMainHandlers } from "./list";
+
 import { MyDatabase } from "./database";
+import { diddlMainHandlers } from "./diddl";
+import { fileSystemMainHandlers } from "./file-system";
+import { listMainHandlers } from "./list";
 
 const registerMainHandlers = (browserWindow: BrowserWindow, db: MyDatabase): void => {
   fileSystemMainHandlers(db);

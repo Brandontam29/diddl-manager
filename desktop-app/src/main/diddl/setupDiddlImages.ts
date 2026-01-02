@@ -1,13 +1,14 @@
-import { appPath, diddlImagesPath, diddlImagesZipPath } from "../pathing";
-import { logging } from "../logging";
-import isExists from "../utils/isExists";
 import AdmZip from "adm-zip";
+
+import { logging } from "../logging";
+import { appPath, diddlImagesPath, diddlImagesZipPath } from "../pathing";
+import exists from "../utils/exists";
 
 const setupDiddlImages = async () => {
   const zipPath = diddlImagesZipPath();
   const outputFolder = diddlImagesPath();
 
-  if (await isExists(outputFolder)) {
+  if (await exists(outputFolder)) {
     logging.info("diddl-images directory already exists. No need to setup images");
     return;
   }

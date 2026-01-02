@@ -1,6 +1,7 @@
 import confetti from "canvas-confetti";
+import { JSX } from "solid-js";
 
-export const confettiStars = (e: MouseEvent & { target: HTMLElement }) => {
+export const confettiStars = (e: { target: Element }) => {
   if (!e.target) return;
 
   const { left, top, width, height } = e.target.getBoundingClientRect();

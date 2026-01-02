@@ -1,16 +1,16 @@
 import { ipcRenderer } from "electron";
 
+import type { AddListItem, List, ListItem } from "../../shared";
 import {
-  GET_LISTS,
   ADD_LIST_ITEMS,
-  REMOVE_LIST_ITEMS,
-  GET_LIST_ITEMS,
   CREATE_LIST,
   DELETE_LIST,
-  UPDATE_LIST_NAME,
+  GET_LISTS,
+  GET_LIST_ITEMS,
+  REMOVE_LIST_ITEMS,
   UPDATE_LIST_ITEMS,
+  UPDATE_LIST_NAME,
 } from "./listMainHandlers";
-import type { AddListItem, List, ListItem } from "../../shared";
 
 const listPreloadApi = {
   //List
@@ -31,7 +31,7 @@ const listPreloadApi = {
   addListItems: (listId: number, payload: AddListItem[]): Promise<{ success: boolean }> =>
     ipcRenderer.invoke(ADD_LIST_ITEMS, listId, payload),
 
-  removeListItems: (listId: number, idsToRemove: number[]): Promise<void> =>
+  removeListItems: (listId: number, idsToRemove: number[]): Promise<{ success: boolean }> =>
     ipcRenderer.invoke(REMOVE_LIST_ITEMS, listId, idsToRemove),
 
   updateListItems: (
@@ -42,7 +42,7 @@ const listPreloadApi = {
       isDamaged?: boolean;
       isIncomplete?: boolean;
     },
-  ): Promise<{ success: boolean; data?: { numUpdatedRows: number } }> =>
+  ): Promise<{ success: boolean; data?: { numUpdatedRows: number; numDeletedRows: number } }> =>
     ipcRenderer.invoke(UPDATE_LIST_ITEMS, listId, listItemIds, action),
 };
 

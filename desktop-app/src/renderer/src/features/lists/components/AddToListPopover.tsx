@@ -1,18 +1,22 @@
 import { RiMediaPlayListAddFill } from "solid-icons/ri";
 import { Component, For, Show } from "solid-js";
-import { listStore } from "../createListsStore";
+
 import { Button } from "@renderer/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
 import CreateListDialog from "@renderer/features/lists/components/CreateListDialog";
+
+import { useLists } from "../lists";
 
 const AddToListPopover: Component<{
   open: boolean;
   onOpenChange: (isOpen: boolean) => void;
   onListClick: (listId: number) => void;
 }> = (props) => {
+  const lists = useLists();
+
   return (
     <Popover>
-      <PopoverTrigger class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200">
+      <PopoverTrigger class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200">
         <RiMediaPlayListAddFill />
         <span>Add To List</span>
       </PopoverTrigger>
@@ -23,9 +27,9 @@ const AddToListPopover: Component<{
             Create New List
           </Button>
         </CreateListDialog>
-        <Show when={listStore.lists}>
+        <Show when={lists()}>
           <div class="mt-2 grid grid-cols-2 gap-2">
-            <For each={listStore.lists}>
+            <For each={lists()}>
               {(list) => (
                 <Button variant="outline" onClick={() => props.onListClick(list.id)} class="block">
                   {list.name}

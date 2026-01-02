@@ -1,4 +1,4 @@
-import { Selectable, Insertable, Updateable, Generated } from "kysely";
+import { Generated, Insertable, Selectable, Updateable } from "kysely";
 import { z } from "zod";
 
 export const diddlTypeSchema = z.enum([

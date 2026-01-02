@@ -1,4 +1,3 @@
-import { cn } from "@renderer/libs/cn";
 import type {
   DialogContentProps,
   DialogDescriptionProps,
@@ -10,6 +9,8 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { ComponentProps, ParentProps, ValidComponent } from "solid-js";
 import { mergeProps, splitProps } from "solid-js";
+
+import { cn } from "@renderer/libs/cn";
 
 export const Sheet = DialogPrimitive;
 export const SheetTrigger = DialogPrimitive.Trigger;
@@ -50,7 +51,7 @@ export const SheetContent = <T extends ValidComponent = "div">(
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay
         class={cn(
-          "fixed inset-0 z-50 bg-background/80 data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0",
+          "bg-background/80 data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 fixed inset-0 z-50",
         )}
       />
       <DialogPrimitive.Content
@@ -58,7 +59,7 @@ export const SheetContent = <T extends ValidComponent = "div">(
         {...rest}
       >
         {local.children}
-        <DialogPrimitive.CloseButton class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-[opacity,box-shadow] hover:opacity-100 focus:outline-none focus:ring-[1.5px] focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+        <DialogPrimitive.CloseButton class="ring-offset-background focus:ring-ring absolute top-4 right-4 rounded-sm opacity-70 transition-[opacity,box-shadow] hover:opacity-100 focus:ring-[1.5px] focus:ring-offset-2 focus:outline-none disabled:pointer-events-none">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4">
             <path
               fill="none"
@@ -87,7 +88,7 @@ export const SheetTitle = <T extends ValidComponent = "h2">(
 
   return (
     <DialogPrimitive.Title
-      class={cn("text-lg font-semibold text-foreground", local.class)}
+      class={cn("text-foreground text-lg font-semibold", local.class)}
       {...rest}
     />
   );
@@ -104,7 +105,7 @@ export const SheetDescription = <T extends ValidComponent = "p">(
 
   return (
     <DialogPrimitive.Description
-      class={cn("text-sm text-muted-foreground", local.class)}
+      class={cn("text-muted-foreground text-sm", local.class)}
       {...rest}
     />
   );

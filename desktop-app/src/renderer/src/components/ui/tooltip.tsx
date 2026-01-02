@@ -1,9 +1,9 @@
-import { cn } from "@renderer/libs/cn";
-
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type { TooltipContentProps, TooltipRootProps } from "@kobalte/core/tooltip";
 import { Tooltip as TooltipPrimitive } from "@kobalte/core/tooltip";
 import { type ValidComponent, mergeProps, splitProps } from "solid-js";
+
+import { cn } from "@renderer/libs/cn";
 
 export const TooltipTrigger = TooltipPrimitive.Trigger;
 
@@ -26,7 +26,7 @@ export const TooltipContent = <T extends ValidComponent = "div">(
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Content
         class={cn(
-          "z-50 overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95",
+          "bg-primary text-primary-foreground data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95 z-50 overflow-hidden rounded-md px-3 py-1.5 text-xs",
           local.class,
         )}
         {...rest}

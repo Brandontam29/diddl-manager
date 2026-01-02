@@ -1,17 +1,18 @@
 import { toaster } from "@kobalte/core/toast";
+import { useAction, useMatch, useParams } from "@solidjs/router";
+import { CircleX, Download, Minus, Plus, SplineIcon } from "lucide-solid";
+import { type Component, JSX, Show, createMemo, createSignal } from "solid-js";
+
+import type { Diddl, ListItem } from "@shared";
+
 import { Toast, ToastContent, ToastProgress, ToastTitle } from "@renderer/components/ui/toast";
-import { setDiddlStore, diddlStore } from "@renderer/features/diddl";
-import { addListItems } from "@renderer/features/lists";
+import { diddlStore, setDiddlStore } from "@renderer/features/diddl";
+import { addListItemsAction, updateListItemsAction } from "@renderer/features/lists";
 import AddToListPopover from "@renderer/features/lists/components/AddToListPopover";
 import createAsyncCallback from "@renderer/hooks/createAsyncCallback";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { confettiStars } from "@renderer/libs/confetti";
-import { updateListItems } from "@renderer/features/lists/listMethods";
-import type { Diddl, ListItem } from "@shared";
-import { useMatch, useParams } from "@solidjs/router";
-import { CircleX, Download, Minus, Plus, SplineIcon } from "lucide-solid";
-import { createMemo, createSignal, Show, type Component } from "solid-js";
 
 const OPTIONS = {
   home: ["hihi", "list:add", "download"],
@@ -23,8 +24,10 @@ type Action = (typeof OPTIONS)[keyof typeof OPTIONS][number];
 const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (props) => {
   const screenWidth = useScreenWidth();
   const [open, setOpen] = createSignal(false);
+  const updateListItems = useAction(updateListItemsAction);
+  const addListItems = useAction(addListItemsAction);
 
-  const onDownloadImages = async (e: MouseEvent & { target: HTMLButtonElement }) => {
+  const onDownloadImages: JSX.EventHandler<HTMLButtonElement, MouseEvent> = async (e) => {
     const diddlIds = diddlStore.selectedIndices.map((index) => props.diddls[index]?.id || -1);
     const result = await window.api.downloadImages(diddlIds);
 
@@ -40,6 +43,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
       </Toast>
     ));
   };
+
   const { isLoading: downloadImagesIsLoading, handler: downloadImagesHandler } =
     createAsyncCallback(onDownloadImages);
 
@@ -56,20 +60,20 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
   };
 
   const params = useParams();
-  const id = createMemo(() => parseInt(params.id));
+  const id = createMemo(() => (params.id === undefined ? null : parseInt(params.id)));
   const selectedIndices = () => diddlStore.selectedIndices;
 
   return (
     <div
       class={cn(
         "fixed top-0 left-[256px] flex items-center gap-2",
-        "bg-white py-1 px-2 rounded-b-md border-x border-b-2 shadow border-gray-300",
+        "rounded-b-md border-x border-b-2 border-gray-300 bg-white px-2 py-1 shadow",
       )}
       style={{ width: `${screenWidth() - 256 - 32}px` }}
     >
       <button
-        class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
-        onClick={async () => setDiddlStore("selectedIndices", [])}
+        class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
+        onClick={() => setDiddlStore("selectedIndices", [])}
       >
         <CircleX size={15} /> <span>{diddlStore.selectedIndices.length} Selected</span>
       </button>
@@ -91,10 +95,14 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
 
       <Show when={hasAction("list:update")}>
         <button
-          class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
+          class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
           onClick={() => {
+            const listId = id();
+
+            if (listId === null) return;
+
             updateListItems(
-              id(),
+              listId,
               selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
               { addQuantity: 1 },
             );
@@ -105,13 +113,20 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
         </button>
         <div class="h-[24px] w-0.5 bg-gray-200" />
         <button
-          class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
-          onClick={() => {
-            updateListItems(
-              id(),
+          class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
+          onClick={async () => {
+            const listId = id();
+
+            if (listId === null) return;
+
+            const result = await updateListItems(
+              listId,
               selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
               { addQuantity: -1 },
             );
+
+            console.log(result);
+            if (result?.data?.numDeletedRows) setDiddlStore("selectedIndices", []);
           }}
         >
           <Minus />
@@ -119,10 +134,14 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
         </button>
         <div class="h-[24px] w-0.5 bg-gray-200" />{" "}
         <button
-          class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
+          class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
           onClick={() => {
+            const listId = id();
+
+            if (listId === null) return;
+
             updateListItems(
-              id(),
+              listId,
               selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
               { isIncomplete: false },
             );
@@ -132,10 +151,14 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
         </button>
         <div class="h-[24px] w-0.5 bg-gray-200" />{" "}
         <button
-          class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
+          class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
           onClick={() => {
+            const listId = id();
+
+            if (listId === null) return;
+
             updateListItems(
-              id(),
+              listId,
               selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
               { isIncomplete: true },
             );
@@ -145,27 +168,31 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
         </button>
         <div class="h-[24px] w-0.5 bg-gray-200" />{" "}
         <button
-          class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
-          onClick={async () => {
-            const originalLength = props.diddls.length;
+          class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
+          onClick={() => {
+            const listId = id();
 
-            await updateListItems(
-              id(),
+            if (listId === null) return;
+
+            updateListItems(
+              listId,
               selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
               { isDamaged: false },
             );
-
-            const newLength = props.diddls.length;
           }}
         >
           <span>Set as Mint</span>
         </button>
         <div class="h-[24px] w-0.5 bg-gray-200" />{" "}
         <button
-          class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
+          class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
           onClick={() => {
+            const listId = id();
+
+            if (listId === null) return;
+
             updateListItems(
-              id(),
+              listId,
               selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
               { isDamaged: true },
             );
@@ -177,7 +204,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
 
       <div class="h-[24px] w-px bg-gray-200" />
       <button
-        class="gap-1 flex items-center px-2 py-1 rounded-md hover:bg-gray-200"
+        class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
         onClick={downloadImagesHandler}
       >
         {downloadImagesIsLoading() ? (

@@ -1,10 +1,10 @@
-import { cn } from "@renderer/libs/cn";
-
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type { RadioGroupItemControlProps } from "@kobalte/core/radio-group";
 import { RadioGroup as RadioGroupPrimitive } from "@kobalte/core/radio-group";
 import type { ValidComponent, VoidProps } from "solid-js";
 import { splitProps } from "solid-js";
+
+import { cn } from "@renderer/libs/cn";
 
 export const RadioGroupDescription = RadioGroupPrimitive.Description;
 export const RadioGroupErrorMessage = RadioGroupPrimitive.ErrorMessage;
@@ -27,12 +27,12 @@ export const RadioGroupItemControl = <T extends ValidComponent = "div">(
   return (
     <RadioGroupPrimitive.ItemControl
       class={cn(
-        "flex aspect-square h-4 w-4 items-center justify-center rounded-full border border-primary text-primary shadow transition-shadow focus:outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[checked]:bg-foreground",
+        "border-primary text-primary focus-visible:ring-ring data-[checked]:bg-foreground flex aspect-square h-4 w-4 items-center justify-center rounded-full border shadow transition-shadow focus:outline-none focus-visible:ring-[1.5px] disabled:cursor-not-allowed disabled:opacity-50",
         local.class,
       )}
       {...rest}
     >
-      <RadioGroupPrimitive.ItemIndicator class="h-2 w-2 rounded-full data-[checked]:bg-background" />
+      <RadioGroupPrimitive.ItemIndicator class="data-[checked]:bg-background h-2 w-2 rounded-full" />
     </RadioGroupPrimitive.ItemControl>
   );
 };

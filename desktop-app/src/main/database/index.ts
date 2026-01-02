@@ -1,7 +1,8 @@
 import { Kysely } from "kysely";
+
+import { ListDb, ListItemDb } from "../../shared";
 import { DiddlDb } from "../../shared/diddl-models";
 import { initDb, migrateToLatest } from "./db";
-import { ListDb, ListItemDb } from "../../shared";
 
 export type RawDatabase = {
   diddl: DiddlDb;

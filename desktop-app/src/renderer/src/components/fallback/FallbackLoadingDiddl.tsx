@@ -1,11 +1,13 @@
 import { For } from "solid-js";
-import { Skeleton } from "./ui/skeleton";
+
 import { uiStore } from "@renderer/features/ui-state";
 
-const LIST = new Array(30);
+import { Skeleton } from "../ui/skeleton";
+
+const LIST = Array.from({ length: 30 });
 const FallbackLoadingDiddl = () => {
   return (
-    <div class="flex flex-wrap gap-2 content-start">
+    <div class="flex flex-wrap content-start gap-2">
       <For each={LIST}>
         {() => (
           <Skeleton

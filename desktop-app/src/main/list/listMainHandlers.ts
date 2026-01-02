@@ -1,9 +1,8 @@
 import { type BrowserWindow, ipcMain } from "electron";
 
-import { logging } from "../logging";
-
-import { MyDatabase } from "../database";
 import { AddListItem, addListItemSchema } from "../../shared";
+import { MyDatabase } from "../database";
+import { logging } from "../logging";
 
 export const GET_LISTS = "get-lists";
 export const CREATE_LIST = "create-list";
@@ -32,7 +31,7 @@ const listMainHandlers = (_browserWindow: BrowserWindow, db: MyDatabase) => {
       return lists;
     } catch (e) {
       logging.error(e);
-      throw new Error("Failed to fetch lists");
+      throw new Error("Failed to fetch lists", { cause: e });
     }
   });
 
@@ -53,12 +52,10 @@ const listMainHandlers = (_browserWindow: BrowserWindow, db: MyDatabase) => {
           const listItems = diddlIds.map((id) => ({
             listId: newList.id,
             diddlId: id,
-            // @ts-ignore
             quantity: 1,
             isDamaged: false,
             isIncomplete: false,
           }));
-          // @ts-ignore
           await trx.insertInto("listItem").values(listItems).execute();
         }
 
@@ -66,7 +63,7 @@ const listMainHandlers = (_browserWindow: BrowserWindow, db: MyDatabase) => {
       });
     } catch (e) {
       logging.error(e);
-      throw new Error("Failed to create list");
+      throw new Error("Failed to create list", { cause: e });
     }
   });
 
@@ -79,7 +76,7 @@ const listMainHandlers = (_browserWindow: BrowserWindow, db: MyDatabase) => {
         .execute();
     } catch (e) {
       logging.error(e);
-      throw new Error("Failed to delete list");
+      throw new Error("Failed to delete list", { cause: e });
     }
   });
 
@@ -92,7 +89,7 @@ const listMainHandlers = (_browserWindow: BrowserWindow, db: MyDatabase) => {
         .execute();
     } catch (e) {
       logging.error(e);
-      throw new Error("Failed to update list name");
+      throw new Error("Failed to update list name", { cause: e });
     }
   });
 
@@ -123,7 +120,7 @@ const listMainHandlers = (_browserWindow: BrowserWindow, db: MyDatabase) => {
       return items;
     } catch (e) {
       logging.error(e);
-      throw new Error("Failed to fetch list details");
+      throw new Error("Failed to fetch list details", { cause: e });
     }
   });
 
@@ -150,7 +147,7 @@ const listMainHandlers = (_browserWindow: BrowserWindow, db: MyDatabase) => {
       return { success: true };
     } catch (e) {
       logging.error(e);
-      throw new Error("Failed to add list items");
+      throw new Error("Failed to add list items", { cause: e });
     }
   });
 
@@ -188,25 +185,14 @@ const listMainHandlers = (_browserWindow: BrowserWindow, db: MyDatabase) => {
         const updateResult = await db.transaction().execute(async (trx) => {
           const results = await trx
             .updateTable("listItem")
-            .set((eb) => {
-              const updates: Record<string, any> = {};
+            .set((eb) => ({
+              quantity:
+                addQuantity === undefined ? eb.ref("quantity") : eb("quantity", "+", addQuantity),
 
-              // 1. Handle the increment logic
-              if (addQuantity !== undefined) {
-                updates.quantity = eb("quantity", "+", addQuantity);
-              }
+              isDamaged: isDamaged ?? eb.ref("isDamaged"),
 
-              // 2. Handle the simple boolean sets
-              if (isDamaged !== undefined) {
-                updates.isDamaged = isDamaged;
-              }
-
-              if (isIncomplete !== undefined) {
-                updates.isIncomplete = isIncomplete;
-              }
-
-              return updates;
-            })
+              isIncomplete: isIncomplete ?? eb.ref("isIncomplete"),
+            }))
             .returning(["id", "quantity"])
             .where("listId", "=", listId)
             .where("id", "in", listItemIds)
@@ -222,7 +208,7 @@ const listMainHandlers = (_browserWindow: BrowserWindow, db: MyDatabase) => {
               .execute();
           }
 
-          return { numUpdatedRows: results.length };
+          return { numUpdatedRows: results.length, numDeletedRows: idsToDelete.length };
         });
 
         return { success: true, data: updateResult };

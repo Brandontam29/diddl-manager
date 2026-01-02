@@ -1,4 +1,4 @@
-const tryCatch = (callback: () => any, errorHandler: (err: unknown) => any) => {
+const tryCatch = <T, U>(callback: () => T, errorHandler: (err: unknown) => U): T | U => {
   try {
     return callback();
   } catch (error) {

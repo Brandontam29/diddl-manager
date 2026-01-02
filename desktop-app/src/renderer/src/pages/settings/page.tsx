@@ -4,7 +4,7 @@ import SettingsSectionUx from "./components/SettingsSectionUx";
 
 const SettingsPage = () => {
   return (
-    <div class="grow px-4 py-8 max-w-screen-xl mx-auto">
+    <div class="mx-auto max-w-screen-xl grow px-4 py-8">
       <SettingsSectionUx />
       {/* <SecretMigrationButton /> */}
       {/* <SettingsSectionProfile /> */}

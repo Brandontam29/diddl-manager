@@ -2,14 +2,21 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "unicorn"],
   "jsPlugins": [
-    "eslint-plugin-solid",
-    "@electron-toolkit/eslint-config-prettier",
-    "@electron-toolkit/eslint-config-ts"
+    "eslint-plugin-solid"
+    // "@electron-toolkit/eslint-config-prettier"
+    // "@electron-toolkit/eslint-config-ts"
   ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "pedantic": "warn"
+  },
   "rules": {
     // --- TypeScript Rules ---
     "typescript/no-explicit-any": "warn",
     "typescript/no-unused-vars": "warn",
+    // "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": "error",
 
     // --- SolidJS specific rules ---
     "solid/reactivity": "error",
@@ -17,22 +24,17 @@
     "solid/jsx-no-undef": "error",
 
     // --- Unicorn (Modern Best Practices) ---
+    "unicorn/prefer-top-level-await": "off",
     "unicorn/filename-case": [
       "error",
       { "cases": { "camelCase": true, "kebabCase": true, "pascalCase": true } }
     ],
-    "unicorn/no-null": "off" // Often disabled as React/TS users prefer null
+    "unicorn/no-null": "off", // Often disabled as React/TS users prefer null
 
-    // --- Accessibility (JSX-A11Y) ---
-    // "jsx-a11y/alt-text": "error",
-    // "jsx-a11y/anchor-has-content": "error",
-    // "jsx_a11y/autocomplete-valid": ["warn", {}],
-    // "jsx-a11y/label-has-associated-control": [
-    //   "warn",
-    //   {
-    //     "labelAttribute": ["alt", "aria-label", "aria-labelledby", "for"]
-    //   }
-    // ]
+    // --- Other ---
+    "radix": ["warn", "as-needed"],
+    "eslint/max-lines": ["warn", { "max": 1000 }],
+    "eslint/max-lines-per-function": "off"
   },
   "env": {
     "browser": true,
@@ -40,9 +42,20 @@
   },
   "overrides": [
     {
-      "files": ["*.test.ts", "*.test.tsx"],
+      "files": ["*.test.ts", "*.test.tsx", "**/migrations/*.ts"],
       "rules": {
         "typescript/no-explicit-any": "off"
+      }
+    },
+    {
+      "files": ["**/migrations/*.ts"],
+      "rules": {
+        "unicorn/filename-case": [
+          "error",
+          {
+            "case": "snakeCase"
+          }
+        ]
       }
     }
   ]

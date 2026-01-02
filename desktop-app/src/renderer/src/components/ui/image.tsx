@@ -1,10 +1,10 @@
-import { cn } from "@renderer/libs/cn";
-
 import type { ImageFallbackProps, ImageImgProps, ImageRootProps } from "@kobalte/core/image";
 import { Image as ImagePrimitive } from "@kobalte/core/image";
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type { ValidComponent } from "solid-js";
 import { splitProps } from "solid-js";
+
+import { cn } from "@renderer/libs/cn";
 
 type imageRootProps<T extends ValidComponent = "span"> = ImageRootProps<T> & {
   class?: string;
@@ -42,7 +42,7 @@ export const ImageFallback = <T extends ValidComponent = "span">(
   return (
     <ImagePrimitive.Fallback
       class={cn(
-        "flex h-full w-full items-center justify-center rounded-full bg-muted",
+        "bg-muted flex h-full w-full items-center justify-center rounded-full",
         local.class,
       )}
       {...rest}

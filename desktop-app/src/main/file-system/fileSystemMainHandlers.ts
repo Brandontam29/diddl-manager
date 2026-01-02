@@ -1,35 +1,49 @@
-import { ipcMain } from "electron";
-import { rename } from "fs/promises";
+import { rename } from "node:fs/promises";
+import path from "node:path";
 
 import AdmZip from "adm-zip";
-import path from "path";
-import { defaultZipPath, downloadsFolder } from "../pathing";
-import { log } from "../logging";
-import isExists from "../utils/isExists";
+import { ipcMain } from "electron";
+
 import { MyDatabase } from "../database";
+import { log } from "../logging";
+import { defaultZipPath, downloadsFolder } from "../pathing";
+import exists from "../utils/exists";
 
 export const GET_FILE_CONTENT = "get-file-content";
 export const EDIT_FILE_CONTENT = "edit-file-content";
 export const ZIP_AND_DOWNLOAD = "zip-and-download";
 
-const zipFiles = async (filePaths: string[], outputZipPath: string) => {
-  return new Promise<boolean>((resolve, reject) => {
-    const zip = new AdmZip();
+const zipFiles = async (filePaths: string[], outputZipPath: string): Promise<boolean> => {
+  const zip = new AdmZip();
 
-    filePaths.forEach(async (filePath) => {
-      if (await isExists(filePath)) zip.addLocalFile(filePath); // Add file to zip
-    });
+  const existenceChecks = await Promise.all(
+    filePaths.map(async (p) => ({ path: p, exists: await exists(p) })),
+  );
 
-    // Write the zip file to the specified output path
-    zip.writeZip(outputZipPath, (errorOrNull) => {
-      log.info(errorOrNull);
-      if (errorOrNull) {
-        log.error(errorOrNull);
-        reject(false);
+  const validFiles = existenceChecks.filter((f) => f.exists).map((f) => f.path);
+
+  if (validFiles.length === 0) {
+    log.error("No valid files found to zip.");
+    return false;
+  }
+
+  for (const filePath of validFiles) {
+    try {
+      zip.addLocalFile(filePath, "");
+    } catch (err) {
+      log.warn(`Failed to add ${filePath} to zip:`, err);
+    }
+  }
+
+  return new Promise<boolean>((resolve) => {
+    zip.writeZip(outputZipPath, (error) => {
+      if (error) {
+        log.error(`Zip writing failed at ${outputZipPath}:`, error);
+        resolve(false);
+      } else {
+        log.info(`Zip file created successfully at ${outputZipPath}`);
+        resolve(true);
       }
-
-      log.info(`Zip file created at ${outputZipPath}`);
-      resolve(true);
     });
   });
 };

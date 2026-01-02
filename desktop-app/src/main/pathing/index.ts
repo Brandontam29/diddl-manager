@@ -1,5 +1,6 @@
+import path from "node:path";
+
 import { app } from "electron";
-import path from "path";
 
 import isDev from "../utils/isDev";
 import logAllPaths from "./logAllPaths";

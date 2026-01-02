@@ -1,6 +1,8 @@
-import { HiOutlineCog6Tooth } from "solid-icons/hi";
 import { Button } from "@kobalte/core/button";
 import type { DialogTriggerProps } from "@kobalte/core/dialog";
+import { HiOutlineCog6Tooth } from "solid-icons/hi";
+import { createSignal } from "solid-js";
+
 import {
   Dialog,
   DialogContent,
@@ -18,7 +20,6 @@ import {
 } from "@renderer/components/ui/select";
 import { HEIGHT_ZOOM_MAP, setCardZoomLevel, uiStore } from "@renderer/features/ui-state";
 import type { DeepMutable } from "@renderer/type-utils";
-import { createSignal } from "solid-js";
 
 const ZOOM_OPTIONS = [
   { label: "Small", value: "sm" },
@@ -38,7 +39,7 @@ const SettingsDialog = () => {
         as={(props: DialogTriggerProps) => (
           <Button
             variant="outline"
-            class="w-full flex items-center gap-2 px-4 hover:bg-red-100"
+            class="flex w-full items-center gap-2 px-4 hover:bg-red-100"
             {...props}
           >
             <div class="pb-0.5">

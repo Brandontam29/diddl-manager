@@ -1,5 +1,10 @@
 import { Button } from "@kobalte/core/button";
 import type { DialogTriggerProps } from "@kobalte/core/dialog";
+import { useAction } from "@solidjs/router";
+import { type Component, JSX, createSignal } from "solid-js";
+
+import { List } from "@shared";
+
 import {
   Dialog,
   DialogContent,
@@ -8,18 +13,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@renderer/components/ui/dialog";
-
-import { type Component, createSignal, JSX } from "solid-js";
 import { TextField, TextFieldLabel, TextFieldRoot } from "@renderer/components/ui/textfield";
-import { fetchTrackerList } from "@renderer/features/lists";
-import { List } from "@shared";
+
+import { createListAction } from "../lists";
 
 const CreateListDialog: Component<{
   children: JSX.Element;
   callback?: (list: List) => void;
 }> = (props) => {
   const [listName, setListName] = createSignal("");
-  const [error, setError] = createSignal("");
+  const [error, _setError] = createSignal("");
+  const createList = useAction(createListAction);
 
   return (
     <Dialog>
@@ -48,16 +52,13 @@ const CreateListDialog: Component<{
         <DialogFooter>
           <Dialog.CloseButton
             onClick={async () => {
-              const list = await window.api.createList(listName(), []);
+              const list = await createList(listName(), []);
 
               if (list) {
-                props.callback && props.callback(list);
-                fetchTrackerList();
-                return;
+                props?.callback?.(list);
               }
-
-              // setError(list.error.message);
             }}
+            // setError(list.error.message);
           >
             Create
           </Dialog.CloseButton>

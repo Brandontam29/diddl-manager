@@ -1,16 +1,17 @@
 // import { cn } from "@renderer/libs/cn";
-import { Button } from "@renderer/components/ui/button";
-import {
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  Dialog,
-} from "@renderer/components/ui/dialog";
-import { TextFieldRoot, TextFieldLabel, TextField } from "@renderer/components/ui/textfield";
 import { DialogTriggerProps } from "@kobalte/core/dialog";
 import { createSignal } from "solid-js";
+
+import { Button } from "@renderer/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@renderer/components/ui/dialog";
+import { TextField, TextFieldLabel, TextFieldRoot } from "@renderer/components/ui/textfield";
 
 const SecretMigrationButton = () => {
   const [open, setOpen] = createSignal(false);
@@ -53,27 +54,34 @@ const SecretMigrationButton = () => {
         <DialogFooter>
           <Button
             onClick={async () => {
-              if (password() !== "hihihi") {
+              const currentPassword = password();
+              const currentListName = listname();
+
+              if (currentPassword !== "hihihi") {
                 setError("Oops, wrong password.");
                 return;
               }
 
-              const list = await window.api.createList(
-                listname(),
-                Array.from(new Set(COLLECTION_LIST.map((item) => item.id))),
-              );
+              try {
+                const list = await window.api.createList(
+                  currentListName,
+                  Array.from(new Set(COLLECTION_LIST.map((item) => item.id))),
+                );
 
-              const promises = COLLECTION_LIST.map((item) => {
-                if (item.count === 1) return;
+                const promises = COLLECTION_LIST.map((item) => {
+                  if (item.count === 1) return null;
 
-                return window.api.updateListItems(list.id, [item.id], {
-                  addQuantity: item.count - 1,
+                  return window.api.updateListItems(list.id, [item.id], {
+                    addQuantity: item.count - 1,
+                  });
                 });
-              });
 
-              await Promise.allSettled(promises);
-
-              setOpen(false);
+                await Promise.allSettled(promises);
+                setOpen(false);
+              } catch (err) {
+                console.error("Migration failed:", err);
+                setError("Migration failed. Please try again.");
+              }
             }}
           >
             Recover List

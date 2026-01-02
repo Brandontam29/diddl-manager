@@ -1,21 +1,21 @@
 import Database from "better-sqlite3";
 import {
-  Kysely,
-  SqliteDialect,
-  Migrator,
-  MigrationProvider,
-  Migration,
   CamelCasePlugin,
+  Kysely,
+  Migration,
+  MigrationProvider,
+  Migrator,
+  SqliteDialect,
 } from "kysely";
-
-import { up as up0, down as down0 } from "./migrations/000_initial_schema";
-import { up as up1, down as down1 } from "./migrations/001_seed_diddls";
-import { dbPath } from "../pathing";
-import { type RawDatabase } from ".";
 import { SerializePlugin } from "kysely-plugin-serialize";
-import { logging } from "../logging";
 
-export const initDb = async () => {
+import { type RawDatabase } from ".";
+import { logging } from "../logging";
+import { dbPath } from "../pathing";
+import { down as down0, up as up0 } from "./migrations/000_initial_schema";
+import { down as down1, up as up1 } from "./migrations/001_seed_diddls";
+
+export const initDb = () => {
   try {
     const nativeDb = new Database(dbPath());
 
@@ -35,6 +35,7 @@ export const initDb = async () => {
   }
 };
 
+// oxlint-disable-next-line no-explicit-any
 export const migrateToLatest = async (db: Kysely<any>) => {
   const migrator = new Migrator({
     db,
@@ -59,7 +60,7 @@ export const migrateToLatest = async (db: Kysely<any>) => {
 };
 
 class MyStaticMigrationProvider implements MigrationProvider {
-  async getMigrations(): Promise<Record<string, Migration>> {
+  getMigrations(): Promise<Record<string, Migration>> {
     return {
       "000_initial_schema": {
         up: up0,

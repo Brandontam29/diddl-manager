@@ -1,10 +1,11 @@
+import { useSearchParams } from "@solidjs/router";
+import { Show, createMemo } from "solid-js";
+
+import { diddlStore } from "@renderer/features/diddl";
+import DiddlCardListLimiter from "@renderer/features/diddl/components/DiddlCardListLimiter";
+import Taskbar from "@renderer/features/taskbars/Taskbar";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
-import { useSearchParams } from "@solidjs/router";
-import { createMemo, Show } from "solid-js";
-import Taskbar from "@renderer/features/taskbars/Taskbar";
-import DiddlCardListLimiter from "@renderer/components/DiddlCardListLimiter";
-import { diddlStore } from "@renderer/features/diddl";
 
 const HomePage = () => {
   const screenWidth = useScreenWidth();
@@ -19,20 +20,20 @@ const HomePage = () => {
 
     if (searchParams.from || searchParams.to) {
       diddls = diddls.slice(
-        searchParams.from !== undefined ? Number.parseInt(searchParams.from) : 0,
-        searchParams.to !== undefined ? Number.parseInt(searchParams.to) : undefined,
+        searchParams.from === undefined ? 0 : Number.parseInt(searchParams.from),
+        searchParams.to === undefined ? undefined : Number.parseInt(searchParams.to),
       );
     }
 
     return diddls;
   });
 
-  const isSelectMode = createMemo(() => diddlStore.selectedIndices.length !== 0);
+  const isSelectMode = createMemo(() => diddlStore.selectedIndices.length > 0);
 
   return (
     <>
       <div
-        class={cn("relative grow px-4 pt-10 pb-4 flex flex-wrap gap-2 content-start")}
+        class={cn("relative flex grow flex-wrap content-start gap-2 px-4 pt-10 pb-4")}
         style={{ width: `${screenWidth() - 256 - 32}px` }}
       >
         <DiddlCardListLimiter diddls={filteredDiddls()} />

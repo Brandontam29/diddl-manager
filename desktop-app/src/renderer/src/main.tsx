@@ -1,10 +1,10 @@
-import "./styles/index.css";
-
-import { render } from "solid-js/web";
-import { Route, HashRouter } from "@solidjs/router";
+import { HashRouter, Route } from "@solidjs/router";
 import { lazy } from "solid-js";
-import BaseLayout from "./pages/layout";
+import { render } from "solid-js/web";
+
 import { ToastList, ToastRegion } from "./components/ui/toast";
+import BaseLayout from "./pages/layout";
+import "./styles/index.css";
 
 const HomePage = lazy(() => import("./pages/page"));
 const NotFoundPage = lazy(() => import("./pages/not-found"));
@@ -26,5 +26,5 @@ render(
       </ToastRegion>
     </HashRouter>
   ),
-  document.getElementById("root") as HTMLElement,
+  document.querySelector("#root") as HTMLElement,
 );

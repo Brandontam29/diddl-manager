@@ -1,26 +1,24 @@
-import FallbackLoadingLists from "@renderer/components/FallbackLoadingLists";
-import FallbackNoLists from "@renderer/components/FallbackNoLists";
-import { listStore } from "@renderer/features/lists";
 import { A } from "@solidjs/router";
-import { createEffect, For, Show } from "solid-js";
-import ListCard from "@renderer/features/lists/components/ListCard";
-import CreateListDialog from "@renderer/features/lists/components/CreateListDialog";
 import { ListPlus } from "lucide-solid";
+import { For, Show } from "solid-js";
+
+import FallbackLoadingLists from "@renderer/components/fallback/FallbackLoadingLists";
+import FallbackNoLists from "@renderer/components/fallback/FallbackNoLists";
 import { Button } from "@renderer/components/ui/button";
-import fetchLists from "@renderer/features/lists/fetchLists";
+import { useLists } from "@renderer/features/lists";
+import CreateListDialog from "@renderer/features/lists/components/CreateListDialog";
+import ListCard from "@renderer/features/lists/components/ListCard";
 
 const ListsPage = () => {
-  const lists = () => listStore.lists;
-
-  createEffect(() => fetchLists());
+  const lists = useLists();
 
   return (
     <div class="grow px-4 py-8">
-      <div class="flex items-center mb-4 gap-4">
+      <div class="mb-4 flex items-center gap-4">
         <h1 class="text-xl font-bold">Lists</h1>
 
         <CreateListDialog>
-          <Button as="div" variant={"outline"} class="grow flex items-center gap-2 rounded-md">
+          <Button as="div" variant={"outline"} class="flex grow items-center gap-2 rounded-md">
             <ListPlus />
             <span>Create New</span>
           </Button>
@@ -28,7 +26,7 @@ const ListsPage = () => {
       </div>
       <Show when={Array.isArray(lists())} fallback={<FallbackLoadingLists />}>
         <Show when={Array.isArray(lists()) && lists()!.length > 0} fallback={<FallbackNoLists />}>
-          <div class="grid grid-flow-col gap-4 justify-start">
+          <div class="grid grid-flow-col justify-start gap-4">
             <For each={lists()}>
               {(item) => (
                 <A href={`/lists/${item.id}`}>

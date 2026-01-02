@@ -1,13 +1,14 @@
-import { cn } from "@renderer/libs/cn";
 import type { Diddl } from "@shared";
-import { type Component } from "solid-js";
-import { Image, ImageFallback, ImageRoot } from "./ui/image";
 import { ImageOffIcon } from "lucide-solid";
+import { type Component } from "solid-js";
+
+import { Image, ImageFallback, ImageRoot } from "@renderer/components/ui/image";
+import { cn } from "@renderer/libs/cn";
 
 const DiddlCard: Component<{ diddl: Diddl; className?: string }> = (props) => {
   return (
     <div class={cn(props.className)}>
-      <div class="h-[calc(100%-20px)] w-full border-t border-x border-black/20 rounded-t">
+      <div class="h-[calc(100%-20px)] w-full rounded-t border-x border-t border-black/20">
         <ImageRoot fallbackDelay={600} class="h-full w-full">
           <Image
             loading="lazy"
@@ -19,7 +20,7 @@ const DiddlCard: Component<{ diddl: Diddl; className?: string }> = (props) => {
           </ImageFallback>
         </ImageRoot>
       </div>
-      <div class="text-purple-950 bg-purple-200 h-5 w-full grid place-content-center rounded-b">
+      <div class="grid h-5 w-full place-content-center rounded-b bg-purple-200 text-purple-950">
         {props.diddl.name}
       </div>
     </div>

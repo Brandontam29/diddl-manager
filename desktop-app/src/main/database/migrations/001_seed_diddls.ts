@@ -1,4 +1,5 @@
 import { Kysely } from "kysely";
+
 import diddls from "../diddls.json";
 
 export async function up(db: Kysely<any>) {

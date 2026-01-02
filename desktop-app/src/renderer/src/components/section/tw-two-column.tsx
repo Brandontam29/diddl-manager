@@ -1,6 +1,6 @@
-import { ImageIcon, UserCircleIcon, ChevronDownIcon } from "lucide-solid";
+import { ChevronDownIcon, ImageIcon, UserCircleIcon } from "lucide-solid";
 
-const TwoColumn = () => {
+const _TwoColumn = () => {
   return (
     <div class="divide-y divide-gray-900/10 dark:divide-white/10">
       <div class="grid grid-cols-1 gap-x-8 gap-y-8 py-10 md:grid-cols-3">

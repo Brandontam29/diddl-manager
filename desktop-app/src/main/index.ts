@@ -120,5 +120,5 @@ autoUpdater.on("update-available", () => {
 autoUpdater.on("update-downloaded", () => {
   logging.info("Update downloaded; will install now");
   // You can prompt the user to restart here
-  // autoUpdater.quitAndInstall();
+  autoUpdater.quitAndInstall();
 });

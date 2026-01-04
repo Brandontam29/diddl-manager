@@ -1,6 +1,6 @@
 import { useAction, useParams } from "@solidjs/router";
 import { CheckCircle, Circle, CircleX, Minus, Plus } from "lucide-solid";
-import { type Component, For, JSX, Show, createMemo } from "solid-js";
+import { type Component, For, JSX, Show, createEffect, createMemo } from "solid-js";
 
 import type { Diddl } from "@shared";
 import { ListItem } from "@shared";
@@ -29,6 +29,7 @@ const DiddlListCard: Component<{
   const isSelectMode = createMemo(() => selectedIndices().length > 0);
   const updateListItems = useAction(updateListItemsAction);
 
+  createEffect(() => console.log(props.diddls));
   return (
     <Show when={Array.isArray(props.diddls)} fallback={<FallbackLoadingDiddl />}>
       <Show

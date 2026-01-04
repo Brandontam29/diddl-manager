@@ -88,7 +88,13 @@ app.whenReady().then(async () => {
 
     // 3. Pass the file path back to Electron
 
-    // console.log("image:", filePath);
+    // console.log(request.url, "===", filePath);
+    if (filePath.includes(".JPG.jpg")) {
+      const newPath = filePath.replaceAll("JPG.jpg", "jpg");
+      callback({ path: newPath });
+
+      return;
+    }
     callback({ path: filePath });
   });
 

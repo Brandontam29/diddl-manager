@@ -34,7 +34,11 @@ const writeLog = async (type: LogLevel, ...messages: any[]) => {
   const content = messages.map(formatMessage).join(" ");
   const fullLogLine = `${prefix} ${content}\n`;
 
-  console[type](fullLogLine.trim());
+  if (type === "fatal") {
+    console["error"](fullLogLine.trim());
+  } else {
+    console[type](fullLogLine.trim());
+  }
 
   try {
     const fileName = `LOGGING-Q${getQuarter(now)}.log`;

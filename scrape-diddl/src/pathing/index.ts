@@ -33,4 +33,6 @@ export const structurePath = () =>
 export const libraryIndexMap = () =>
     path.join(projectRoot(), "json-files", "library-index-map.json");
 
+export const logDirectory = () => path.join(projectRoot(), "logging");
+
 export { logAllPaths };

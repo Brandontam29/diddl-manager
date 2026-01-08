@@ -51,7 +51,7 @@ const writeLog = async (type: LogLevel, ...messages: any[]) => {
   }
 };
 
-const log = {
+export const logging = {
   info: (...args: any[]) => {
     writeLog("info", ...args);
   },
@@ -68,5 +68,3 @@ const log = {
     writeLog("debug", ...args);
   },
 };
-
-export default log;

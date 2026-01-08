@@ -7,19 +7,22 @@ import electronUpdater from "electron-updater";
 import icon from "../../resources/icon.jpg?asset";
 import { initDb, migrateToLatest } from "./database";
 import setupDiddlImages from "./diddl/setupDiddlImages";
-import { log, logging } from "./logging";
+import { logging } from "./logging";
 import { appPath, logAllPaths } from "./pathing";
 import registerMainHandlers from "./registerMainHandlers";
+import { createDefaultSetting, createDefaultUiState } from "./setting";
 import isDev from "./utils/isDev";
 
 const { autoUpdater } = electronUpdater;
 
 autoUpdater.logger = logging;
 
-function createWindow() {
+function createWindow(bounds?: { width?: number; height?: number; x?: number; y?: number }) {
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: bounds?.width ?? 900,
+    height: bounds?.height ?? 670,
+    x: bounds?.x,
+    y: bounds?.y,
     show: false,
     // autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),
@@ -36,7 +39,18 @@ function createWindow() {
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url);
+    try {
+      const { protocol } = new URL(details.url);
+      if (["https:", "http:"].includes(protocol)) {
+        shell.openExternal(details.url);
+        return { action: "allow" };
+      }
+
+      logging.warn("User tried to open url: ", details.url);
+    } catch (e) {
+      logging.error(e);
+    }
+
     return { action: "deny" };
   });
 
@@ -69,8 +83,16 @@ app.whenReady().then(async () => {
 
   await setupDiddlImages();
 
-  const window = createWindow();
-  if (db) registerMainHandlers(window, db);
+  const uiStore = createDefaultUiState();
+
+  // Get saved bounds
+  const savedState = uiStore.store;
+  const { width, height, x, y } = savedState.windowBounds;
+
+  const window = createWindow({ width, height, x, y });
+  const store = createDefaultSetting();
+
+  if (db) registerMainHandlers(window, db, store, uiStore);
 
   app.on("activate", () => {
     // On macOS it's common to re-create a window in the app when the
@@ -79,16 +101,14 @@ app.whenReady().then(async () => {
   });
 
   protocol.registerFileProtocol("app", (request, callback) => {
-    // 1. Get the requested file path from the URL
-    // e.g., for "app://images/photo.png", url will be "images/photo.png"
     const url = request.url.slice("app://".length);
 
-    // 2. Construct the absolute path to the image in your AppData
     const filePath = path.join(appPath(), url);
 
-    // 3. Pass the file path back to Electron
+    if (!filePath.startsWith(appPath())) {
+      return callback({ path: path.join(appPath(), "404") });
+    }
 
-    // console.log(request.url, "===", filePath);
     if (filePath.includes(".JPG.jpg")) {
       const newPath = filePath.replaceAll("JPG.jpg", "jpg");
       callback({ path: newPath });
@@ -99,7 +119,7 @@ app.whenReady().then(async () => {
   });
 
   autoUpdater.checkForUpdatesAndNotify().catch((err) => {
-    log.error("Update check failed", err);
+    logging.error("Update check failed", err);
   });
 });
 

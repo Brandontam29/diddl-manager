@@ -61,6 +61,10 @@ export const defaultZipPath = (fileName: string = "diddls.zip") => path.join(app
 
 export const downloadsFolder = () => app.getPath("downloads");
 
+export const settingsPath = () => path.join(appPath(), "json-files", "settings.json");
+export const uiStatePath = () => path.join(appPath(), "json-files", "ui-state.json");
+
+
 /**
  * Images
  */

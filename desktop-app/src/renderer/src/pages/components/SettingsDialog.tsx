@@ -18,7 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@renderer/components/ui/select";
-import { HEIGHT_ZOOM_MAP, setCardZoomLevel, uiStore } from "@renderer/features/ui-state";
+import {
+  HEIGHT_ZOOM_MAP,
+  setCardZoomLevel,
+  uiStore,
+} from "@renderer/features/settings/legacy-index";
 import type { DeepMutable } from "@renderer/type-utils";
 
 const ZOOM_OPTIONS = [

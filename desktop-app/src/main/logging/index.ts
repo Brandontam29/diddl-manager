@@ -1,3 +1,1 @@
-import log from "./log";
-
-export { log, log as logging };
+export { logging } from "./log";

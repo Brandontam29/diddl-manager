@@ -1,6 +1,6 @@
 import { For } from "solid-js";
 
-import { uiStore } from "@renderer/features/ui-state";
+import { uiStore } from "@renderer/features/settings/legacy-index";
 
 import { Skeleton } from "../ui/skeleton";
 

@@ -14,7 +14,7 @@ import {
   removeSelectedIndices,
 } from "@renderer/features/diddl/selectedIndicesMethods";
 import { updateListItemsAction } from "@renderer/features/lists";
-import { uiStore } from "@renderer/features/ui-state";
+import { uiStore } from "@renderer/features/settings/legacy-index";
 import { cn } from "@renderer/libs/cn";
 
 import DiddlCard from "./DiddlCard";

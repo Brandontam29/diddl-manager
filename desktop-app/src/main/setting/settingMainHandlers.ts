@@ -11,6 +11,7 @@ export const UPDATE_UI_STATE = "update-ui-state";
 
 const settingMainHandlers = (
   _browserWindow: BrowserWindow,
+
   store: ElectronStore<Settings>,
 
   uiStore: ElectronStore<UiState>,

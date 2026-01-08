@@ -2,7 +2,7 @@ import { type BrowserWindow, ipcMain } from "electron";
 import type ElectronStore from "electron-store";
 
 import { type Settings, settingsSchema } from "../../shared/settings-schema";
-import { type Settings as UiState, uiStateSchema } from "../../shared/ui-state-schema";
+import { type UiState, uiStateSchema } from "../../shared/ui-state-schema";
 
 export const GET_SETTINGS = "get-settings";
 export const UPDATE_SETTING = "update-setting";
@@ -54,7 +54,6 @@ const settingMainHandlers = (
     return { success: true, data: uiStore.store };
   });
 };
-
 
 function deepMerge(target: any, source: any): any {
   if (

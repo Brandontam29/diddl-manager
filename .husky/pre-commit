@@ -1,3 +1,6 @@
+#!/bin/sh
+. "$(dirname -- "$0")/_/husky.sh"
+
 # Run in subdirectories if they exist
 (cd desktop-app && npx lint-staged)
 (cd electrobun-hello-world && npx lint-staged)

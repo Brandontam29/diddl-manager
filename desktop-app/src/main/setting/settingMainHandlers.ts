@@ -13,6 +13,15 @@ const settingMainHandlers = (
   _browserWindow: BrowserWindow,
   store: ElectronStore<Settings>,
 
+
+
+
+
+
+
+
+
+  
   uiStore: ElectronStore<UiState>,
 ) => {
   // --- Settings ---

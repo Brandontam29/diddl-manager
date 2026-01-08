@@ -22,8 +22,13 @@
         "zod": "^4.0.17"
     },
     "devDependencies": {
+        "lint-staged": "^16.2.7",
+        "prettier": "^3.7.4",
         "typescript": "^5.7.2",
         "vite": "^6.0.0",
         "vite-plugin-solid": "^2.11.6"
+    },
+    "lint-staged": {
+        "**/*": "prettier --write --ignore-unknown"
     }
 }

@@ -22,8 +22,7 @@
     "build:win": "bun run build && electron-builder --win --publish always",
     "build:mac": "electron-vite build && electron-builder --mac --publish always",
     "build:linux": "electron-vite build && electron-builder --linux --publish always",
-    "postinstall": "electron-builder install-app-deps",
-    "prepare": "cd .. && husky desktop-app/.husky"
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",

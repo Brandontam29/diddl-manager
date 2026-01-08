@@ -1,0 +1,5 @@
+# Run in subdirectories if they exist
+(cd desktop-app && npx lint-staged)
+(cd electrobun-hello-world && npx lint-staged)
+(cd scrape-diddl && npx lint-staged)
+(cd solidjs-template && npx lint-staged)

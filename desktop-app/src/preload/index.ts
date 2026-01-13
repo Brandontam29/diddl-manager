@@ -1,17 +1,17 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge } from "electron";
 
+import { configPreloadApi } from "../main/config";
 import { diddlPreloadApi } from "../main/diddl";
 import { fileSystemPreloadApi } from "../main/file-system";
 import { listPreloadApi } from "../main/list";
-import { settingPreloadApi } from "../main/setting";
 
 // Custom APIs for renderer
 const api = {
   ...fileSystemPreloadApi,
   ...diddlPreloadApi,
   ...listPreloadApi,
-  ...settingPreloadApi,
+  ...configPreloadApi,
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

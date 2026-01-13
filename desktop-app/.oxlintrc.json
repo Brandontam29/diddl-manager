@@ -2,7 +2,8 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "unicorn"],
   "jsPlugins": [
-    "eslint-plugin-solid"
+    "eslint-plugin-solid",
+    "eslint-plugin-neverthrow"
     // "@electron-toolkit/eslint-config-prettier"
     // "@electron-toolkit/eslint-config-ts"
   ],

@@ -5,12 +5,12 @@ import { BrowserWindow, app, protocol, shell } from "electron";
 import electronUpdater from "electron-updater";
 
 import icon from "../../resources/icon.jpg?asset";
+import { createDefaultSetting, createDefaultUiState } from "./config";
 import { initDb, migrateToLatest } from "./database";
 import setupDiddlImages from "./diddl/setupDiddlImages";
 import { logging } from "./logging";
 import { appPath, logAllPaths } from "./pathing";
 import registerMainHandlers from "./registerMainHandlers";
-import { createDefaultSetting, createDefaultUiState } from "./setting";
 import isDev from "./utils/isDev";
 
 const { autoUpdater } = electronUpdater;

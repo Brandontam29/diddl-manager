@@ -64,7 +64,6 @@ export const downloadsFolder = () => app.getPath("downloads");
 export const settingsPath = () => path.join(appPath(), "json-files", "settings.json");
 export const uiStatePath = () => path.join(appPath(), "json-files", "ui-state.json");
 
-
 /**
  * Images
  */
@@ -75,5 +74,6 @@ export const diddlImagesZipPath = () =>
     : path.join(rawGetAppData(), "../", "diddl-images.zip");
 
 export const diddlImagesPath = () => path.join(appPath(), "diddl-images");
+export const userImagesPath = () => path.join(appPath(), "user-images");
 
 export { logAllPaths };

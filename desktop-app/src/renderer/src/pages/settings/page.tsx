@@ -1,6 +1,6 @@
-// import SettingsSectionProfile from "./components/SettingsSectionProfile";
 // import SecretMigrationButton from "./components/SecretMigrationButton";
 import SettingsSectionDev from "./components/SettingsSectionDev";
+import SettingsSectionProfile from "./components/SettingsSectionProfile";
 import SettingsSectionUx from "./components/SettingsSectionUx";
 
 const SettingsPage = () => {
@@ -9,7 +9,7 @@ const SettingsPage = () => {
       <SettingsSectionUx />
       <SettingsSectionDev />
       {/* <SecretMigrationButton /> */}
-      {/* <SettingsSectionProfile /> */}
+      <SettingsSectionProfile />
     </div>
   );
 };

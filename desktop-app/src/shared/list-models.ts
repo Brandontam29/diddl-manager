@@ -12,6 +12,9 @@ const isoDateStringSchema = z.string().refine(
 
 const DISALLOWED_WORDS = ["catherine cai", "dick", "fuck", "satan"];
 
+/**
+ * List
+ */
 export const listNameSchema = z
   .string()
   .min(2, { message: "The string must be at least 3 characters long." })
@@ -52,6 +55,9 @@ export type SelectListDb = Selectable<ListDb>;
 export type InsertListDb = Insertable<ListDb>;
 export type UpdateListDb = Updateable<ListDb>;
 
+/**
+ * List Item
+ */
 export const addListItemSchema = listItemSchema.omit({ id: true, listId: true }).extend({
   isDamaged: listItemSchema.shape.isDamaged.default(false),
   isIncomplete: listItemSchema.shape.isIncomplete.default(false),

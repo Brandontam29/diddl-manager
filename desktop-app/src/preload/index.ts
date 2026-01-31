@@ -5,6 +5,7 @@ import { configPreloadApi } from "../main/config";
 import { diddlPreloadApi } from "../main/diddl";
 import { fileSystemPreloadApi } from "../main/file-system";
 import { listPreloadApi } from "../main/list";
+import { profilePreloadApi } from "../main/profile";
 
 // Custom APIs for renderer
 const api = {
@@ -12,6 +13,7 @@ const api = {
   ...diddlPreloadApi,
   ...listPreloadApi,
   ...configPreloadApi,
+  ...profilePreloadApi,
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

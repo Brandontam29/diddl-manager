@@ -5,6 +5,7 @@ import {
   Migration,
   MigrationProvider,
   Migrator,
+  ParseJSONResultsPlugin,
   SqliteDialect,
 } from "kysely";
 import { SerializePlugin } from "kysely-plugin-serialize";
@@ -12,8 +13,10 @@ import { SerializePlugin } from "kysely-plugin-serialize";
 import { type RawDatabase } from ".";
 import { logging } from "../logging";
 import { dbPath } from "../pathing";
+import { AutoUpdatedAtPlugin } from "./auto-updated-at-plugin";
 import { down as down0, up as up0 } from "./migrations/000_initial_schema";
 import { down as down1, up as up1 } from "./migrations/001_seed_diddls";
+import { down as down2, up as up2 } from "./migrations/002_profile";
 
 export const initDb = () => {
   try {
@@ -25,7 +28,12 @@ export const initDb = () => {
       dialect: new SqliteDialect({
         database: nativeDb,
       }),
-      plugins: [new CamelCasePlugin(), new SerializePlugin()],
+      plugins: [
+        new CamelCasePlugin(),
+        new SerializePlugin(),
+        new ParseJSONResultsPlugin(),
+        new AutoUpdatedAtPlugin(),
+      ],
     });
 
     return db;
@@ -60,8 +68,8 @@ export const migrateToLatest = async (db: Kysely<any>) => {
 };
 
 class MyStaticMigrationProvider implements MigrationProvider {
-  getMigrations(): Promise<Record<string, Migration>> {
-    return {
+  async getMigrations() {
+    const migrations = {
       "000_initial_schema": {
         up: up0,
         down: down0,
@@ -70,6 +78,12 @@ class MyStaticMigrationProvider implements MigrationProvider {
         up: up1,
         down: down1,
       },
-    };
+      "002_profile": {
+        up: up2,
+        down: down2,
+      },
+    } as const satisfies Record<string, Migration>;
+
+    return migrations;
   }
 }

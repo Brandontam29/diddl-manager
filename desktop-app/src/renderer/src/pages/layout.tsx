@@ -24,9 +24,10 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
   });
 
   createComputed(
-    on([() => props.location.pathname, () => props.location.search], () =>
-      setDiddlStore("selectedIndices", []),
-    ),
+    on([() => props.location.pathname, () => props.location.search], () => {
+      setDiddlStore("selectedIndices", []);
+      setDiddlStore("diffListId", null);
+    }),
   );
 
   const currentPath = createMemo(() => `${props.location.pathname}${props.location.search}`);

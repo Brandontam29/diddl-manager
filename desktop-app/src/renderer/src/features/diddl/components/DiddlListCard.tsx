@@ -9,6 +9,7 @@ import FallbackLoadingDiddl from "@renderer/components/fallback/FallbackLoadingD
 import FallbackNoDiddl from "@renderer/components/fallback/FallbackNoDiddl";
 import { Button } from "@renderer/components/ui/button";
 import { diddlStore, setDiddlStore } from "@renderer/features/diddl";
+import { diffDiddlIds } from "@renderer/features/diddl/diffMode";
 import {
   addSelectedIndices,
   removeSelectedIndices,
@@ -27,6 +28,7 @@ const DiddlListCard: Component<{
   const listId = createMemo(() => (params.id === undefined ? null : parseInt(params.id)));
   const selectedIndices = () => diddlStore.selectedIndices;
   const isSelectMode = createMemo(() => selectedIndices().length > 0);
+  const isDiffMode = createMemo(() => diddlStore.diffListId !== null);
   const updateListItems = useAction(updateListItemsAction);
 
   createEffect(() => console.log(props.diddls));
@@ -40,6 +42,10 @@ const DiddlListCard: Component<{
           {(diddl, index) => {
             const ratio =
               diddl.imageWidth && diddl.imageHeight ? diddl.imageWidth / diddl.imageHeight : null;
+            const isGrayedOut = createMemo(() => {
+              const ids = diffDiddlIds();
+              return isDiffMode() && ids !== null && !ids.has(diddl.id);
+            });
 
             return (
               <div
@@ -49,7 +55,10 @@ const DiddlListCard: Component<{
                   width: ratio ? `${uiStore.cardHeight * ratio}px` : undefined,
                 }}
               >
-                <DiddlCard className={cn("h-full w-full")} diddl={diddl} />
+                <DiddlCard
+                  className={cn("h-full w-full", isGrayedOut() && "opacity-40 grayscale")}
+                  diddl={diddl}
+                />
                 <div
                   // full overlay
                   class={cn(

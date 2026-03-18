@@ -3,6 +3,7 @@ import { Show, createMemo } from "solid-js";
 
 import { diddlStore } from "@renderer/features/diddl";
 import DiddlCardListLimiter from "@renderer/features/diddl/components/DiddlCardListLimiter";
+import CompareListPopover from "@renderer/features/lists/components/CompareListPopover";
 import Taskbar from "@renderer/features/taskbars/Taskbar";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
@@ -33,10 +34,15 @@ const HomePage = () => {
   return (
     <>
       <div
-        class={cn("relative flex grow flex-wrap content-start gap-2 px-4 pt-10 pb-4")}
+        class={cn("relative flex grow flex-col px-4 pt-2 pb-4")}
         style={{ width: `${screenWidth() - 256 - 32}px` }}
       >
-        <DiddlCardListLimiter diddls={filteredDiddls()} />
+        <div class="mb-2 flex items-center">
+          <CompareListPopover />
+        </div>
+        <div class="flex grow flex-wrap content-start gap-2">
+          <DiddlCardListLimiter diddls={filteredDiddls()} />
+        </div>
       </div>
       <Show when={isSelectMode()}>
         <Taskbar diddls={filteredDiddls()} />

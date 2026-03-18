@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "unicorn"],
+  "plugins": ["typescript", "import", "unicorn"],
   "jsPlugins": [
     "eslint-plugin-solid",
     "eslint-plugin-neverthrow"

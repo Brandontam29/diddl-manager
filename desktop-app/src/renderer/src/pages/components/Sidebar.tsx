@@ -222,6 +222,9 @@ const Sidebar: Component<{ currentPath: string }> = (props) => {
         </For>
       </TopLinkContainer>
       <div>
+        <SidebarLink href="/profile" currentPath={props.currentPath} icon={CogIcon}>
+          Profile
+        </SidebarLink>
         <SidebarLink href="/settings" currentPath={props.currentPath} icon={CogIcon}>
           Settings
         </SidebarLink>

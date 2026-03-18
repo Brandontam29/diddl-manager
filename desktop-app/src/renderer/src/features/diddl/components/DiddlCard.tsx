@@ -1,6 +1,7 @@
-import type { Diddl } from "@shared";
 import { ImageOffIcon } from "lucide-solid";
 import { type Component } from "solid-js";
+
+import type { Diddl } from "@shared";
 
 import { Image, ImageFallback, ImageRoot } from "@renderer/components/ui/image";
 import { cn } from "@renderer/libs/cn";

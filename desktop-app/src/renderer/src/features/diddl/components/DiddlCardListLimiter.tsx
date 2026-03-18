@@ -1,7 +1,8 @@
-import { Diddl, ListItem } from "@shared";
 import { createIntersectionObserver } from "@solid-primitives/intersection-observer";
 import { useSearchParams } from "@solidjs/router";
 import { Component, JSX, createComputed, createMemo, createSignal, on } from "solid-js";
+
+import { Diddl, ListItem } from "@shared";
 
 import DiddlListCard from "./DiddlListCard";
 

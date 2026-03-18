@@ -1,5 +1,6 @@
-import type { Diddl } from "@shared";
 import { createStore } from "solid-js/store";
+
+import type { Diddl } from "@shared";
 
 type Store = {
   diddlState: Diddl[];

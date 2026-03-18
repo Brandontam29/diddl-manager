@@ -1,7 +1,8 @@
 import AdmZip from "adm-zip";
+
 import { logging } from "../../logging";
 import { generateBackupReport } from "./generateReport";
-import { validateFilePaths, filterValidFiles } from "./validateFiles";
+import { filterValidFiles, validateFilePaths } from "./validateFiles";
 
 export type ZipResult = {
   success: boolean;
@@ -10,7 +11,7 @@ export type ZipResult = {
 
 export const createBackupZip = async (
   filePaths: string[],
-  outputZipPath: string
+  outputZipPath: string,
 ): Promise<ZipResult> => {
   const zip = new AdmZip();
   const errors: string[] = [];

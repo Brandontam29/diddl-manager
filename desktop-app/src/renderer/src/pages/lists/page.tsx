@@ -13,23 +13,23 @@ const ListsPage = () => {
   const lists = useLists();
 
   return (
-    <div class="grow px-4 py-8">
-      <div class="mb-4 flex items-center gap-4">
-        <h1 class="text-xl font-bold">Lists</h1>
+    <div class="mx-auto w-full max-w-7xl px-4 py-8">
+      <div class="mb-8 flex items-center justify-between gap-4">
+        <h1 class="text-3xl font-bold">Lists</h1>
 
         <CreateListDialog>
-          <Button as="div" variant={"outline"} class="flex grow items-center gap-2 rounded-md">
-            <ListPlus />
-            <span>Create New</span>
+          <Button variant={"outline"} class="flex items-center gap-2 rounded-md px-6">
+            <ListPlus size={20} />
+            <span>Create New List</span>
           </Button>
         </CreateListDialog>
       </div>
       <Show when={Array.isArray(lists())} fallback={<FallbackLoadingLists />}>
         <Show when={Array.isArray(lists()) && lists()!.length > 0} fallback={<FallbackNoLists />}>
-          <div class="grid grid-flow-col justify-start gap-4">
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <For each={lists()}>
               {(item) => (
-                <A href={`/lists/${item.id}`}>
+                <A href={`/lists/${item.id}`} class="h-full">
                   <ListCard list={item} />
                 </A>
               )}

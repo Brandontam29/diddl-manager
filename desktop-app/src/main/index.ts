@@ -1,3 +1,4 @@
+// oxlint-disable import/max-dependencies
 import path from "node:path";
 
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
@@ -5,7 +6,7 @@ import { BrowserWindow, app, protocol, shell } from "electron";
 import electronUpdater from "electron-updater";
 
 import icon from "../../resources/icon.jpg?asset";
-import { createDefaultSetting, createDefaultUiState } from "./config";
+import { createDefaultUiState } from "./config";
 import { initDb, migrateToLatest } from "./database";
 import setupDiddlImages from "./diddl/setupDiddlImages";
 import { logging } from "./logging";
@@ -87,12 +88,11 @@ app.whenReady().then(async () => {
 
   // Get saved bounds
   const savedState = uiStore.store;
-  const { width, height, x, y } = savedState.windowBounds;
+  const { width, height, x, y } = savedState.windowBounds ?? {};
 
   const window = createWindow({ width, height, x, y });
-  const store = createDefaultSetting();
 
-  if (db) registerMainHandlers(window, db, store, uiStore);
+  if (db) registerMainHandlers(window, db);
 
   app.on("activate", () => {
     // On macOS it's common to re-create a window in the app when the

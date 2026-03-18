@@ -10,7 +10,7 @@ const ListCard: Component<{ list: List }> = (props) => {
   return (
     <Card
       class={cn(
-        "w-full max-w-md",
+        "flex h-full w-full flex-col",
         "transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg",
       )}
     >

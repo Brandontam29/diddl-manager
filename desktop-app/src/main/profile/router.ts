@@ -4,10 +4,10 @@ import path from "node:path";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { updateProfileSchema } from "../../../shared";
-import { logging } from "../../logging";
-import { userImagesPath } from "../../pathing";
-import { publicProcedure, router } from "../trpc";
+import { updateProfileSchema } from "../../shared";
+import { logging } from "../logging";
+import { userImagesPath } from "../pathing";
+import { publicProcedure, router } from "../trpc/trpc";
 
 const defaultProfile = {
   name: "",

@@ -2,10 +2,10 @@ import { rm } from "node:fs/promises";
 
 import { TRPCError } from "@trpc/server";
 
-import setupDiddlImages from "../../diddl/setupDiddlImages";
-import { logging } from "../../logging";
-import { diddlImagesPath } from "../../pathing";
-import { publicProcedure, router } from "../trpc";
+import { logging } from "../logging";
+import { diddlImagesPath } from "../pathing";
+import { publicProcedure, router } from "../trpc/trpc";
+import setupDiddlImages from "./setupDiddlImages";
 
 export const diddlRouter = router({
   getAll: publicProcedure.query(async ({ ctx }) => {

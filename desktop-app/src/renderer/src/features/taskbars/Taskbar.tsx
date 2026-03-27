@@ -1,13 +1,17 @@
 import { toaster } from "@kobalte/core/toast";
 import { useAction, useMatch, useParams } from "@solidjs/router";
-import { CircleX, Download, Minus, Plus, SplineIcon } from "lucide-solid";
+import { CircleX, Copy, Download, Minus, Plus, SplineIcon } from "lucide-solid";
 import { type Component, JSX, Show, createMemo, createSignal } from "solid-js";
 
 import type { Diddl, ListItem } from "@shared";
 
 import { Toast, ToastContent, ToastProgress, ToastTitle } from "@renderer/components/ui/toast";
 import { diddlStore, setDiddlStore } from "@renderer/features/diddl";
-import { addListItemsAction, updateListItemsAction } from "@renderer/features/lists";
+import {
+  addListItemsAction,
+  duplicateListItemAction,
+  updateListItemsAction,
+} from "@renderer/features/lists";
 import AddToListPopover from "@renderer/features/lists/components/AddToListPopover";
 import createAsyncCallback from "@renderer/hooks/createAsyncCallback";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
@@ -27,6 +31,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
   const [open, setOpen] = createSignal(false);
   const updateListItems = useAction(updateListItemsAction);
   const addListItems = useAction(addListItemsAction);
+  const duplicateListItems = useAction(duplicateListItemAction);
 
   const onDownloadImages: JSX.EventHandler<HTMLButtonElement, MouseEvent> = async (e) => {
     const diddlIds = diddlStore.selectedIndices.map((index) => props.diddls[index]?.id || -1);
@@ -132,6 +137,16 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
         >
           <Minus />
           <span>Remove 1</span>
+        </button>
+        <div class="h-[24px] w-0.5 bg-gray-200" />{" "}
+        <button
+          class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
+          onClick={() => {
+            duplicateListItems(selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1));
+          }}
+        >
+          <Copy size={16} />
+          <span>Duplicate</span>
         </button>
         <div class="h-[24px] w-0.5 bg-gray-200" />{" "}
         <button

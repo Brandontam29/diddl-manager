@@ -41,6 +41,14 @@ export const removeListItemsAction = action(async (listId: number, idsToRemove: 
   return result;
 });
 
+export const duplicateListItemAction = action(async (listItemIds: number[]) => {
+  for (const id of listItemIds) {
+    await trpc.list.duplicateItem.mutate({ listItemId: id });
+  }
+
+  revalidate("list-items");
+});
+
 export const updateListItemsAction = action(
   async (
     listId: number,

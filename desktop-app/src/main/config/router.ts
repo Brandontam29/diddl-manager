@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { settingsSchema } from "../../../shared/settings-schema";
-import { uiStateSchema } from "../../../shared/ui-state-schema";
-import { YamlHandler } from "../../config/yaml-handler";
-import { settingsPath, uiStatePath } from "../../pathing";
-import { publicProcedure, router } from "../trpc";
+import { settingsSchema } from "../../shared/settings-schema";
+import { uiStateSchema } from "../../shared/ui-state-schema";
+import { settingsPath, uiStatePath } from "../pathing";
+import { publicProcedure, router } from "../trpc/trpc";
+import { YamlHandler } from "./yaml-handler";
 
 const settingsDocument = new YamlHandler(settingsSchema, settingsPath());
 const uiStateDocument = new YamlHandler(uiStateSchema, uiStatePath());

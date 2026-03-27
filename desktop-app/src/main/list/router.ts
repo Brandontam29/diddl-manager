@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { addListItemSchema } from "../../../shared";
-import { logging } from "../../logging";
-import { publicProcedure, router } from "../trpc";
+import { addListItemSchema } from "../../shared";
+import { logging } from "../logging";
+import { publicProcedure, router } from "../trpc/trpc";
 
 export const listRouter = router({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -167,6 +167,39 @@ export const listRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to remove list items",
+        });
+      }
+    }),
+
+  duplicateItem: publicProcedure
+    .input(z.object({ listItemId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const sourceItem = await ctx.db
+          .selectFrom("listItem")
+          .selectAll()
+          .where("id", "=", input.listItemId)
+          .executeTakeFirst();
+
+        if (!sourceItem) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "List item not found" });
+        }
+
+        await ctx.db
+          .updateTable("listItem")
+          .set((eb) => ({
+            quantity: eb("quantity", "+", sourceItem.quantity),
+          }))
+          .where("id", "=", sourceItem.id)
+          .execute();
+
+        return { success: true as const };
+      } catch (e) {
+        if (e instanceof TRPCError) throw e;
+        logging.error(e);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to duplicate list item",
         });
       }
     }),

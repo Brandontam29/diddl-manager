@@ -4,10 +4,10 @@ import path from "path";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createBackupZip } from "../../file-system/zip/createBackupZip";
-import { logging } from "../../logging";
-import { defaultZipPath, downloadsFolder } from "../../pathing";
-import { publicProcedure, router } from "../trpc";
+import { logging } from "../logging";
+import { defaultZipPath, downloadsFolder } from "../pathing";
+import { publicProcedure, router } from "../trpc/trpc";
+import { createBackupZip } from "./zip/createBackupZip";
 
 export const fileSystemRouter = router({
   downloadImages: publicProcedure

@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import { BrowserWindow, app, protocol, shell } from "electron";
+import { createIPCHandler } from "electron-trpc/main";
 import electronUpdater from "electron-updater";
 
 import icon from "../../resources/icon.jpg?asset";
@@ -11,7 +12,7 @@ import { initDb, migrateToLatest } from "./database";
 import setupDiddlImages from "./diddl/setupDiddlImages";
 import { logging } from "./logging";
 import { appPath, logAllPaths } from "./pathing";
-import registerMainHandlers from "./registerMainHandlers";
+import { appRouter } from "./trpc/router";
 import isDev from "./utils/isDev";
 
 const { autoUpdater } = electronUpdater;
@@ -92,7 +93,13 @@ app.whenReady().then(async () => {
 
   const window = createWindow({ width, height, x, y });
 
-  if (db) registerMainHandlers(window, db);
+  if (db) {
+    createIPCHandler({
+      router: appRouter,
+      windows: [window],
+      createContext: async () => ({ db, browserWindow: window }),
+    });
+  }
 
   app.on("activate", () => {
     // On macOS it's common to re-create a window in the app when the

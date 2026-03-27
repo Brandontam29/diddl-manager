@@ -13,6 +13,7 @@ import createAsyncCallback from "@renderer/hooks/createAsyncCallback";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
 import { confettiStars } from "@renderer/libs/confetti";
+import { trpc } from "@renderer/libs/trpc";
 
 const OPTIONS = {
   home: ["hihi", "list:add", "download"],
@@ -29,7 +30,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
 
   const onDownloadImages: JSX.EventHandler<HTMLButtonElement, MouseEvent> = async (e) => {
     const diddlIds = diddlStore.selectedIndices.map((index) => props.diddls[index]?.id || -1);
-    const result = await window.api.downloadImages(diddlIds);
+    const result = await trpc.fileSystem.downloadImages.mutate({ diddlIds });
 
     if (!result) return;
 

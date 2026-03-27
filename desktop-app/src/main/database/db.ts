@@ -17,6 +17,7 @@ import { AutoUpdatedAtPlugin } from "./auto-updated-at-plugin";
 import { down as down0, up as up0 } from "./migrations/000_initial_schema";
 import { down as down1, up as up1 } from "./migrations/001_seed_diddls";
 import { down as down2, up as up2 } from "./migrations/002_profile";
+import { down as down3, up as up3 } from "./migrations/003_rename_list_modified_at";
 
 export const initDb = () => {
   try {
@@ -68,6 +69,7 @@ export const migrateToLatest = async (db: Kysely<any>) => {
 };
 
 class MyStaticMigrationProvider implements MigrationProvider {
+  // oxlint-disable-next-line require-await
   async getMigrations() {
     const migrations = {
       "000_initial_schema": {
@@ -81,6 +83,10 @@ class MyStaticMigrationProvider implements MigrationProvider {
       "002_profile": {
         up: up2,
         down: down2,
+      },
+      "003_rename_list_modified_at": {
+        up: up3,
+        down: down3,
       },
     } as const satisfies Record<string, Migration>;
 

@@ -6,6 +6,7 @@ import {
   SectionTitle,
 } from "@renderer/components/section/two-column";
 import { Button } from "@renderer/components/ui/button";
+import { trpc } from "@renderer/libs/trpc";
 
 export default function SettingsSectionDev() {
   return (
@@ -17,7 +18,7 @@ export default function SettingsSectionDev() {
       <SectionContent>
         <Button
           onClick={() => {
-            window.api.fixDiddlImages();
+            trpc.diddl.fixImages.mutate();
           }}
         >
           Fix Images

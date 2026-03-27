@@ -1,5 +1,5 @@
 import { diddlStore, setDiddlStore } from "./createDiddlStore";
 import { diffDiddlIds } from "./diffMode";
-import fetchDiddlState from "./fetchDiddlState";
+import fetchDiddls from "./fetchDiddls";
 
-export { diddlStore, setDiddlStore, fetchDiddlState, diffDiddlIds };
+export { diddlStore, setDiddlStore, fetchDiddls, diffDiddlIds };

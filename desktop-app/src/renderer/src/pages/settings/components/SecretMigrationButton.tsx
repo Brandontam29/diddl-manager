@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@renderer/components/ui/dialog";
 import { TextField, TextFieldLabel, TextFieldRoot } from "@renderer/components/ui/textfield";
+import { trpc } from "@renderer/libs/trpc";
 
 const SecretMigrationButton = () => {
   const [open, setOpen] = createSignal(false);
@@ -63,16 +64,18 @@ const SecretMigrationButton = () => {
               }
 
               try {
-                const list = await window.api.createList(
-                  currentListName,
-                  Array.from(new Set(COLLECTION_LIST.map((item) => item.id))),
-                );
+                const list = await trpc.list.create.mutate({
+                  name: currentListName,
+                  diddlIds: Array.from(new Set(COLLECTION_LIST.map((item) => item.id))),
+                });
 
                 const promises = COLLECTION_LIST.map((item) => {
                   if (item.count === 1) return null;
 
-                  return window.api.updateListItems(list.id, [item.id], {
-                    addQuantity: item.count - 1,
+                  return trpc.list.updateItems.mutate({
+                    listId: list.id,
+                    listItemIds: [item.id],
+                    action: { addQuantity: item.count - 1 },
                   });
                 });
 

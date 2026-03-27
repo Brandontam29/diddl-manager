@@ -5,10 +5,10 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [externalizeDepsPlugin({ exclude: ["electron-trpc"] })],
   },
   preload: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [externalizeDepsPlugin({ exclude: ["electron-trpc"] })],
   },
   renderer: {
     plugins: [solid(), tailwindcss(), tsconfigPaths()],

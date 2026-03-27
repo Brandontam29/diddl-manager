@@ -2,9 +2,11 @@ import { action, createAsyncStore, query, revalidate } from "@solidjs/router";
 
 import type { List } from "@shared";
 
+import { trpc } from "@renderer/libs/trpc";
+
 const fetchLists = query(() => {
   console.log("lists");
-  return window.api.getLists();
+  return trpc.list.getAll.query();
 }, "lists");
 
 export const useLists = () =>
@@ -19,7 +21,7 @@ export const useLists = () =>
   });
 
 export const createListAction = action(async (currentListName: string, diddlIds: number[]) => {
-  const list = await window.api.createList(currentListName, diddlIds);
+  const list = await trpc.list.create.mutate({ name: currentListName, diddlIds });
 
   revalidate("lists");
 

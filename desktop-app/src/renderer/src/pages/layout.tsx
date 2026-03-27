@@ -11,7 +11,7 @@ import {
 
 import FallbackPageLoading from "@renderer/components/fallback/FallbackPageLoading";
 import { ToastList, ToastRegion } from "@renderer/components/ui/toast";
-import { fetchDiddlState, setDiddlStore } from "@renderer/features/diddl";
+import { fetchDiddls, setDiddlStore } from "@renderer/features/diddl";
 import { useWindowTracking } from "@renderer/features/ui-state";
 
 import Sidebar from "./components/Sidebar";
@@ -20,7 +20,7 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
   useWindowTracking();
 
   onMount(() => {
-    fetchDiddlState();
+    fetchDiddls();
   });
 
   createComputed(

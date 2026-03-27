@@ -1,8 +1,6 @@
 import { AnyFieldApi, createForm } from "@tanstack/solid-form";
-import { Component, For, Show, createMemo, createSignal, onMount } from "solid-js";
+import { Component, For, Show, createMemo } from "solid-js";
 import { z } from "zod";
-
-import { Profile } from "@shared";
 
 import {
   Section,
@@ -12,54 +10,46 @@ import {
   SectionTitle,
 } from "@renderer/components/section/two-column";
 import { Button } from "@renderer/components/ui/button";
+import { useProfile } from "@renderer/features/profile/profile-state";
 
-const profileSchema = z.object({
+const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   description: z.string().min(10, "Description must be at least 10 characters").max(200),
   hobbies: z.string(),
   birthdate: z.string(),
-  picture: z.any().nullable().optional(),
+  picture: z.union([z.string(), z.instanceof(File)]).nullable(),
 });
 
 export default function SettingsSectionProfile() {
-  const [profileId, setProfileId] = createSignal<number | null>(null);
+  const { profile, actions } = useProfile();
 
   const form = createForm(() => ({
     defaultValues: {
-      name: profile.name,
-      description: profile.description || "",
-      hobbies: profile.hobbies || "",
-      birthdate: profile.birthdate || "",
-
-      picture: profile.picturePath,
+      name: profile()?.name ?? "",
+      description: profile()?.description ?? "",
+      hobbies: profile()?.hobbies ?? "",
+      birthdate: profile()?.birthdate ?? "",
+      picture: (profile()?.picturePath ?? null) as string | File | null,
     },
     validators: {
-      onChange: profileSchema,
+      onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      if (value.picture instanceof File) {
+        const filePath = (value.picture as any).path;
+        if (filePath) {
+          await actions.updateProfilePicture(filePath);
+        }
+      }
+
+      await actions.updateProfile({
+        name: value.name,
+        description: value.description,
+        hobbies: value.hobbies,
+        birthdate: value.birthdate,
+      });
     },
   }));
-
-  onMount(async () => {
-    const profile = (await window.api.getProfile()) as Profile | null;
-    if (profile) {
-      setProfileId(profile.id);
-      setInitialValues({
-        name: profile.name,
-        description: profile.description || "",
-        hobbies: profile.hobbies || "",
-        birthdate: profile.birthdate || "",
-        picture: profile.picturePath,
-      });
-      // Update form values after fetching
-      form.setFieldValue("name", profile.name);
-      form.setFieldValue("description", profile.description || "");
-      form.setFieldValue("hobbies", profile.hobbies || "");
-      form.setFieldValue("birthdate", profile.birthdate || "");
-      form.setFieldValue("picture", profile.picturePath);
-    }
-  });
 
   return (
     <Section>
@@ -200,32 +190,3 @@ const FieldInfo: Component<{ field: AnyFieldApi }> = (props) => {
     </div>
   );
 };
-
-/**
- *   console.log("Form Submitted:", value);
-
-    //   let picturePath = typeof value.picture === 'string' ? value.picture : null;
-
-    //   // specific logic if it is a File object (uploading new)
-    //   if (value.picture && value.picture instanceof File) {
-    //     // Electron adds 'path' to File object
-    //     const filePath = (value.picture as any).path;
-    //     console.log("File path:", filePath);
-    //     if (filePath) {
-    //       const result = await window.api.updateProfilePicture(filePath);
-    //       if (result.success) {
-    //         picturePath = result.path;
-    //       }
-    //     }
-    //   }
-
-    //   await window.api.updateProfile({
-    //     name: value.name,
-    //     description: value.description,
-    //     hobbies: value.hobbies || null,
-    //     birthdate: value.birthdate || null,
-    //     picturePath: picturePath,
-    //   });
-    //   alert("Profile updated successfully!");
-    // },
- */

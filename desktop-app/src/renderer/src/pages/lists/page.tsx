@@ -1,5 +1,5 @@
 import { A } from "@solidjs/router";
-import { ListPlus } from "lucide-solid";
+import { ListPlus, X } from "lucide-solid";
 import { For, Show } from "solid-js";
 
 import FallbackLoadingLists from "@renderer/components/fallback/FallbackLoadingLists";
@@ -7,6 +7,7 @@ import FallbackNoLists from "@renderer/components/fallback/FallbackNoLists";
 import { Button } from "@renderer/components/ui/button";
 import { useLists } from "@renderer/features/lists";
 import CreateListDialog from "@renderer/features/lists/components/CreateListDialog";
+import DeleteListDialog from "@renderer/features/lists/components/DeleteListDialog";
 import ListCard from "@renderer/features/lists/components/ListCard";
 
 const ListsPage = () => {
@@ -29,9 +30,16 @@ const ListsPage = () => {
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <For each={lists()}>
               {(item) => (
-                <A href={`/lists/${item.id}`} class="h-full">
-                  <ListCard list={item} />
-                </A>
+                <div class="relative h-full">
+                  <A href={`/lists/${item.id}`} class="h-full">
+                    <ListCard list={item} />
+                  </A>
+                  <div class="absolute top-2 right-2 z-10">
+                    <DeleteListDialog listId={item.id} listName={item.name}>
+                      <X size={16} class="text-muted-foreground hover:text-destructive" />
+                    </DeleteListDialog>
+                  </div>
+                </div>
               )}
             </For>
           </div>

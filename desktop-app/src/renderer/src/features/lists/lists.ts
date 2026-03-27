@@ -27,3 +27,9 @@ export const createListAction = action(async (currentListName: string, diddlIds:
 
   return list;
 });
+
+export const deleteListAction = action(async (listId: number) => {
+  await trpc.list.delete.mutate({ listId });
+
+  revalidate("lists");
+});

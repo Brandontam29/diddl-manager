@@ -1,9 +1,9 @@
 import { Button } from "@kobalte/core/button";
 import type { DialogTriggerProps } from "@kobalte/core/dialog";
 import { useAction } from "@solidjs/router";
-import { type Component, JSX, createSignal } from "solid-js";
+import { type Component, type JSX, createSignal } from "solid-js";
 
-import { List } from "@shared";
+import type { List } from "@shared";
 
 import {
   Dialog,
@@ -21,12 +21,23 @@ const CreateListDialog: Component<{
   children: JSX.Element;
   callback?: (list: List) => void;
 }> = (props) => {
+  const [open, setOpen] = createSignal(false);
   const [listName, setListName] = createSignal("");
   const [error, _setError] = createSignal("");
   const createList = useAction(createListAction);
 
+  const handleSubmit = async (e: SubmitEvent) => {
+    e.preventDefault();
+    const list = await createList(listName(), []);
+    if (list) {
+      props?.callback?.(list);
+    }
+    setListName("");
+    setOpen(false);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open()} onOpenChange={setOpen}>
       <DialogTrigger
         as={(triggerProps: DialogTriggerProps) => (
           <Button {...triggerProps} variant="none">
@@ -35,34 +46,25 @@ const CreateListDialog: Component<{
         )}
       />
       <DialogContent class="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Create a New List</DialogTitle>
-        </DialogHeader>
+        <form onSubmit={handleSubmit}>
+          <DialogHeader>
+            <DialogTitle>Create a New List</DialogTitle>
+          </DialogHeader>
 
-        <TextFieldRoot
-          value={listName()}
-          onChange={setListName}
-          class="grid grid-cols-3 items-center gap-4 md:grid-cols-4"
-        >
-          <TextFieldLabel class="text-right">List Name</TextFieldLabel>
-          <TextField class="col-span-2 md:col-span-3" />
-        </TextFieldRoot>
-        <div>{error()}</div>
-
-        <DialogFooter>
-          <Dialog.CloseButton
-            onClick={async () => {
-              const list = await createList(listName(), []);
-
-              if (list) {
-                props?.callback?.(list);
-              }
-            }}
-            // setError(list.error.message);
+          <TextFieldRoot
+            value={listName()}
+            onChange={setListName}
+            class="mt-4 grid grid-cols-3 items-center gap-4 md:grid-cols-4"
           >
-            Create
-          </Dialog.CloseButton>
-        </DialogFooter>
+            <TextFieldLabel class="text-right">List Name</TextFieldLabel>
+            <TextField class="col-span-2 md:col-span-3" />
+          </TextFieldRoot>
+          <div>{error()}</div>
+
+          <DialogFooter class="mt-4">
+            <button type="submit">Create</button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

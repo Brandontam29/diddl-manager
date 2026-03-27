@@ -22,7 +22,7 @@ const ListCard: Component<{ list: List }> = (props) => {
           <div class="flex items-center space-x-2">
             <CalendarDays class="text-muted-foreground h-5 w-5" />
             <span class="text-muted-foreground text-sm">
-              Last modified: {displayDate(props.list.lastModifiedAt)}
+              Last modified: {displayDate(props.list.updatedAt)}
             </span>
           </div>
           <div class="flex items-center space-x-2">

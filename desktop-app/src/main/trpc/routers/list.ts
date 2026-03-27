@@ -38,7 +38,7 @@ export const listRouter = router({
             .values({
               name: input.name,
               createdAt: new Date().toISOString(),
-              lastModifiedAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
             })
             .returningAll()
             .executeTakeFirstOrThrow();
@@ -83,7 +83,7 @@ export const listRouter = router({
       try {
         await ctx.db
           .updateTable("list")
-          .set({ name: input.name, lastModifiedAt: new Date().toISOString() })
+          .set({ name: input.name, updatedAt: new Date().toISOString() })
           .where("id", "=", input.listId)
           .execute();
       } catch (e) {

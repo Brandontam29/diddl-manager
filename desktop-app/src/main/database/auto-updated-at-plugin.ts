@@ -16,7 +16,7 @@ export class AutoUpdatedAtPlugin implements KyselyPlugin {
   #columnName: string;
 
   constructor(options?: { columnName?: string }) {
-    this.#columnName = options?.columnName ?? "updatedAt";
+    this.#columnName = options?.columnName ?? "updated_at";
   }
 
   // We only need to transform the query before it's sent to the DB

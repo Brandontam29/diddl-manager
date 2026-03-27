@@ -41,7 +41,7 @@ export const listSchema = z.object({
   name: listNameSchema,
 
   createdAt: isoDateStringSchema,
-  lastModifiedAt: isoDateStringSchema,
+  updatedAt: isoDateStringSchema,
   deletedAt: isoDateStringSchema.nullable(),
 });
 

@@ -33,7 +33,7 @@ export const initDb = () => {
         new CamelCasePlugin(),
         new SerializePlugin(),
         new ParseJSONResultsPlugin(),
-        new AutoUpdatedAtPlugin({ columnName: "updated_at" }),
+        new AutoUpdatedAtPlugin({ columnName: "updated_at", tables: ["list", "profile"] }),
       ],
     });
 

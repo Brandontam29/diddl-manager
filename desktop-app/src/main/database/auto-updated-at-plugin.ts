@@ -7,6 +7,7 @@ import {
   PluginTransformResultArgs,
   QueryResult,
   RootOperationNode,
+  TableNode,
   UnknownRow,
   UpdateQueryNode,
   ValueNode,
@@ -14,9 +15,11 @@ import {
 
 export class AutoUpdatedAtPlugin implements KyselyPlugin {
   #columnName: string;
+  #tables: Set<string> | null;
 
-  constructor(options?: { columnName?: string }) {
+  constructor(options?: { columnName?: string; tables?: string[] }) {
     this.#columnName = options?.columnName ?? "updated_at";
+    this.#tables = options?.tables ? new Set(options.tables) : null;
   }
 
   // We only need to transform the query before it's sent to the DB
@@ -39,7 +42,23 @@ export class AutoUpdatedAtPlugin implements KyselyPlugin {
     return Promise.resolve(args.result);
   }
 
+  #getTableName(node: UpdateQueryNode): string | undefined {
+    if (node.table && TableNode.is(node.table)) {
+      const identifier = node.table.table.identifier;
+      if (IdentifierNode.is(identifier)) {
+        return identifier.name;
+      }
+    }
+    return undefined;
+  }
+
   #transformUpdate(node: UpdateQueryNode): UpdateQueryNode {
+    // Skip tables that don't have the updated_at column
+    if (this.#tables) {
+      const tableName = this.#getTableName(node);
+      if (!tableName || !this.#tables.has(tableName)) return node;
+    }
+
     const now = new Date().toISOString();
 
     // Check if updatedAt is already being set manually

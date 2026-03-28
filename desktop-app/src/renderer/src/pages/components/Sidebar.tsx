@@ -37,140 +37,140 @@ const Sidebar: Component<{ currentPath: string }> = (props) => {
         {
           title: "A6",
           links: [
-            { label: "1-99", href: getParams({ type: "A6", from: 0, to: 98 }) },
-            { label: "100-199", href: getParams({ type: "A6", from: 99, to: 198 }) },
-            { label: "200-299", href: getParams({ type: "A6", from: 199, to: 298 }) },
+            { label: "1-99", href: getParams({ type: "A6", from: 0, to: 99 }) },
+            { label: "100-199", href: getParams({ type: "A6", from: 99, to: 199 }) },
+            { label: "200-299", href: getParams({ type: "A6", from: 199, to: 299 }) },
           ],
         },
         {
           title: "A5",
           links: [
-            { label: "1-99", href: getParams({ type: "A5", from: 0, to: 98 }) },
-            { label: "100-199", href: getParams({ type: "A5", from: 99, to: 198 }) },
-            { label: "200-299", href: getParams({ type: "A5", from: 199, to: 298 }) },
-            { label: "300-399", href: getParams({ type: "A5", from: 299, to: 398 }) },
-            { label: "400-499", href: getParams({ type: "A5", from: 399, to: 498 }) },
+            { label: "1-99", href: getParams({ type: "A5", from: 0, to: 99 }) },
+            { label: "100-199", href: getParams({ type: "A5", from: 99, to: 199 }) },
+            { label: "200-299", href: getParams({ type: "A5", from: 199, to: 299 }) },
+            { label: "300-399", href: getParams({ type: "A5", from: 299, to: 399 }) },
+            { label: "400-499", href: getParams({ type: "A5", from: 399, to: 499 }) },
           ],
         },
         {
           title: "A4",
           links: [
-            { label: "1-99", href: getParams({ type: "A4", from: 0, to: 98 }) },
-            { label: "100-199", href: getParams({ type: "A4", from: 99, to: 198 }) },
+            { label: "1-99", href: getParams({ type: "A4", from: 0, to: 99 }) },
+            { label: "100-199", href: getParams({ type: "A4", from: 99, to: 199 }) },
           ],
         },
         {
           title: "Series",
           links: [
-            { label: "1-99", href: getParams({ type: "series", from: 0, to: 98 }) },
-            { label: "100-199", href: getParams({ type: "series", from: 99, to: 198 }) },
+            { label: "1-99", href: getParams({ type: "series", from: 0, to: 99 }) },
+            { label: "100-199", href: getParams({ type: "series", from: 99, to: 199 }) },
           ],
         },
         {
           title: "Gift Paper",
           links: [
-            { label: "1-99", href: getParams({ type: "gift-paper", from: 0, to: 98 }) },
-            { label: "100-199", href: getParams({ type: "gift-paper", from: 99, to: 198 }) },
-            { label: "200-299", href: getParams({ type: "gift-paper", from: 199, to: 298 }) },
+            { label: "1-99", href: getParams({ type: "gift-paper", from: 0, to: 99 }) },
+            { label: "100-199", href: getParams({ type: "gift-paper", from: 99, to: 199 }) },
+            { label: "200-299", href: getParams({ type: "gift-paper", from: 199, to: 299 }) },
           ],
         },
         {
           title: "Birthday",
-          links: [{ label: "1-99", href: getParams({ type: "birthday", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "birthday", from: 0, to: 99 }) }],
         },
         {
           title: "Special",
-          links: [{ label: "1-99", href: getParams({ type: "special", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "special", from: 0, to: 99 }) }],
         },
         {
           title: "Game",
-          links: [{ label: "1-99", href: getParams({ type: "game", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "game", from: 0, to: 99 }) }],
         },
         {
           title: "A2",
-          links: [{ label: "1-99", href: getParams({ type: "A2", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "A2", from: 0, to: 99 }) }],
         },
         {
           title: "Paper Relief",
-          links: [{ label: "1-99", href: getParams({ type: "paper-relief", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "paper-relief", from: 0, to: 99 }) }],
         },
         {
           title: "Post-It",
-          links: [{ label: "1-99", href: getParams({ type: "post-it", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "post-it", from: 0, to: 99 }) }],
         },
         {
           title: "Rectangular Memo",
           links: [
-            { label: "1-99", href: getParams({ type: "rectangular-memo", from: 0, to: 98 }) },
+            { label: "1-99", href: getParams({ type: "rectangular-memo", from: 0, to: 99 }) },
           ],
         },
         {
           title: "Square Memo",
-          links: [{ label: "1-99", href: getParams({ type: "square-memo", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "square-memo", from: 0, to: 99 }) }],
         },
         {
           title: "Quardiddl Card",
-          links: [{ label: "1-99", href: getParams({ type: "quardiddl-card", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "quardiddl-card", from: 0, to: 99 }) }],
         },
         {
           title: "Letter Paper",
           links: [
-            { label: "1-99", href: getParams({ type: "letter-paper", from: 0, to: 98 }) },
-            { label: "100-199", href: getParams({ type: "letter-paper", from: 99, to: 198 }) },
-            { label: "200-299", href: getParams({ type: "letter-paper", from: 199, to: 298 }) },
+            { label: "1-99", href: getParams({ type: "letter-paper", from: 0, to: 99 }) },
+            { label: "100-199", href: getParams({ type: "letter-paper", from: 99, to: 199 }) },
+            { label: "200-299", href: getParams({ type: "letter-paper", from: 199, to: 299 }) },
           ],
         },
         {
           title: "Stamp",
-          links: [{ label: "1-99", href: getParams({ type: "stamp", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "stamp", from: 0, to: 99 }) }],
         },
         {
           title: "Paper Bag A5",
-          links: [{ label: "1-99", href: getParams({ type: "paper-bag-A5", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "paper-bag-A5", from: 0, to: 99 }) }],
         },
         {
           title: "Paper Bag A4",
-          links: [{ label: "1-99", href: getParams({ type: "paper-bag-A4", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "paper-bag-A4", from: 0, to: 99 }) }],
         },
         {
           title: "Paper Bag Expo",
-          links: [{ label: "1-99", href: getParams({ type: "paper-bag-expo", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "paper-bag-expo", from: 0, to: 99 }) }],
         },
         {
           title: "Small Bag",
-          links: [{ label: "1-99", href: getParams({ type: "bag-small", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "bag-small", from: 0, to: 99 }) }],
         },
         {
           title: "Large Bag",
-          links: [{ label: "1-99", href: getParams({ type: "bag-large", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "bag-large", from: 0, to: 99 }) }],
         },
         {
           title: "Mega Bag",
-          links: [{ label: "1-99", href: getParams({ type: "bag-mega", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "bag-mega", from: 0, to: 99 }) }],
         },
         {
           title: "Plastic Bag",
-          links: [{ label: "1-99", href: getParams({ type: "bag-plastic", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "bag-plastic", from: 0, to: 99 }) }],
         },
         {
           title: "Sticker",
           links: [
-            { label: "1-99", href: getParams({ type: "sticker", from: 0, to: 98 }) },
-            { label: "100-199", href: getParams({ type: "sticker", from: 99, to: 198 }) },
-            { label: "200-299", href: getParams({ type: "sticker", from: 199, to: 298 }) },
+            { label: "1-99", href: getParams({ type: "sticker", from: 0, to: 99 }) },
+            { label: "100-199", href: getParams({ type: "sticker", from: 99, to: 199 }) },
+            { label: "200-299", href: getParams({ type: "sticker", from: 199, to: 299 }) },
           ],
         },
         {
           title: "Postal cards",
           links: [
-            { label: "1-99", href: getParams({ type: "postal-card", from: 0, to: 98 }) },
-            { label: "100-199", href: getParams({ type: "postal-card", from: 99, to: 198 }) },
-            { label: "200-299", href: getParams({ type: "postal-card", from: 199, to: 298 }) },
+            { label: "1-99", href: getParams({ type: "postal-card", from: 0, to: 99 }) },
+            { label: "100-199", href: getParams({ type: "postal-card", from: 99, to: 199 }) },
+            { label: "200-299", href: getParams({ type: "postal-card", from: 199, to: 299 }) },
           ],
         },
         {
           title: "Towel",
-          links: [{ label: "1-99", href: getParams({ type: "towel", from: 0, to: 98 }) }],
+          links: [{ label: "1-99", href: getParams({ type: "towel", from: 0, to: 99 }) }],
         },
       ] as const satisfies {
         title?: string | JSX.Element;

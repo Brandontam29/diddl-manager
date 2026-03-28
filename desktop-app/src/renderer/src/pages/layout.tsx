@@ -26,7 +26,10 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
   createComputed(
     on([() => props.location.pathname, () => props.location.search], () => {
       setDiddlStore("selectedIndices", []);
-      setDiddlStore("diffListId", null);
+
+      if (props.location.pathname !== "/") {
+        setDiddlStore("diffListId", null);
+      }
     }),
   );
 

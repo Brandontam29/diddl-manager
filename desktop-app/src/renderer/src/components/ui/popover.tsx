@@ -1,5 +1,9 @@
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
-import type { PopoverContentProps, PopoverRootProps } from "@kobalte/core/popover";
+import type {
+  PopoverCloseButtonProps,
+  PopoverContentProps,
+  PopoverRootProps,
+} from "@kobalte/core/popover";
 import { Popover as PopoverPrimitive } from "@kobalte/core/popover";
 import type { ParentProps, ValidComponent } from "solid-js";
 import { mergeProps, splitProps } from "solid-js";
@@ -31,26 +35,49 @@ export const PopoverContent = <T extends ValidComponent = "div">(
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Content
         class={cn(
-          "bg-popover text-popover-foreground data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95 z-50 w-72 rounded-md border p-4 shadow-md outline-none",
+          "bg-popover text-popover-foreground data-expanded:animate-in data-closed:animate-out data-closed:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95 z-50 w-72 rounded-md border p-4 shadow-md outline-none",
           local.class,
         )}
         {...rest}
       >
         {local.children}
-        <PopoverPrimitive.CloseButton class="ring-offset-background focus:ring-ring absolute top-4 right-4 rounded-sm opacity-70 transition-[opacity,box-shadow] hover:opacity-100 focus:ring-[1.5px] focus:ring-offset-2 focus:outline-none disabled:pointer-events-none">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4">
-            <path
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M18 6L6 18M6 6l12 12"
-            />
-          </svg>
-          <span class="sr-only">Close</span>
-        </PopoverPrimitive.CloseButton>
       </PopoverPrimitive.Content>
     </PopoverPrimitive.Portal>
+  );
+};
+
+type popoverContentButtonProps<T extends ValidComponent = "button"> = ParentProps<
+  PopoverCloseButtonProps<T> & {
+    class?: string;
+  }
+>;
+
+export const PopoverClose = <T extends ValidComponent = "button">(
+  props: PolymorphicProps<T, popoverContentButtonProps<T>>,
+) => {
+  const [local, rest] = splitProps(props as popoverContentButtonProps, ["class", "children"]);
+
+  return (
+    <PopoverPrimitive.CloseButton
+      class={cn(
+        "ring-offset-background focus:ring-ring absolute top-4 right-4 rounded-sm opacity-70 transition-[opacity,box-shadow] hover:opacity-100 focus:ring-[1.5px] focus:ring-offset-2 focus:outline-none disabled:pointer-events-none",
+        local.class,
+      )}
+      {...rest}
+    >
+      {local.children || (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4">
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M18 6L6 18M6 6l12 12"
+          />
+        </svg>
+      )}
+      <span class="sr-only">Close</span>
+    </PopoverPrimitive.CloseButton>
   );
 };

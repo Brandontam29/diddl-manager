@@ -33,7 +33,7 @@
     "unicorn/no-null": "off", // Often disabled as React/TS users prefer null
 
     // --- Other ---
-    "radix": ["warn", "as-needed"],
+    "radix": ["off"],
     "eslint/max-lines": ["warn", { "max": 1000 }],
     "eslint/max-lines-per-function": "off"
   },

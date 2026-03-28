@@ -41,6 +41,7 @@ export type ListItem = z.infer<typeof listItemSchema>;
 export const listSchema = z.object({
   id: z.number(),
   name: listNameSchema,
+  color: z.string(),
 
   createdAt: isoDateStringSchema,
   updatedAt: isoDateStringSchema,

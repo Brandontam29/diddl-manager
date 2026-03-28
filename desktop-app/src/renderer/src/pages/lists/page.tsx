@@ -6,6 +6,7 @@ import FallbackLoadingLists from "@renderer/components/fallback/FallbackLoadingL
 import FallbackNoLists from "@renderer/components/fallback/FallbackNoLists";
 import { Button } from "@renderer/components/ui/button";
 import { useLists } from "@renderer/features/lists";
+import ColorPickerPopover from "@renderer/features/lists/components/ColorPickerPopover";
 import CreateListDialog from "@renderer/features/lists/components/CreateListDialog";
 import DeleteListDialog from "@renderer/features/lists/components/DeleteListDialog";
 import ListCard from "@renderer/features/lists/components/ListCard";
@@ -34,10 +35,13 @@ const ListsPage = () => {
                   <A href={`/lists/${item.id}`} class="h-full">
                     <ListCard list={item} />
                   </A>
-                  <div class="absolute top-2 right-2 z-10">
+                  <div class="absolute top-2 right-2">
                     <DeleteListDialog listId={item.id} listName={item.name}>
                       <X size={16} class="text-muted-foreground hover:text-destructive" />
                     </DeleteListDialog>
+                  </div>
+                  <div class="absolute right-0 bottom-0">
+                    <ColorPickerPopover listId={item.id} currentColor={item.color} />
                   </div>
                 </div>
               )}

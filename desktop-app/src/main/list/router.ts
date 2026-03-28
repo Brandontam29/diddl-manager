@@ -5,6 +5,19 @@ import { addListItemSchema, listItemFilterSchema } from "../../shared";
 import { logging } from "../logging";
 import { publicProcedure, router } from "../trpc/trpc";
 
+const LIST_COLORS = [
+  "oklch(77.2% 0.142 5.8)",
+  "oklch(82.7% 0.125 65.4)",
+  "oklch(91.2% 0.187 101.3)",
+  "oklch(86.3% 0.190 123.6)",
+  "oklch(82.9% 0.123 160.8)",
+  "oklch(80.3% 0.106 203.4)",
+  "oklch(76.4% 0.131 260.4)",
+  "oklch(74.3% 0.193 287.2)",
+  "oklch(77.7% 0.204 305.7)",
+  "oklch(78.2% 0.201 333.8)",
+];
+
 export const listRouter = router({
   getAll: publicProcedure.query(async ({ ctx }) => {
     try {
@@ -33,10 +46,20 @@ export const listRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return await ctx.db.transaction().execute(async (trx) => {
+          const existingLists = await trx
+            .selectFrom("list")
+            .select("color")
+            .where("deletedAt", "is", null)
+            .execute();
+
+          const usedColors = new Set(existingLists.map((l) => l.color).filter(Boolean));
+          const color = LIST_COLORS.find((c) => !usedColors.has(c)) ?? LIST_COLORS[0];
+
           const newList = await trx
             .insertInto("list")
             .values({
               name: input.name,
+              color,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             })
@@ -74,6 +97,24 @@ export const listRouter = router({
       } catch (e) {
         logging.error(e);
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to delete list" });
+      }
+    }),
+
+  updateColor: publicProcedure
+    .input(z.object({ listId: z.number(), color: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.db
+          .updateTable("list")
+          .set({ color: input.color })
+          .where("id", "=", input.listId)
+          .execute();
+      } catch (e) {
+        logging.error(e);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update list color",
+        });
       }
     }),
 

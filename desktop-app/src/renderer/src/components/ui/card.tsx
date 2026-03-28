@@ -1,24 +1,32 @@
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import type { ComponentProps, ParentComponent } from "solid-js";
 import { splitProps } from "solid-js";
 
 import { cn } from "@renderer/libs/cn";
 
-export const Card = (props: ComponentProps<"div">) => {
-  const [local, rest] = splitProps(props, ["class"]);
+export const cardVariants = cva(
+  "rounded-xl shadow-xs border border-white dark:shadow-none dark:-outline-offset-1 text-card-foreground",
+  {
+    variants: {
+      color: {
+        default:
+          "bg-linear-to-br from-purple-200/70 via-purple-200/10 to-purple-200/70 backdrop-blur-md dark:bg-gray-800/50",
+        custom: "",
+      },
+    },
+    defaultVariants: {
+      color: "default",
+    },
+  },
+);
 
-  return (
-    <div
-      class={cn(
-        "rounded-xl shadow-xs",
-        "border border-white",
-        "bg-linear-to-br from-purple-200/70 via-purple-200/10 to-purple-200/70 backdrop-blur-md",
-        "dark:bg-gray-800/50 dark:shadow-none dark:-outline-offset-1",
-        "text-card-foreground",
-        local.class,
-      )}
-      {...rest}
-    />
-  );
+type CardProps = ComponentProps<"div"> & VariantProps<typeof cardVariants>;
+
+export const Card = (props: CardProps) => {
+  const [local, rest] = splitProps(props, ["class", "color"]);
+
+  return <div class={cn(cardVariants({ color: local.color }), local.class)} {...rest} />;
 };
 
 export const CardHeader = (props: ComponentProps<"div">) => {

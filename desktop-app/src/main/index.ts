@@ -4,7 +4,6 @@ import path from "node:path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import { BrowserWindow, app, protocol, shell } from "electron";
 import { createIPCHandler } from "electron-trpc/main";
-import electronUpdater from "electron-updater";
 
 import icon from "../../resources/icon.jpg?asset";
 import { createDefaultUiState } from "./config";
@@ -13,11 +12,8 @@ import setupDiddlImages from "./diddl/setupDiddlImages";
 import { logging } from "./logging";
 import { appPath, logAllPaths } from "./pathing";
 import { appRouter } from "./trpc/router";
+import { checkForUpdates, setupAutoUpdater } from "./updater/setup";
 import isDev from "./utils/isDev";
-
-const { autoUpdater } = electronUpdater;
-
-autoUpdater.logger = logging;
 
 function createWindow(bounds?: { width?: number; height?: number; x?: number; y?: number }) {
   const mainWindow = new BrowserWindow({
@@ -125,7 +121,8 @@ app.whenReady().then(async () => {
     callback({ path: filePath });
   });
 
-  autoUpdater.checkForUpdatesAndNotify().catch((err) => {
+  setupAutoUpdater();
+  checkForUpdates().catch((err) => {
     logging.error("Update check failed", err);
   });
 });
@@ -137,15 +134,4 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
-});
-
-// Optional: Listen for events to show custom UI/Notifications
-autoUpdater.on("update-available", () => {
-  logging.info("Update available.");
-});
-
-autoUpdater.on("update-downloaded", () => {
-  logging.info("Update downloaded; will install now");
-  // You can prompt the user to restart here
-  autoUpdater.quitAndInstall();
 });

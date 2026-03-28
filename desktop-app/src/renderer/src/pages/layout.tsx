@@ -13,6 +13,8 @@ import FallbackPageLoading from "@renderer/components/fallback/FallbackPageLoadi
 import { ToastList, ToastRegion } from "@renderer/components/ui/toast";
 import { clearDiffCache, fetchDiddls, setDiddlStore } from "@renderer/features/diddl";
 import { useWindowTracking } from "@renderer/features/ui-state";
+import UpdateDialog from "@renderer/features/updater/UpdateDialog";
+import { initUpdateState } from "@renderer/features/updater/update-state";
 
 import Sidebar from "./components/Sidebar";
 
@@ -21,6 +23,7 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
 
   onMount(() => {
     fetchDiddls();
+    initUpdateState();
   });
 
   createComputed(
@@ -43,6 +46,7 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
     <>
       <Sidebar currentPath={currentPath()} />
       <Suspense fallback={<FallbackPageLoading />}>{props.children}</Suspense>
+      <UpdateDialog />
       <ToastRegion>
         <ToastList />
       </ToastRegion>

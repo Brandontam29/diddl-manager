@@ -10,20 +10,21 @@ import { trpc } from "@renderer/libs/trpc";
 
 export default function SettingsSectionDev() {
   return (
-    <Section>
-      <SectionHeader>
-        <SectionTitle>Fixes</SectionTitle>
-        <SectionDescription>Fix the app yourself! Sometimes it is broken.</SectionDescription>
-      </SectionHeader>
-      <SectionContent>
-        <Button
-          onClick={() => {
-            trpc.diddl.fixImages.mutate();
-          }}
-        >
-          Fix Images
-        </Button>
-      </SectionContent>
-    </Section>
+    <div />
+    // <Section>
+    //   <SectionHeader>
+    //     <SectionTitle>Fixes</SectionTitle>
+    //     <SectionDescription>Fix the app yourself! Sometimes it is broken.</SectionDescription>
+    //   </SectionHeader>
+    //   <SectionContent>
+    //     <Button
+    //       onClick={() => {
+    //         trpc.diddl.fixImages.mutate();
+    //       }}
+    //     >
+    //       Fix Images
+    //     </Button>
+    //   </SectionContent>
+    // </Section>
   );
 }

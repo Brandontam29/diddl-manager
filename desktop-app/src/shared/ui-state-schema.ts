@@ -28,6 +28,7 @@ export const uiStateSchema = z
       })
       .partial(),
     rememberPosition: z.boolean().default(true),
+    lastCheckedForUpdate: z.string().optional(),
   })
   .partial();
 

@@ -2,7 +2,7 @@ import { trpc } from "@renderer/libs/trpc";
 
 import { setDiddlStore } from "./createDiddlStore";
 
-const fetchDiddls = async () => {
+export const fetchDiddls = async () => {
   try {
     const diddls = await trpc.diddl.getAll.query();
 
@@ -11,5 +11,3 @@ const fetchDiddls = async () => {
     return console.error("cannot get diddls", e);
   }
 };
-
-export default fetchDiddls;

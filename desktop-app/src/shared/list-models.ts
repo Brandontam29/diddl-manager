@@ -1,6 +1,8 @@
 import { Generated, Insertable, Selectable, Updateable } from "kysely";
 import { z } from "zod";
 
+import { diddlTypeSchema } from "./diddl-models";
+
 const isoDateStringSchema = z.string().refine(
   (val) => {
     return !isNaN(Date.parse(val));
@@ -83,3 +85,32 @@ export const updateListItemSchema = listItemSchema
   .partial();
 
 export type UpdateListItem = z.infer<typeof updateListItemSchema>;
+
+/**
+ * Joined List Item (listItem + diddl)
+ */
+export const joinedListItemSchema = z.object({
+  listItemId: z.number(),
+  listId: z.number(),
+  diddlId: z.number(),
+  quantity: z.number(),
+  isDamaged: z.boolean(),
+  isIncomplete: z.boolean(),
+  diddlName: z.string(),
+  diddlType: diddlTypeSchema,
+  imagePath: z.string(),
+  imageWidth: z.number().nullable().optional(),
+  imageHeight: z.number().nullable().optional(),
+});
+
+export type JoinedListItem = z.infer<typeof joinedListItemSchema>;
+
+export const listItemFilterSchema = z.object({
+  type: diddlTypeSchema.optional(),
+  isDamaged: z.boolean().optional(),
+  isIncomplete: z.boolean().optional(),
+  minCount: z.number().optional(),
+  maxCount: z.number().optional(),
+});
+
+export type ListItemFilter = z.infer<typeof listItemFilterSchema>;

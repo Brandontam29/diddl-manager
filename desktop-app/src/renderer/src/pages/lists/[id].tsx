@@ -2,8 +2,8 @@ import { useParams, useSearchParams } from "@solidjs/router";
 import { Show, createEffect, createMemo } from "solid-js";
 
 import { diddlStore } from "@renderer/features/diddl";
-import DiddlListCard from "@renderer/features/diddl/components/DiddlListCard";
 import { fetchListItems, useListItems, useLists } from "@renderer/features/lists";
+import DiddlCards from "@renderer/features/lists/components/DiddlCards";
 import Taskbar from "@renderer/features/taskbars/Taskbar";
 import useScreenWidth from "@renderer/hooks/useScreenWidth";
 import { cn } from "@renderer/libs/cn";
@@ -13,63 +13,45 @@ const ListIdPage = () => {
   const id = createMemo(() => (params.id === undefined ? null : parseInt(params.id)));
 
   const screenWidth = useScreenWidth();
-  const listItems = useListItems(id());
   const lists = useLists();
 
   const [searchParams] = useSearchParams();
   const isSelectMode = createMemo(() => diddlStore.selectedIndices.length > 0);
 
-  const diddls = createMemo(() => {
-    if (!listItems()) return null;
+  const filters = createMemo(() => {
+    const f: {
+      // type?: string;
+      isDamaged?: boolean;
+      isIncomplete?: boolean;
+      minCount?: number;
+      maxCount?: number;
+    } = {};
 
-    const entries = listItems()?.map((item) => {
-      return { ...diddlStore.diddlState[item.diddlId - 1], listItem: item };
-    });
+    // if (searchParams.type !== undefined) f.type = searchParams.type;
+    if (searchParams.isDamaged !== undefined) f.isDamaged = searchParams.isDamaged === "true";
+    if (searchParams.isIncomplete !== undefined)
+      f.isIncomplete = searchParams.isIncomplete === "true";
+    if (searchParams.minCount !== undefined) f.minCount = parseInt(searchParams.minCount as string);
+    if (searchParams.maxCount !== undefined) f.maxCount = parseInt(searchParams.maxCount as string);
 
-    return entries;
+    return Object.keys(f).length > 0 ? f : undefined;
   });
 
-  const filteredDiddls = createMemo(() => {
-    let diddlListItems = diddls();
-
-    if (!diddlListItems) return;
-
-    const filteredDiddls = diddlListItems.filter((item) => {
-      const { type, isDamaged, isIncomplete, minCount, maxCount } = searchParams;
-      const { listItem } = item;
-
-      // If a param exists, the item must match it.
-      // If the param is undefined, the condition evaluates to true.
-      if (type !== undefined && item.type !== type) return false;
-
-      if (isDamaged !== undefined && listItem.isDamaged.toString() !== isDamaged) return false;
-
-      if (isIncomplete !== undefined && listItem.isIncomplete.toString() !== isIncomplete)
-        return false;
-
-      if (minCount !== undefined && listItem.quantity < parseInt(minCount as string)) return false;
-
-      if (maxCount !== undefined && listItem.quantity > parseInt(maxCount as string)) return false;
-
-      return true;
-    });
-
-    return filteredDiddls;
-  });
+  const listItems = useListItems(id(), filters());
 
   const list = createMemo(() => {
     return lists()?.find((list) => list.id === id());
   });
 
   const totalQuantity = createMemo(() => {
-    return diddls()?.reduce((acc, item) => acc + item.listItem.quantity, 0);
+    return listItems()?.reduce((acc, item) => acc + item.quantity, 0);
   });
 
   createEffect(() => {
     const listId = id();
     if (listId === null) return;
 
-    fetchListItems(listId);
+    fetchListItems(listId, filters());
   });
 
   return (
@@ -86,12 +68,12 @@ const ListIdPage = () => {
           </Show>
         </div>
         <div class={cn("relative flex grow flex-wrap gap-2 px-4 pt-8 pb-4")}>
-          <DiddlListCard diddls={filteredDiddls()} isListItem={true} />
+          <DiddlCards items={listItems()} />
         </div>
       </div>
       <Show when={isSelectMode()}>
-        <Show when={filteredDiddls()}>
-          <Taskbar diddls={filteredDiddls()!} />
+        <Show when={listItems()}>
+          <Taskbar items={listItems()!} />
         </Show>
       </Show>
     </>

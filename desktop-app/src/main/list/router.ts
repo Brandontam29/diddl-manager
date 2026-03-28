@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { addListItemSchema } from "../../shared";
+import { addListItemSchema, listItemFilterSchema } from "../../shared";
 import { logging } from "../logging";
 import { publicProcedure, router } from "../trpc/trpc";
 
@@ -95,36 +95,72 @@ export const listRouter = router({
       }
     }),
 
-  items: publicProcedure.input(z.object({ listId: z.number() })).query(async ({ ctx, input }) => {
-    try {
-      const list = await ctx.db
-        .selectFrom("list")
-        .selectAll()
-        .where("id", "=", input.listId)
-        .where("deletedAt", "is", null)
-        .executeTakeFirst();
+  items: publicProcedure
+    .input(z.object({ listId: z.number(), filters: listItemFilterSchema.optional() }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const list = await ctx.db
+          .selectFrom("list")
+          .selectAll()
+          .where("id", "=", input.listId)
+          .where("deletedAt", "is", null)
+          .executeTakeFirst();
 
-      if (!list) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "List not found" });
+        if (!list) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "List not found" });
+        }
+
+        let query = ctx.db
+          .selectFrom("listItem")
+          .innerJoin("diddl", "diddl.id", "listItem.diddlId")
+          .select([
+            "listItem.id as listItemId",
+            "listItem.listId",
+            "listItem.diddlId",
+            "listItem.quantity",
+            "listItem.isDamaged",
+            "listItem.isIncomplete",
+            "diddl.name as diddlName",
+            "diddl.type as diddlType",
+            "diddl.imagePath",
+            "diddl.imageWidth",
+            "diddl.imageHeight",
+          ])
+          .orderBy("diddlId", "asc")
+
+          .where("listItem.listId", "=", input.listId);
+
+        const filters = input.filters;
+        if (filters) {
+          if (filters.type !== undefined) {
+            query = query.where("diddl.type", "=", filters.type);
+          }
+          if (filters.isDamaged !== undefined) {
+            query = query.where("listItem.isDamaged", "=", filters.isDamaged);
+          }
+          if (filters.isIncomplete !== undefined) {
+            query = query.where("listItem.isIncomplete", "=", filters.isIncomplete);
+          }
+          if (filters.minCount !== undefined) {
+            query = query.where("listItem.quantity", ">=", filters.minCount);
+          }
+          if (filters.maxCount !== undefined) {
+            query = query.where("listItem.quantity", "<=", filters.maxCount);
+          }
+        }
+
+        const items = await query.execute();
+
+        return items;
+      } catch (e) {
+        if (e instanceof TRPCError) throw e;
+        logging.error(e);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch list details",
+        });
       }
-
-      const items = await ctx.db
-        .selectFrom("listItem")
-        .selectAll()
-        .select("quantity")
-        .where("listId", "=", input.listId)
-        .execute();
-
-      return items;
-    } catch (e) {
-      if (e instanceof TRPCError) throw e;
-      logging.error(e);
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to fetch list details",
-      });
-    }
-  }),
+    }),
 
   addItems: publicProcedure
     .input(
@@ -138,7 +174,6 @@ export const listRouter = router({
         await ctx.db
           .insertInto("listItem")
           .values(input.items.map((item) => ({ listId: input.listId, ...item })))
-          .onConflict((oc) => oc.columns(["listId", "diddlId"]).doNothing())
           .execute();
 
         return { success: true as const };
@@ -152,13 +187,13 @@ export const listRouter = router({
     }),
 
   removeItems: publicProcedure
-    .input(z.object({ listId: z.number(), diddlIds: z.array(z.number()) }))
+    .input(z.object({ listId: z.number(), listItemIds: z.array(z.number()) }))
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.db
           .deleteFrom("listItem")
           .where("listId", "=", input.listId)
-          .where("diddlId", "in", input.diddlIds)
+          .where("id", "in", input.listItemIds)
           .execute();
 
         return { success: true as const };
@@ -186,11 +221,14 @@ export const listRouter = router({
         }
 
         await ctx.db
-          .updateTable("listItem")
-          .set((eb) => ({
-            quantity: eb("quantity", "+", sourceItem.quantity),
-          }))
-          .where("id", "=", sourceItem.id)
+          .insertInto("listItem")
+          .values({
+            listId: sourceItem.listId,
+            diddlId: sourceItem.diddlId,
+            quantity: 1,
+            isDamaged: sourceItem.isDamaged,
+            isIncomplete: sourceItem.isIncomplete,
+          })
           .execute();
 
         return { success: true as const };

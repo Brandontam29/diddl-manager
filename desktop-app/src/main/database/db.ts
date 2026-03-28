@@ -18,6 +18,7 @@ import { down as down0, up as up0 } from "./migrations/000_initial_schema";
 import { down as down1, up as up1 } from "./migrations/001_seed_diddls";
 import { down as down2, up as up2 } from "./migrations/002_profile";
 import { down as down3, up as up3 } from "./migrations/003_rename_list_modified_at";
+import { down as down4, up as up4 } from "./migrations/004_drop_list_item_unique_index";
 
 export const initDb = () => {
   try {
@@ -87,6 +88,10 @@ class MyStaticMigrationProvider implements MigrationProvider {
       "003_rename_list_modified_at": {
         up: up3,
         down: down3,
+      },
+      "004_drop_list_item_unique_index": {
+        up: up4,
+        down: down4,
       },
     } as const satisfies Record<string, Migration>;
 

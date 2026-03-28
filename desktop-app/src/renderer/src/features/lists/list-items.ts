@@ -1,25 +1,24 @@
 import { action, createAsyncStore, query, revalidate } from "@solidjs/router";
 
-import type { AddListItem, ListItem } from "@shared";
+import type { AddListItem, JoinedListItem, ListItemFilter } from "@shared";
 
 import { trpc } from "@renderer/libs/trpc";
 
-export const fetchListItems = query((listId?: number | null) => {
+export const fetchListItems = query((listId?: number | null, filters?: ListItemFilter) => {
   if (listId === undefined || listId === null || !Number.isInteger(listId))
     return new Promise<null>((resolve) => {
       resolve(null);
     });
 
-  return trpc.list.items.query({ listId });
+  return trpc.list.items.query({ listId, filters });
 }, "list-items");
 
-export const useListItems = (listId?: number | null) =>
-  createAsyncStore<ListItem[] | null>(() => fetchListItems(listId), {
+export const useListItems = (listId?: number | null, filters?: ListItemFilter) =>
+  createAsyncStore<JoinedListItem[] | null>(() => fetchListItems(listId, filters), {
     initialValue: null,
 
-    // default values
     reconcile: {
-      key: "id",
+      key: "listItemId",
       merge: false,
     },
   });
@@ -33,8 +32,8 @@ export const addListItemsAction = action(
   },
 );
 
-export const removeListItemsAction = action(async (listId: number, idsToRemove: number[]) => {
-  const result = await trpc.list.removeItems.mutate({ listId, diddlIds: idsToRemove });
+export const removeListItemsAction = action(async (listId: number, listItemIds: number[]) => {
+  const result = await trpc.list.removeItems.mutate({ listId, listItemIds });
 
   revalidate("lists-items");
 

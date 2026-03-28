@@ -3,7 +3,7 @@ import { useAction, useMatch, useParams } from "@solidjs/router";
 import { CircleX, Copy, Download, Minus, Plus, SplineIcon } from "lucide-solid";
 import { type Component, JSX, Show, createMemo, createSignal } from "solid-js";
 
-import type { Diddl, ListItem } from "@shared";
+import type { Diddl, JoinedListItem, ListItem } from "@shared";
 
 import { Toast, ToastContent, ToastProgress, ToastTitle } from "@renderer/components/ui/toast";
 import { diddlStore, setDiddlStore } from "@renderer/features/diddl";
@@ -26,15 +26,28 @@ const OPTIONS = {
 
 type Action = (typeof OPTIONS)[keyof typeof OPTIONS][number];
 
-const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (props) => {
+const Taskbar: Component<{
+  diddls?: (Diddl & { listItem?: ListItem })[];
+  items?: JoinedListItem[];
+}> = (props) => {
   const screenWidth = useScreenWidth();
   const [open, setOpen] = createSignal(false);
   const updateListItems = useAction(updateListItemsAction);
   const addListItems = useAction(addListItemsAction);
   const duplicateListItems = useAction(duplicateListItemAction);
 
+  const getDiddlId = (index: number) => {
+    if (props.items) return props.items[index]?.diddlId || -1;
+    return props.diddls?.[index]?.id || -1;
+  };
+
+  const getListItemId = (index: number) => {
+    if (props.items) return props.items[index]?.listItemId || -1;
+    return props.diddls?.[index]?.listItem?.id || -1;
+  };
+
   const onDownloadImages: JSX.EventHandler<HTMLButtonElement, MouseEvent> = async (e) => {
-    const diddlIds = diddlStore.selectedIndices.map((index) => props.diddls[index]?.id || -1);
+    const diddlIds = diddlStore.selectedIndices.map((index) => getDiddlId(index));
     const result = await trpc.fileSystem.downloadImages.mutate({ diddlIds });
 
     if (!result) return;
@@ -92,7 +105,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
         onListClick={async (listId) => {
           await addListItems(
             listId,
-            diddlStore.selectedIndices.map((index) => props.diddls[index]?.id || -1),
+            diddlStore.selectedIndices.map((index) => getDiddlId(index)),
           );
           setDiddlStore("selectedIndices", []);
           setOpen(false);
@@ -109,7 +122,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
 
             updateListItems(
               listId,
-              selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
+              selectedIndices().map((i) => getListItemId(i)),
               { addQuantity: 1 },
             );
           }}
@@ -127,7 +140,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
 
             const result = await updateListItems(
               listId,
-              selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
+              selectedIndices().map((i) => getListItemId(i)),
               { addQuantity: -1 },
             );
 
@@ -142,7 +155,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
         <button
           class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
           onClick={() => {
-            duplicateListItems(selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1));
+            duplicateListItems(selectedIndices().map((i) => getListItemId(i)));
           }}
         >
           <Copy size={16} />
@@ -158,7 +171,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
 
             updateListItems(
               listId,
-              selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
+              selectedIndices().map((i) => getListItemId(i)),
               { isIncomplete: false },
             );
           }}
@@ -175,7 +188,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
 
             updateListItems(
               listId,
-              selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
+              selectedIndices().map((i) => getListItemId(i)),
               { isIncomplete: true },
             );
           }}
@@ -192,7 +205,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
 
             updateListItems(
               listId,
-              selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
+              selectedIndices().map((i) => getListItemId(i)),
               { isDamaged: false },
             );
           }}
@@ -209,7 +222,7 @@ const Taskbar: Component<{ diddls: (Diddl & { listItem?: ListItem })[] }> = (pro
 
             updateListItems(
               listId,
-              selectedIndices().map((i) => props.diddls[i]?.listItem?.id || -1),
+              selectedIndices().map((i) => getListItemId(i)),
               { isDamaged: true },
             );
           }}

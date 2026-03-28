@@ -1,21 +1,17 @@
 import { GitCompareArrows, X } from "lucide-solid";
-import { Component, For, Show, createMemo, createSignal } from "solid-js";
+import { Component, For, Show, createSignal } from "solid-js";
 
 import { Button } from "@renderer/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
-import { diddlStore, setDiddlStore } from "@renderer/features/diddl";
+import { setDiddlStore } from "@renderer/features/diddl";
+import { diffList, isDiffModeActive } from "@renderer/features/diddl/diffMode";
 
 import { useLists } from "../lists";
 
 const CompareListPopover: Component = () => {
   const lists = useLists();
   const [open, setOpen] = createSignal(false);
-  const isDiffMode = createMemo(() => diddlStore.diffListId !== null);
-  const activeListName = createMemo(() => {
-    const id = diddlStore.diffListId;
-    if (id === null) return null;
-    return lists()?.find((l) => l.id === id)?.name ?? null;
-  });
+  const activeListName = () => diffList()?.name ?? null;
 
   return (
     <div class="flex items-center gap-1">
@@ -33,7 +29,7 @@ const CompareListPopover: Component = () => {
               <For each={lists()}>
                 {(list) => (
                   <Button
-                    variant={diddlStore.diffListId === list.id ? "default" : "outline"}
+                    variant={diffList()?.id === list.id ? "default" : "outline"}
                     onClick={() => {
                       setDiddlStore("diffListId", list.id);
                       setOpen(false);
@@ -49,7 +45,7 @@ const CompareListPopover: Component = () => {
         </PopoverContent>
       </Popover>
 
-      <Show when={isDiffMode()}>
+      <Show when={isDiffModeActive()}>
         <button
           class="rounded-md p-1 hover:bg-gray-200"
           onClick={() => setDiddlStore("diffListId", null)}

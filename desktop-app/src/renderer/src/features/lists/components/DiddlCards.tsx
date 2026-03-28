@@ -8,7 +8,7 @@ import FallbackLoadingDiddl from "@renderer/components/fallback/FallbackLoadingD
 import FallbackNoDiddl from "@renderer/components/fallback/FallbackNoDiddl";
 import { diddlStore } from "@renderer/features/diddl";
 import DiddlCardUi from "@renderer/features/diddl/components/DiddlCardUi";
-import { diffDiddlIds } from "@renderer/features/diddl/diffMode";
+import { diddlListColors, diffDiddlIds } from "@renderer/features/diddl/diffMode";
 import {
   addSelectedIndices,
   removeSelectedIndices,
@@ -33,7 +33,7 @@ const DiddlCards: Component<{
   const listId = createMemo(() => (params.id === undefined ? null : parseInt(params.id)));
   const selectedIndices = () => diddlStore.selectedIndices;
   const isSelectMode = createMemo(() => selectedIndices().length > 0);
-  const isDiffMode = createMemo(() => diddlStore.diffListId !== null);
+  const isDiffMode = createMemo(() => diddlStore.diffListIds.length > 0);
 
   return (
     <Show when={Array.isArray(props.items)} fallback={<FallbackLoadingDiddl />}>
@@ -49,6 +49,9 @@ const DiddlCards: Component<{
               const ids = diffDiddlIds();
               return isDiffMode() && ids !== null && !ids.has(getItemDiddlId(item));
             });
+            const cardColors = createMemo(() =>
+              isDiffMode() ? (diddlListColors().get(getItemDiddlId(item)) ?? []) : [],
+            );
 
             return (
               <div
@@ -64,9 +67,23 @@ const DiddlCards: Component<{
                   class={cn(
                     "h-full w-full",
 
-                    isGrayedOut() && "rounded ring-3 ring-pink-400",
+                    isGrayedOut() && "rounded ring-4 ring-black",
                   )}
                 />
+                <Show when={isDiffMode()}>
+                  <div class="absolute top-1 right-1 z-10 flex gap-0.5">
+                    <Show when={cardColors().length > 0}>
+                      <For each={cardColors()}>
+                        {(color) => (
+                          <div
+                            class="h-2.5 w-2.5 rounded-full"
+                            style={{ "background-color": color }}
+                          />
+                        )}
+                      </For>
+                    </Show>
+                  </div>
+                </Show>
                 <div
                   class={cn(
                     "inset-x absolute top-0 h-[calc(100%-20px)] w-full",

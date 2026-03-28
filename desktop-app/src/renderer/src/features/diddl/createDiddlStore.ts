@@ -8,7 +8,7 @@ type Store = {
   selectedIndices: number[];
   indicesCount: number[];
 
-  diffListId: number | null;
+  diffListIds: number[];
 };
 
 const [diddlStore, setDiddlStore] = createStore<Store>({
@@ -17,7 +17,7 @@ const [diddlStore, setDiddlStore] = createStore<Store>({
   selectedIndices: [],
   indicesCount: [],
 
-  diffListId: null,
+  diffListIds: [],
 });
 
 export { diddlStore, setDiddlStore };

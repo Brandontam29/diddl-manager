@@ -1,6 +1,6 @@
 use package manager bun
 
-the term **diddl** is a specific card/paper collectible
+the term **diddl** is a collectible
 
 use reusable components `desktop-app\src\renderer\src\components\ui\` whenever possible for
 - buttons

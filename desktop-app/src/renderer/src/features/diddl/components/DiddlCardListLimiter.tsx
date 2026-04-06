@@ -56,7 +56,7 @@ const DEFAULT_SHOWN = 150;
 const INCREMENT_SHOWN = 150;
 
 const DiddlCardListLimiter: Component<{
-  diddls?: (Diddl | JoinedListItem)[];
+  diddls?: (Diddl | JoinedListItem)[] | null;
 }> = (props) => {
   const [maxShown, setMaxShown] = createSignal(DEFAULT_SHOWN);
 

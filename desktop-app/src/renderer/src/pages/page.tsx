@@ -1,7 +1,7 @@
 import { useSearchParams } from "@solidjs/router";
 import { Show, createMemo } from "solid-js";
 
-import { diddlStore } from "@renderer/features/diddl";
+import { diddlStore, useDiddls } from "@renderer/features/diddl";
 import DiddlCardListLimiter from "@renderer/features/diddl/components/DiddlCardListLimiter";
 import { diffDiddlIds, isDiffModeActive } from "@renderer/features/diddl/diffMode";
 import CompareListPopover from "@renderer/features/lists/components/CompareListPopover";
@@ -12,22 +12,26 @@ import { cn } from "@renderer/libs/cn";
 const HomePage = () => {
   const screenWidth = useScreenWidth();
   const [searchParams] = useSearchParams<{ from: string; to: string; type: string }>();
+  const diddls = useDiddls();
 
   const filteredDiddls = createMemo(() => {
-    let diddls = diddlStore.diddlState;
+    const allDiddls = diddls();
+    if (allDiddls === null) return null;
+
+    let filteredDiddls = allDiddls;
 
     if (searchParams.type !== undefined) {
-      diddls = diddls.filter((diddl) => searchParams.type === diddl.type);
+      filteredDiddls = filteredDiddls.filter((diddl) => searchParams.type === diddl.type);
     }
 
     if (searchParams.from || searchParams.to) {
-      diddls = diddls.slice(
+      filteredDiddls = filteredDiddls.slice(
         searchParams.from === undefined ? 0 : Number.parseInt(searchParams.from),
         searchParams.to === undefined ? undefined : Number.parseInt(searchParams.to),
       );
     }
 
-    return diddls;
+    return filteredDiddls;
   });
 
   const isSelectMode = createMemo(() => diddlStore.selectedIndices.length > 0);
@@ -51,7 +55,7 @@ const HomePage = () => {
         </div>
       </div>
       <Show when={isSelectMode()}>
-        <Taskbar diddls={filteredDiddls()} />
+        <Taskbar diddls={filteredDiddls() ?? undefined} />
       </Show>
     </>
   );

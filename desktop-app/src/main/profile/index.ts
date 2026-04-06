@@ -1,1 +1,1 @@
-export {};
+export { profileRouter } from "./router";

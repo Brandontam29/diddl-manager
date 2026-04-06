@@ -1,5 +1,5 @@
 export { diddlStore, setDiddlStore } from "./createDiddlStore";
-export { fetchDiddls } from "./fetchDiddls";
+export { fetchDiddls, useDiddls } from "./fetchDiddls";
 export {
   isDiffModeActive,
   diffDiddlIds,

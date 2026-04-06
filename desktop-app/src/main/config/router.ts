@@ -1,73 +1,66 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { settingsSchema } from "../../shared/settings-schema";
-import { uiStateSchema } from "../../shared/ui-state-schema";
-import { settingsPath, uiStatePath } from "../pathing";
+import { logging } from "../logging";
 import { publicProcedure, router } from "../trpc/trpc";
-import { YamlHandler } from "./yaml-handler";
+import { createDefaultSetting } from "./settings";
+import { createDefaultUiState } from "./ui-state";
 
-const settingsDocument = new YamlHandler(settingsSchema, settingsPath());
-const uiStateDocument = new YamlHandler(uiStateSchema, uiStatePath());
+const settingsStore = createDefaultSetting();
+const uiStateStore = createDefaultUiState();
 
 export const configRouter = router({
-  getSettings: publicProcedure.query(async () => {
-    const result = await settingsDocument.read();
-    return result.match(
-      (data) => data,
-      (e) => {
-        console.error(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to read settings",
-        });
-      },
-    );
+  getSettings: publicProcedure.query(() => {
+    try {
+      return settingsStore.store;
+    } catch (e) {
+      logging.error(`Failed to read settings: ${e}`);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to read settings",
+      });
+    }
   }),
 
   updateSetting: publicProcedure
     .input(z.object({ keyPath: z.array(z.string()), value: z.any() }))
-    .mutation(async ({ input }) => {
-      const result = await settingsDocument.update(input.keyPath, input.value);
-      return result.match(
-        () => ({ success: true as const }),
-        (e) => {
-          console.error(e);
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to update setting",
-          });
-        },
-      );
-    }),
-
-  getUiState: publicProcedure.query(async () => {
-    const result = await uiStateDocument.read();
-    return result.match(
-      (data) => data,
-      (e) => {
-        console.error(e);
+    .mutation(({ input }) => {
+      try {
+        settingsStore.set(input.keyPath.join("."), input.value);
+        return { success: true as const };
+      } catch (e) {
+        logging.error(`Failed to update setting: ${e}`);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to read UI state",
+          message: "Failed to update setting",
         });
-      },
-    );
+      }
+    }),
+
+  getUiState: publicProcedure.query(() => {
+    try {
+      return uiStateStore.store;
+    } catch (e) {
+      logging.error(`Failed to read UI state: ${e}`);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to read UI state",
+      });
+    }
   }),
 
   updateUiState: publicProcedure
     .input(z.object({ keyPath: z.array(z.string()), value: z.any() }))
-    .mutation(async ({ input }) => {
-      const result = await uiStateDocument.update(input.keyPath, input.value);
-      return result.match(
-        () => ({ success: true as const }),
-        (e) => {
-          console.error(e);
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to update UI state",
-          });
-        },
-      );
+    .mutation(({ input }) => {
+      try {
+        uiStateStore.set(input.keyPath.join("."), input.value);
+        return { success: true as const };
+      } catch (e) {
+        logging.error(`Failed to update UI state: ${e}`);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update UI state",
+        });
+      }
     }),
 });

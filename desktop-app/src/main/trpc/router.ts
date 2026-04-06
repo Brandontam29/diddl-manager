@@ -2,7 +2,7 @@ import { configRouter } from "../config/router";
 import { diddlRouter } from "../diddl/router";
 import { fileSystemRouter } from "../file-system/router";
 import { listRouter } from "../list/router";
-import { profileRouter } from "../profile/router";
+import { profileRouter } from "../profile";
 import { updaterRouter } from "../updater/router";
 import { router } from "./trpc";
 

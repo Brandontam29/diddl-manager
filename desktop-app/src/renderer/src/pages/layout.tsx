@@ -11,7 +11,7 @@ import {
 
 import FallbackPageLoading from "@renderer/components/fallback/FallbackPageLoading";
 import { ToastList, ToastRegion } from "@renderer/components/ui/toast";
-import { clearDiffCache, fetchDiddls, setDiddlStore } from "@renderer/features/diddl";
+import { clearDiffCache, setDiddlStore } from "@renderer/features/diddl";
 import { useWindowTracking } from "@renderer/features/ui-state";
 import UpdateDialog from "@renderer/features/updater/UpdateDialog";
 import { initUpdateState } from "@renderer/features/updater/update-state";
@@ -22,7 +22,6 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
   useWindowTracking();
 
   onMount(() => {
-    fetchDiddls();
     initUpdateState();
   });
 

@@ -114,9 +114,11 @@
 <div class="flex h-screen overflow-hidden bg-stone-50">
 	<CatalogSidebar diddlTypes={diddlTypesWithCounts} {selectedType} {selectedFrom} />
 
-	<main class="relative min-w-0 flex-1 flex flex-col overflow-hidden">
+	<main class="relative flex min-w-0 flex-1 flex-col overflow-hidden">
 		<!-- Header / Toolbar area -->
-		<header class="flex h-16 shrink-0 items-center justify-between border-b border-stone-200 bg-white px-6">
+		<header
+			class="flex h-16 shrink-0 items-center justify-between border-b border-stone-200 bg-white px-6"
+		>
 			<div>
 				<h1 class="text-lg font-semibold text-stone-900">
 					{selectedType ? `${selectedType} #${selectedFrom}-${selectedTo}` : 'Catalog'}

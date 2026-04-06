@@ -106,7 +106,7 @@ export const executeMigration = internalMutation({
 		const slotsAvailable = Math.max(0, listCap - existingLists.length);
 
 		// Build map: guestListId -> convexListId
-		const listIdMap = new Map<string, typeof existingLists[0]['_id']>();
+		const listIdMap = new Map<string, (typeof existingLists)[0]['_id']>();
 
 		for (const guestList of args.lists.slice(0, slotsAvailable)) {
 			const convexListId = await ctx.db.insert('lists', {

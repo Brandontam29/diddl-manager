@@ -35,7 +35,7 @@
 <div
 	onclick={handleClick}
 	class={cn(
-		'group relative cursor-pointer outline-none ring-offset-2 transition-all',
+		'group relative cursor-pointer ring-offset-2 transition-all outline-none',
 		isSelectable && isSelected && 'ring-2 ring-rose-500 ring-offset-0',
 		!isSelectable && 'cursor-default'
 	)}

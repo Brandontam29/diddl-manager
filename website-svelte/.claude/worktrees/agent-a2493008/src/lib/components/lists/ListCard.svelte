@@ -19,16 +19,16 @@
 </script>
 
 <Card.Root
-	class="relative overflow-hidden transition-shadow hover:shadow-md cursor-pointer"
+	class="relative cursor-pointer overflow-hidden transition-shadow hover:shadow-md"
 	onclick={() => (window.location.href = `/app/lists/${list.id}`)}
 >
 	<div class="h-1 w-full" style="background-color: {list.color}"></div>
 	<Card.Header class="pb-2">
 		<div class="flex items-start justify-between">
-			<Card.Title class="text-sm font-semibold truncate max-w-[calc(100%-64px)]">
+			<Card.Title class="max-w-[calc(100%-64px)] truncate text-sm font-semibold">
 				{list.name}
 			</Card.Title>
-			<div class="flex gap-1 -mt-2 -mr-2" onclick={(e) => e.stopPropagation()}>
+			<div class="-mt-2 -mr-2 flex gap-1" onclick={(e) => e.stopPropagation()}>
 				<Button
 					variant="ghost"
 					size="icon"

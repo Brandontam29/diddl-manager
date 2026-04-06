@@ -1,6 +1,7 @@
 import { v } from 'convex/values';
 import { internal } from '../_generated/api';
 import { privateAction, privateQuery } from './helpers';
+import type { MigrationResult } from '../../lib/lists/migrationResult';
 
 const guestListValidator = v.object({
 	id: v.string(),
@@ -36,8 +37,8 @@ export const preflightGuestMigration = privateQuery({
 		lists: v.array(guestListValidator),
 		items: v.array(guestItemValidator)
 	},
-	handler: async (ctx, args) => {
-		const preflight = await ctx.runQuery(
+	handler: async (ctx, args): Promise<MigrationResult> => {
+		const preflight: any = await ctx.runQuery(
 			internal.private.migrationInternals.preflightGuestMigrationInternal,
 			args
 		);
@@ -54,8 +55,8 @@ export const runGuestMigration = privateAction({
 		lists: v.array(guestListValidator),
 		items: v.array(guestItemValidator)
 	},
-	handler: async (ctx, args) => {
-		const preflight = await ctx.runQuery(
+	handler: async (ctx, args): Promise<MigrationResult> => {
+		const preflight: any = await ctx.runQuery(
 			internal.private.migrationInternals.preflightGuestMigrationInternal,
 			args
 		);
@@ -64,13 +65,13 @@ export const runGuestMigration = privateAction({
 			return preflight.result;
 		}
 
-		return await ctx.runMutation(internal.private.migrationInternals.applyGuestMigrationInternal, {
+		return (await ctx.runMutation(internal.private.migrationInternals.applyGuestMigrationInternal, {
 			ownerSubject: args.ownerSubject,
 			guestSessionId: args.guestSessionId,
 			listsProcessed: preflight.result.listsProcessed,
 			itemsProcessed: preflight.result.itemsProcessed,
 			creates: preflight.operations.creates,
 			merges: preflight.operations.merges
-		});
+		})) as any;
 	}
 });

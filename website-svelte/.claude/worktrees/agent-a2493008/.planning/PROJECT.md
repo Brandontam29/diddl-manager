@@ -63,19 +63,20 @@ Users can browse the Diddl catalog by type and manage their collection lists —
 
 ## Key Decisions
 
-| Decision | Rationale | Outcome |
-|----------|-----------|---------|
-| Convex for database + realtime | Already integrated, provides reactive queries and serverless functions | — Pending |
-| Clerk for auth | Already integrated, handles identity + JWT for Convex | — Pending |
-| Guest mode with localStorage migration | Full trial lowers barrier to entry, migration preserves work | — Pending |
-| Sidebar as nested type → range tree | 10k items need chunking; type-first browsing matches collector mental model | — Pending |
-| Effect v4 for backend | Type-safe error handling, composable services already established | — Pending |
+| Decision                               | Rationale                                                                   | Outcome   |
+| -------------------------------------- | --------------------------------------------------------------------------- | --------- |
+| Convex for database + realtime         | Already integrated, provides reactive queries and serverless functions      | — Pending |
+| Clerk for auth                         | Already integrated, handles identity + JWT for Convex                       | — Pending |
+| Guest mode with localStorage migration | Full trial lowers barrier to entry, migration preserves work                | — Pending |
+| Sidebar as nested type → range tree    | 10k items need chunking; type-first browsing matches collector mental model | — Pending |
+| Effect v4 for backend                  | Type-safe error handling, composable services already established           | — Pending |
 
 ## Evolution
 
 This document evolves at phase transitions and milestone boundaries.
 
 **After each phase transition** (via `/gsd:transition`):
+
 1. Requirements invalidated? → Move to Out of Scope with reason
 2. Requirements validated? → Move to Validated with phase reference
 3. New requirements emerged? → Add to Active
@@ -83,10 +84,12 @@ This document evolves at phase transitions and milestone boundaries.
 5. "What This Is" still accurate? → Update if drifted
 
 **After each milestone** (via `/gsd:complete-milestone`):
+
 1. Full review of all sections
 2. Core Value check — still the right priority?
 3. Audit Out of Scope — reasons still valid?
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-02 after initialization*
+
+_Last updated: 2026-04-02 after initialization_

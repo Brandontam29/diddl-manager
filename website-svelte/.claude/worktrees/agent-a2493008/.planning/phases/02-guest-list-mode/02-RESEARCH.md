@@ -17,6 +17,7 @@ The project already has established patterns: Svelte 5 runes for state ($state, 
 ## User Constraints (from CONTEXT.md)
 
 ### Locked Decisions
+
 - D-01: List creation uses a dialog/modal with name + color picker fields
 - D-02: Colors are a preset palette of 6-8 curated colors (Todoist/Google Keep style)
 - D-03: Lists live on a dedicated `/app/lists` page (not in the catalog sidebar)
@@ -43,12 +44,14 @@ The project already has established patterns: Svelte 5 runes for state ($state, 
 - D-24: Svelte reactivity handles cross-component updates -- no custom event bus.
 
 ### Claude's Discretion
+
 - List picker UI for authed users with multiple lists (D-07)
 - Exact preset color palette choices
 - Taskbar visual design and positioning
 - "Show unowned" visual treatment for unowned items (grayed out, outlined, etc.)
 
 ### Deferred Ideas (OUT OF SCOPE)
+
 None -- discussion stayed within phase scope
 
 </user_constraints>
@@ -57,20 +60,20 @@ None -- discussion stayed within phase scope
 
 ## Phase Requirements
 
-| ID | Description | Research Support |
-|----|-------------|------------------|
-| LIST-01 | User can create a new list with a name and color indicator | ListStore.createList(), Dialog component, color palette pattern |
-| LIST-02 | User can rename a list and change its color | ListStore.updateList(), inline edit or dialog reuse |
-| LIST-03 | User can delete a list with confirmation | ListStore.deleteList(), AlertDialog component |
-| LIST-04 | User can add a catalog item to a list from the catalog view | Select mode on CatalogGrid, ListStore.addItems(), bulk add pattern |
-| LIST-05 | User can remove an item from a list | ListStore.removeItems(), taskbar Remove action |
-| LIST-06 | User can modify the quantity/count of a list item | ListStore.updateItem(), quantity stepper UI pattern |
-| LIST-07 | User can tag the condition of a list item | ListStore.updateItem(), taskbar condition dropdown |
-| LIST-08 | User can mark a list item as complete or incomplete | ListStore.updateItem(), taskbar Mark Complete/Incomplete |
+| ID      | Description                                                       | Research Support                                                    |
+| ------- | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
+| LIST-01 | User can create a new list with a name and color indicator        | ListStore.createList(), Dialog component, color palette pattern     |
+| LIST-02 | User can rename a list and change its color                       | ListStore.updateList(), inline edit or dialog reuse                 |
+| LIST-03 | User can delete a list with confirmation                          | ListStore.deleteList(), AlertDialog component                       |
+| LIST-04 | User can add a catalog item to a list from the catalog view       | Select mode on CatalogGrid, ListStore.addItems(), bulk add pattern  |
+| LIST-05 | User can remove an item from a list                               | ListStore.removeItems(), taskbar Remove action                      |
+| LIST-06 | User can modify the quantity/count of a list item                 | ListStore.updateItem(), quantity stepper UI pattern                 |
+| LIST-07 | User can tag the condition of a list item                         | ListStore.updateItem(), taskbar condition dropdown                  |
+| LIST-08 | User can mark a list item as complete or incomplete               | ListStore.updateItem(), taskbar Mark Complete/Incomplete            |
 | LIST-09 | User can duplicate a list item to tag it with different condition | ListStore.duplicateItem(), generates new entry with same catalogRef |
-| LIST-10 | User can add catalog items from within the list detail page | "Show unowned" toggle, sidebar filtering, add-from-grid pattern |
-| LIST-11 | User can view completion percentage per list | $derived completion calc, CompletionBadge reuse |
-| LIST-12 | User can filter to show only missing (incomplete) items in list | Toolbar filter toggle, $derived filtering |
+| LIST-10 | User can add catalog items from within the list detail page       | "Show unowned" toggle, sidebar filtering, add-from-grid pattern     |
+| LIST-11 | User can view completion percentage per list                      | $derived completion calc, CompletionBadge reuse                     |
+| LIST-12 | User can filter to show only missing (incomplete) items in list   | Toolbar filter toggle, $derived filtering                           |
 
 </phase_requirements>
 
@@ -78,35 +81,37 @@ None -- discussion stayed within phase scope
 
 ### Core (already installed)
 
-| Library | Version | Purpose | Why Standard |
-|---------|---------|---------|--------------|
-| svelte | ^5.51.0 | UI framework with runes | Project standard, $state/$derived for reactivity |
-| bits-ui | ^2.16.3 | Headless UI primitives | Powers shadcn-svelte components |
-| shadcn-svelte | ^1.2.7 | UI component library | Project standard, already has card/badge/accordion |
-| runed | ^0.37.1 | Svelte 5 utility runes | Already installed, useful for derived utilities |
-| @lucide/svelte | ^1.7.0 | Icons | Already installed for UI icons |
+| Library        | Version | Purpose                 | Why Standard                                       |
+| -------------- | ------- | ----------------------- | -------------------------------------------------- |
+| svelte         | ^5.51.0 | UI framework with runes | Project standard, $state/$derived for reactivity   |
+| bits-ui        | ^2.16.3 | Headless UI primitives  | Powers shadcn-svelte components                    |
+| shadcn-svelte  | ^1.2.7  | UI component library    | Project standard, already has card/badge/accordion |
+| runed          | ^0.37.1 | Svelte 5 utility runes  | Already installed, useful for derived utilities    |
+| @lucide/svelte | ^1.7.0  | Icons                   | Already installed for UI icons                     |
 
 ### To Install
 
-| Library | Purpose | Install Command |
-|---------|---------|-----------------|
-| shadcn-svelte: dialog | List create/edit modal (D-01) | `bun x shadcn-svelte@latest add dialog` |
-| shadcn-svelte: alert-dialog | Delete confirmation (D-04) | `bun x shadcn-svelte@latest add alert-dialog` |
-| shadcn-svelte: button | Action buttons, steppers | `bun x shadcn-svelte@latest add button` |
-| shadcn-svelte: checkbox | Multi-select cards (D-12) | `bun x shadcn-svelte@latest add checkbox` |
-| shadcn-svelte: dropdown-menu | Condition picker in taskbar (D-14) | `bun x shadcn-svelte@latest add dropdown-menu` |
-| shadcn-svelte: separator | Visual separators in toolbar | `bun x shadcn-svelte@latest add separator` |
-| shadcn-svelte: toggle | Show unowned toggle (D-08), completion filter (D-16) | `bun x shadcn-svelte@latest add toggle` |
-| shadcn-svelte: sonner | Error toasts for localStorage failures (D-23) | `bun x shadcn-svelte@latest add sonner` |
-| svelte-sonner | Toast engine (dependency of shadcn sonner) | Auto-installed with sonner component |
+| Library                      | Purpose                                              | Install Command                                |
+| ---------------------------- | ---------------------------------------------------- | ---------------------------------------------- |
+| shadcn-svelte: dialog        | List create/edit modal (D-01)                        | `bun x shadcn-svelte@latest add dialog`        |
+| shadcn-svelte: alert-dialog  | Delete confirmation (D-04)                           | `bun x shadcn-svelte@latest add alert-dialog`  |
+| shadcn-svelte: button        | Action buttons, steppers                             | `bun x shadcn-svelte@latest add button`        |
+| shadcn-svelte: checkbox      | Multi-select cards (D-12)                            | `bun x shadcn-svelte@latest add checkbox`      |
+| shadcn-svelte: dropdown-menu | Condition picker in taskbar (D-14)                   | `bun x shadcn-svelte@latest add dropdown-menu` |
+| shadcn-svelte: separator     | Visual separators in toolbar                         | `bun x shadcn-svelte@latest add separator`     |
+| shadcn-svelte: toggle        | Show unowned toggle (D-08), completion filter (D-16) | `bun x shadcn-svelte@latest add toggle`        |
+| shadcn-svelte: sonner        | Error toasts for localStorage failures (D-23)        | `bun x shadcn-svelte@latest add sonner`        |
+| svelte-sonner                | Toast engine (dependency of shadcn sonner)           | Auto-installed with sonner component           |
 
 ### Alternatives Considered
-| Instead of | Could Use | Tradeoff |
-|------------|-----------|----------|
-| svelte-persisted-state | Hand-rolled $effect + localStorage | Library adds cross-tab sync but is an extra dependency; hand-rolled is simpler and matches D-19 abstract interface requirement |
-| Popover for list picker | DropdownMenu | DropdownMenu is simpler for single-select; Popover better for search -- use DropdownMenu for D-07 |
+
+| Instead of              | Could Use                          | Tradeoff                                                                                                                       |
+| ----------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| svelte-persisted-state  | Hand-rolled $effect + localStorage | Library adds cross-tab sync but is an extra dependency; hand-rolled is simpler and matches D-19 abstract interface requirement |
+| Popover for list picker | DropdownMenu                       | DropdownMenu is simpler for single-select; Popover better for search -- use DropdownMenu for D-07                              |
 
 **Installation (batch all shadcn components):**
+
 ```bash
 bun x shadcn-svelte@latest add dialog alert-dialog button checkbox dropdown-menu separator toggle sonner
 ```
@@ -114,6 +119,7 @@ bun x shadcn-svelte@latest add dialog alert-dialog button checkbox dropdown-menu
 ## Architecture Patterns
 
 ### Recommended Project Structure
+
 ```
 src/lib/
   stores/
@@ -152,6 +158,7 @@ src/routes/
 **When to use:** Always -- this is the foundational architectural decision (D-19).
 
 **Example:**
+
 ```typescript
 // src/lib/types/list.ts
 
@@ -160,26 +167,26 @@ export type ItemCondition = 'mint' | 'near_mint' | 'good' | 'poor' | 'damaged';
 
 // Natural key for catalog reference (D-20: no Convex IDs in localStorage)
 export interface CatalogRef {
-  type: string;   // e.g., "A4"
-  number: number; // e.g., 42
+	type: string; // e.g., "A4"
+	number: number; // e.g., 42
 }
 
 // localStorage list shape (simplified per D-20)
 export interface GuestList {
-  id: string;          // UUID generated client-side
-  name: string;
-  color: string;
-  createdAt: number;   // epoch ms
+	id: string; // UUID generated client-side
+	name: string;
+	color: string;
+	createdAt: number; // epoch ms
 }
 
 export interface GuestListItem {
-  id: string;          // UUID generated client-side
-  listId: string;
-  catalogRef: CatalogRef;
-  condition: ItemCondition;
-  quantity: number;
-  complete: boolean;
-  tags: string[];
+	id: string; // UUID generated client-side
+	listId: string;
+	catalogRef: CatalogRef;
+	condition: ItemCondition;
+	quantity: number;
+	complete: boolean;
+	tags: string[];
 }
 ```
 
@@ -189,26 +196,29 @@ export interface GuestListItem {
 import type { GuestList, GuestListItem, CatalogRef, ItemCondition } from '$lib/types/list';
 
 export interface ListStore {
-  // Reactive state (components subscribe to these)
-  readonly lists: GuestList[];
-  readonly activeListId: string | null;
-  readonly activeListItems: GuestListItem[];
+	// Reactive state (components subscribe to these)
+	readonly lists: GuestList[];
+	readonly activeListId: string | null;
+	readonly activeListItems: GuestListItem[];
 
-  // List CRUD
-  createList(name: string, color: string): GuestList;
-  updateList(id: string, updates: Partial<Pick<GuestList, 'name' | 'color'>>): void;
-  deleteList(id: string): void;
-  setActiveList(id: string | null): void;
+	// List CRUD
+	createList(name: string, color: string): GuestList;
+	updateList(id: string, updates: Partial<Pick<GuestList, 'name' | 'color'>>): void;
+	deleteList(id: string): void;
+	setActiveList(id: string | null): void;
 
-  // Item CRUD
-  addItems(listId: string, refs: CatalogRef[]): void;
-  removeItems(itemIds: string[]): void;
-  updateItem(itemId: string, updates: Partial<Pick<GuestListItem, 'condition' | 'quantity' | 'complete'>>): void;
-  duplicateItem(itemId: string): GuestListItem;
+	// Item CRUD
+	addItems(listId: string, refs: CatalogRef[]): void;
+	removeItems(itemIds: string[]): void;
+	updateItem(
+		itemId: string,
+		updates: Partial<Pick<GuestListItem, 'condition' | 'quantity' | 'complete'>>
+	): void;
+	duplicateItem(itemId: string): GuestListItem;
 
-  // Derived / computed
-  completionPercent(listId: string): number;
-  itemsByType(listId: string, type: string): GuestListItem[];
+	// Derived / computed
+	completionPercent(listId: string): number;
+	itemsByType(listId: string, type: string): GuestListItem[];
 }
 ```
 
@@ -219,6 +229,7 @@ export interface ListStore {
 **When to use:** Guest mode (no auth).
 
 **Example:**
+
 ```typescript
 // src/lib/stores/guest-list-store.svelte.ts (simplified)
 
@@ -228,49 +239,53 @@ import type { GuestList, GuestListItem, CatalogRef, ListStore } from '$lib/types
 const STORAGE_KEY = 'diddl-lists';
 
 function loadFromStorage(): { lists: GuestList[]; items: GuestListItem[] } {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { lists: [], items: [] };
-  } catch {
-    return { lists: [], items: [] };
-  }
+	try {
+		const raw = localStorage.getItem(STORAGE_KEY);
+		return raw ? JSON.parse(raw) : { lists: [], items: [] };
+	} catch {
+		return { lists: [], items: [] };
+	}
 }
 
 function saveToStorage(data: { lists: GuestList[]; items: GuestListItem[] }): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch (e) {
-    toast.error('Storage full. Sign up to save your collection reliably.');
-  }
+	try {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+	} catch (e) {
+		toast.error('Storage full. Sign up to save your collection reliably.');
+	}
 }
 
 export class GuestListStore implements ListStore {
-  #lists = $state<GuestList[]>([]);
-  #items = $state<GuestListItem[]>([]);
-  #activeListId = $state<string | null>(null);
-  #initialized = false;
+	#lists = $state<GuestList[]>([]);
+	#items = $state<GuestListItem[]>([]);
+	#activeListId = $state<string | null>(null);
+	#initialized = false;
 
-  constructor() {
-    // Load once from localStorage
-    const stored = loadFromStorage();
-    this.#lists = stored.lists;
-    this.#items = stored.items;
-    this.#initialized = true;
+	constructor() {
+		// Load once from localStorage
+		const stored = loadFromStorage();
+		this.#lists = stored.lists;
+		this.#items = stored.items;
+		this.#initialized = true;
 
-    // Auto-save on every change (D-22)
-    $effect(() => {
-      if (!this.#initialized) return;
-      saveToStorage({ lists: this.#lists, items: this.#items });
-    });
-  }
+		// Auto-save on every change (D-22)
+		$effect(() => {
+			if (!this.#initialized) return;
+			saveToStorage({ lists: this.#lists, items: this.#items });
+		});
+	}
 
-  get lists() { return this.#lists; }
-  get activeListId() { return this.#activeListId; }
-  get activeListItems() {
-    return this.#items.filter(i => i.listId === this.#activeListId);
-  }
+	get lists() {
+		return this.#lists;
+	}
+	get activeListId() {
+		return this.#activeListId;
+	}
+	get activeListItems() {
+		return this.#items.filter((i) => i.listId === this.#activeListId);
+	}
 
-  // ... CRUD methods mutate #lists / #items which triggers $effect auto-save
+	// ... CRUD methods mutate #lists / #items which triggers $effect auto-save
 }
 ```
 
@@ -281,6 +296,7 @@ export class GuestListStore implements ListStore {
 **When to use:** Always -- matches existing project conventions (see `clerk.svelte.ts`).
 
 **Example:**
+
 ```typescript
 // src/lib/stores/list-context.svelte.ts
 
@@ -290,13 +306,13 @@ import type { ListStore } from './list-store.svelte';
 const [internalGetListStore, setInternalListStore] = createContext<ListStore>();
 
 export function getListStore(): ListStore {
-  const store = internalGetListStore();
-  if (!store) throw new Error('ListStore context not found');
-  return store;
+	const store = internalGetListStore();
+	if (!store) throw new Error('ListStore context not found');
+	return store;
 }
 
 export function setListStore(store: ListStore): void {
-  setInternalListStore(store);
+	setInternalListStore(store);
 }
 ```
 
@@ -307,6 +323,7 @@ export function setListStore(store: ListStore): void {
 **When to use:** Catalog page for LIST-04.
 
 **Key details:**
+
 - Selection state lives in the catalog page component as `$state<Set<string>>` (set of `type:number` keys)
 - Selection mode toggled by a button in the catalog page header
 - When selection mode active, each CatalogItemCard renders a Checkbox in top-left
@@ -314,6 +331,7 @@ export function setListStore(store: ListStore): void {
 - For guests (1 list): adds directly to the single list. For authed (multiple): show DropdownMenu picker.
 
 ### Anti-Patterns to Avoid
+
 - **Coupling to Convex IDs in localStorage:** Guest store must use natural keys (type+number) per D-20. Never store `Id<'catalogItems'>` or `Id<'lists'>` in localStorage -- they won't exist until Phase 3 migration.
 - **Custom event bus for cross-component updates:** Per D-24, Svelte reactivity ($state mutations) handles this. Do not create a custom EventEmitter or pub/sub.
 - **Writable stores (Svelte 4 pattern):** Use $state runes, not `writable()` from `svelte/store`. The project is Svelte 5 only.
@@ -322,137 +340,142 @@ export function setListStore(store: ListStore): void {
 
 ## Don't Hand-Roll
 
-| Problem | Don't Build | Use Instead | Why |
-|---------|-------------|-------------|-----|
-| Modal dialogs | Custom overlay + focus trap | shadcn-svelte Dialog / AlertDialog | Accessibility (focus trap, escape key, aria attributes), portal rendering |
-| Toast notifications | Custom notification system | svelte-sonner via shadcn Sonner | Animation, stacking, auto-dismiss, accessible announcements |
-| UUID generation | Math.random string | `crypto.randomUUID()` | Collision-safe, native browser API, available in all modern browsers |
-| Dropdown menus | Custom popover + click-outside | shadcn-svelte DropdownMenu | Keyboard nav, submenu support, accessible |
-| Checkbox state | Custom div with click handler | shadcn-svelte Checkbox | Accessible, consistent styling, indeterminate state support |
-| Color picker | Full color wheel | Preset palette of color swatches (D-02) | Simpler, consistent, matches Todoist/Google Keep pattern |
+| Problem             | Don't Build                    | Use Instead                             | Why                                                                       |
+| ------------------- | ------------------------------ | --------------------------------------- | ------------------------------------------------------------------------- |
+| Modal dialogs       | Custom overlay + focus trap    | shadcn-svelte Dialog / AlertDialog      | Accessibility (focus trap, escape key, aria attributes), portal rendering |
+| Toast notifications | Custom notification system     | svelte-sonner via shadcn Sonner         | Animation, stacking, auto-dismiss, accessible announcements               |
+| UUID generation     | Math.random string             | `crypto.randomUUID()`                   | Collision-safe, native browser API, available in all modern browsers      |
+| Dropdown menus      | Custom popover + click-outside | shadcn-svelte DropdownMenu              | Keyboard nav, submenu support, accessible                                 |
+| Checkbox state      | Custom div with click handler  | shadcn-svelte Checkbox                  | Accessible, consistent styling, indeterminate state support               |
+| Color picker        | Full color wheel               | Preset palette of color swatches (D-02) | Simpler, consistent, matches Todoist/Google Keep pattern                  |
 
 **Key insight:** shadcn-svelte provides every UI primitive needed for this phase. The only custom components are domain-specific (QuantityStepper, ColorPalette, ListItemCard, ListToolbar).
 
 ## Common Pitfalls
 
 ### Pitfall 1: $effect Loop with localStorage
+
 **What goes wrong:** Writing to localStorage inside $effect that reads $state causes an infinite loop if the storage read triggers a state update.
 **Why it happens:** $effect tracks all reactive reads. If you read from localStorage inside $effect and update $state, the $state change re-triggers the $effect.
 **How to avoid:** Load from localStorage only once in the constructor (not inside $effect). Use $effect only for writing. Use an `#initialized` flag to gate the first write.
 **Warning signs:** Browser freezing, "Maximum call stack exceeded", rapid localStorage writes.
 
 ### Pitfall 2: localStorage Quota Exceeded in Private Browsing
+
 **What goes wrong:** Safari private browsing and some mobile browsers have very limited localStorage (~0-5MB). Writing fails silently or throws.
 **Why it happens:** Privacy modes restrict persistent storage.
 **How to avoid:** Wrap every `localStorage.setItem()` in try/catch. Show a toast (D-23) suggesting sign-up. Never assume writes succeed.
 **Warning signs:** `QuotaExceededError` exceptions, silent data loss.
 
 ### Pitfall 3: Stale Store Reference After Navigation
+
 **What goes wrong:** Component navigates away and back, but gets a new store instance instead of the existing one.
 **Why it happens:** If store is instantiated per-component instead of per-context, navigation creates a new instance that re-reads stale localStorage.
 **How to avoid:** Instantiate GuestListStore once in the layout (like ClerkStore) via context. Use `getListStore()` in child components.
 **Warning signs:** Edits disappear on navigation, flickering data.
 
 ### Pitfall 4: Natural Key Collisions on Duplicate Items
+
 **What goes wrong:** Two list items reference the same catalog item (after "duplicate" action for different conditions). If you use `type:number` as the unique key, they collide.
 **Why it happens:** LIST-09 requires duplicate items with different conditions for the same catalog item.
 **How to avoid:** Each list item gets its own UUID (`id` field). The `catalogRef` (type+number) is a reference, not the primary key. Multiple items can share the same catalogRef.
 **Warning signs:** Duplicate action overwrites existing item instead of creating a new entry.
 
 ### Pitfall 5: Guest Limit Enforcement (1 List)
+
 **What goes wrong:** Guest creates more than 1 list because the enforcement is only in the UI button state.
 **Why it happens:** Only disabling the "Create List" button is insufficient if there are code paths that bypass it.
 **How to avoid:** Enforce the 1-list guest limit in `GuestListStore.createList()` itself -- throw or return early if `this.#lists.length >= 1`. UI also disables the button as a UX signal.
 **Warning signs:** Guest ends up with multiple lists in localStorage.
 
 ### Pitfall 6: Serialization of $state Proxy Objects
+
 **What goes wrong:** `JSON.stringify()` on $state proxy objects may behave unexpectedly or include internal Svelte metadata.
 **Why it happens:** Svelte 5 $state uses JavaScript proxies. Direct serialization of the proxy may not produce clean JSON.
-**How to avoid:** Use `$state.snapshot()` before serializing to localStorage. This strips the proxy wrapper and returns a plain object.
-**Warning signs:** Extra properties in stored JSON, `TypeError` during serialization.
+**How to avoid:** Use `$state.snapshot()`before serializing to localStorage. This strips the proxy wrapper and returns a plain object.
+**Warning signs:** Extra properties in stored JSON,`TypeError` during serialization.
 
 ## Code Examples
 
 ### Color Palette Component
+
 ```svelte
 <!-- src/lib/components/lists/ColorPalette.svelte -->
 <script lang="ts">
-  // Preset palette (D-02: Todoist/Google Keep style, 6-8 colors)
-  const COLORS = [
-    { name: 'Berry', value: '#e11d48' },
-    { name: 'Sunset', value: '#ea580c' },
-    { name: 'Honey', value: '#ca8a04' },
-    { name: 'Forest', value: '#16a34a' },
-    { name: 'Ocean', value: '#2563eb' },
-    { name: 'Violet', value: '#9333ea' },
-    { name: 'Slate', value: '#64748b' },
-    { name: 'Stone', value: '#78716c' }
-  ];
+	// Preset palette (D-02: Todoist/Google Keep style, 6-8 colors)
+	const COLORS = [
+		{ name: 'Berry', value: '#e11d48' },
+		{ name: 'Sunset', value: '#ea580c' },
+		{ name: 'Honey', value: '#ca8a04' },
+		{ name: 'Forest', value: '#16a34a' },
+		{ name: 'Ocean', value: '#2563eb' },
+		{ name: 'Violet', value: '#9333ea' },
+		{ name: 'Slate', value: '#64748b' },
+		{ name: 'Stone', value: '#78716c' }
+	];
 
-  let { selected, onSelect }: { selected: string; onSelect: (color: string) => void } = $props();
+	let { selected, onSelect }: { selected: string; onSelect: (color: string) => void } = $props();
 </script>
 
 <div class="flex gap-2">
-  {#each COLORS as color}
-    <button
-      type="button"
-      class="h-7 w-7 rounded-full border-2 transition-transform hover:scale-110"
-      class:border-stone-900={selected === color.value}
-      class:border-transparent={selected !== color.value}
-      style="background-color: {color.value}"
-      title={color.name}
-      onclick={() => onSelect(color.value)}
-    ></button>
-  {/each}
+	{#each COLORS as color}
+		<button
+			type="button"
+			class="h-7 w-7 rounded-full border-2 transition-transform hover:scale-110"
+			class:border-stone-900={selected === color.value}
+			class:border-transparent={selected !== color.value}
+			style="background-color: {color.value}"
+			title={color.name}
+			onclick={() => onSelect(color.value)}
+		></button>
+	{/each}
 </div>
 ```
 
 ### Quantity Stepper Component
+
 ```svelte
 <!-- src/lib/components/lists/QuantityStepper.svelte -->
 <script lang="ts">
-  import { Button } from '$lib/components/ui/button/index.js';
-  import { Minus, Plus } from '@lucide/svelte';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { Minus, Plus } from '@lucide/svelte';
 
-  let { quantity, onUpdate }: { quantity: number; onUpdate: (q: number) => void } = $props();
+	let { quantity, onUpdate }: { quantity: number; onUpdate: (q: number) => void } = $props();
 </script>
 
 <div class="flex items-center gap-1">
-  <Button
-    variant="ghost"
-    size="icon"
-    class="h-6 w-6"
-    disabled={quantity <= 1}
-    onclick={() => onUpdate(quantity - 1)}
-  >
-    <Minus class="h-3 w-3" />
-  </Button>
-  <span class="min-w-[1.5rem] text-center text-xs font-medium">{quantity}</span>
-  <Button
-    variant="ghost"
-    size="icon"
-    class="h-6 w-6"
-    onclick={() => onUpdate(quantity + 1)}
-  >
-    <Plus class="h-3 w-3" />
-  </Button>
+	<Button
+		variant="ghost"
+		size="icon"
+		class="h-6 w-6"
+		disabled={quantity <= 1}
+		onclick={() => onUpdate(quantity - 1)}
+	>
+		<Minus class="h-3 w-3" />
+	</Button>
+	<span class="min-w-[1.5rem] text-center text-xs font-medium">{quantity}</span>
+	<Button variant="ghost" size="icon" class="h-6 w-6" onclick={() => onUpdate(quantity + 1)}>
+		<Plus class="h-3 w-3" />
+	</Button>
 </div>
 ```
 
 ### $state.snapshot for localStorage Serialization
+
 ```typescript
 // When saving to localStorage, always snapshot first
 function saveToStorage(data: { lists: GuestList[]; items: GuestListItem[] }): void {
-  try {
-    const plain = $state.snapshot(data);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(plain));
-  } catch (e) {
-    toast.error('Storage full. Sign up to save your collection reliably.');
-  }
+	try {
+		const plain = $state.snapshot(data);
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(plain));
+	} catch (e) {
+		toast.error('Storage full. Sign up to save your collection reliably.');
+	}
 }
 ```
 
 ### Completion Percentage (Derived)
+
 ```typescript
 // Inside GuestListStore
 completionPercent(listId: string): number {
@@ -465,13 +488,13 @@ completionPercent(listId: string): number {
 
 ## State of the Art
 
-| Old Approach | Current Approach | When Changed | Impact |
-|--------------|------------------|--------------|--------|
-| Svelte stores (`writable()`) | Svelte 5 runes ($state, $derived) | Svelte 5 (2024) | Runes are the standard; stores are legacy |
-| svelte-persisted-store | Hand-rolled $effect + localStorage | Svelte 5 (2024) | Old library doesn't support runes well |
-| Component events (`dispatch`) | Callback props (`onX` functions) | Svelte 5 (2024) | Event forwarding removed; use callback props |
-| `<slot>` | `{@render children()}` | Svelte 5 (2024) | Snippets replace slots |
-| `export let` for props | `let { ... } = $props()` | Svelte 5 (2024) | Destructured $props is the new pattern |
+| Old Approach                  | Current Approach                   | When Changed    | Impact                                       |
+| ----------------------------- | ---------------------------------- | --------------- | -------------------------------------------- |
+| Svelte stores (`writable()`)  | Svelte 5 runes ($state, $derived)  | Svelte 5 (2024) | Runes are the standard; stores are legacy    |
+| svelte-persisted-store        | Hand-rolled $effect + localStorage | Svelte 5 (2024) | Old library doesn't support runes well       |
+| Component events (`dispatch`) | Callback props (`onX` functions)   | Svelte 5 (2024) | Event forwarding removed; use callback props |
+| `<slot>`                      | `{@render children()}`             | Svelte 5 (2024) | Snippets replace slots                       |
+| `export let` for props        | `let { ... } = $props()`           | Svelte 5 (2024) | Destructured $props is the new pattern       |
 
 ## Open Questions
 
@@ -493,12 +516,14 @@ completionPercent(listId: string): number {
 ## Sources
 
 ### Primary (HIGH confidence)
+
 - Project codebase: `src/convex/schema.ts` -- Convex schema with lists/listItems tables, condition enum
 - Project codebase: `src/lib/stores/clerk.svelte.ts` -- Established Svelte 5 runes store + context pattern
 - Project codebase: `src/lib/components/catalog/` -- Existing card, grid, sidebar patterns
 - Project codebase: `src/routes/app/catalog/+page.svelte` -- URL-driven query pattern
 
 ### Secondary (MEDIUM confidence)
+
 - [shadcn-svelte Dialog](https://www.shadcn-svelte.com/docs/components/dialog) -- Dialog component docs
 - [shadcn-svelte Alert Dialog](https://www.shadcn-svelte.com/docs/components/alert-dialog) -- Confirmation dialog
 - [shadcn-svelte Sonner](https://www.shadcn-svelte.com/docs/components/sonner) -- Toast component
@@ -508,11 +533,13 @@ completionPercent(listId: string): number {
 - [Svelte Stores Docs](https://svelte.dev/docs/svelte/stores) -- Official docs on stores vs runes
 
 ### Tertiary (LOW confidence)
+
 - None
 
 ## Metadata
 
 **Confidence breakdown:**
+
 - Standard stack: HIGH -- all libraries already in the project or well-documented shadcn-svelte components
 - Architecture: HIGH -- abstract store pattern is a locked decision (D-19), implementation follows established ClerkStore pattern
 - Pitfalls: HIGH -- localStorage gotchas are well-documented; $state proxy serialization is a known Svelte 5 concern

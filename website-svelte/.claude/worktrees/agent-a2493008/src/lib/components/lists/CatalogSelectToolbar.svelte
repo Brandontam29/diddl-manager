@@ -20,7 +20,8 @@
 >
 	<div class="flex items-center gap-3 pl-4">
 		<span class="text-sm font-medium text-stone-900">
-			{selectedCount} {selectedCount === 1 ? 'item' : 'items'} selected
+			{selectedCount}
+			{selectedCount === 1 ? 'item' : 'items'} selected
 		</span>
 	</div>
 

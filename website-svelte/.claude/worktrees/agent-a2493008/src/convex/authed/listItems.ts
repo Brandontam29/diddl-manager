@@ -2,7 +2,10 @@ import { v } from 'convex/values';
 import type { Doc, Id } from '../_generated/dataModel';
 import { authedMutation, authedQuery } from './helpers';
 
-async function requireOwnedList(ctx: Parameters<typeof listOwnershipGuard>[0], listId: Id<'lists'>) {
+async function requireOwnedList(
+	ctx: Parameters<typeof listOwnershipGuard>[0],
+	listId: Id<'lists'>
+) {
 	return await listOwnershipGuard(ctx, listId);
 }
 
@@ -84,9 +87,7 @@ export const addCatalogItems = authedMutation({
 		for (const ref of args.refs) {
 			const catalogItem = await ctx.db
 				.query('catalogItems')
-				.withIndex('by_type_number', (q) =>
-					q.eq('type', ref.type).eq('number', ref.number)
-				)
+				.withIndex('by_type_number', (q) => q.eq('type', ref.type).eq('number', ref.number))
 				.unique();
 
 			if (catalogItem === null) {

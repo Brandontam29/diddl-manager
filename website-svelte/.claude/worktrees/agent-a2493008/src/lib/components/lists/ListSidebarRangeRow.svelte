@@ -23,25 +23,22 @@
 		showCounts: boolean;
 	} = $props();
 
-	const href = $derived(`/app/lists/${listId}?type=${encodeURIComponent(type)}&from=${from}&to=${to}`);
+	const href = $derived(
+		`/app/lists/${listId}?type=${encodeURIComponent(type)}&from=${from}&to=${to}`
+	);
 </script>
 
 <a
 	{href}
 	class={cn(
 		'flex min-h-[44px] items-center justify-between rounded-md px-3 py-2 text-sm transition-colors',
-		isActive
-			? 'bg-stone-900 text-white'
-			: 'text-stone-600 hover:bg-stone-100 hover:text-stone-900'
+		isActive ? 'bg-stone-900 text-white' : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900'
 	)}
 	aria-current={isActive ? 'page' : undefined}
 >
 	<span>{label}</span>
 	{#if showCounts}
-		<span class={cn(
-			'text-xs font-medium',
-			isActive ? 'text-stone-300' : 'text-stone-400'
-		)}>
+		<span class={cn('text-xs font-medium', isActive ? 'text-stone-300' : 'text-stone-400')}>
 			{owned}/{total}
 		</span>
 	{/if}

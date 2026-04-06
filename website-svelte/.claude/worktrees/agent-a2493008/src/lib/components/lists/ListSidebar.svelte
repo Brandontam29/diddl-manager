@@ -32,7 +32,7 @@
 	class="sticky top-0 h-screen w-64 shrink-0 overflow-y-auto border-r border-stone-200 bg-stone-50 p-2"
 >
 	<div class="mb-2 flex items-center justify-between px-3 py-2">
-		<span class="text-xs font-semibold uppercase tracking-wider text-stone-400">Categories</span>
+		<span class="text-xs font-semibold tracking-wider text-stone-400 uppercase">Categories</span>
 		<Button
 			variant="ghost"
 			size="icon"

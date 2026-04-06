@@ -82,6 +82,7 @@ Plans:
    **UI hint**: yes
 
 Plans:
+
 - [x] 03-01-PLAN.md — Convex backend: schema migrations table, authed list/listItem CRUD, migration action with idempotency
 - [x] 03-02-PLAN.md — Landing page, Clerk theming, AppHeader, ShimmerGrid, UpgradePrompt components
 - [ ] 03-03-PLAN.md — ConvexListStore, migration orchestrator, reactive store switching, app layout wiring
@@ -118,10 +119,10 @@ Plans:
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
-| Phase               | Plans Complete | Status      | Completed |
-| ------------------- | -------------- | ----------- | --------- |
-| 1. Schema + Catalog | 0/5            | Not started | -         |
-| 2. Guest List Mode  | 4/5 | Complete    | 2026-04-03 |
-| 3. Auth + Migration | 2/3 | In Progress|  |
-| 4. Profile          | 0/?            | Not started | -         |
-| 5. Admin            | 0/?            | Not started | -         |
+| Phase               | Plans Complete | Status      | Completed  |
+| ------------------- | -------------- | ----------- | ---------- |
+| 1. Schema + Catalog | 0/5            | Not started | -          |
+| 2. Guest List Mode  | 4/5            | Complete    | 2026-04-03 |
+| 3. Auth + Migration | 2/3            | In Progress |            |
+| 4. Profile          | 0/?            | Not started | -          |
+| 5. Admin            | 0/?            | Not started | -          |

@@ -31,15 +31,15 @@ Continues from Phase 1/2 design system. No changes to base configuration.
 
 Inherited from Phase 1/2. No changes.
 
-| Token | Value | Usage                                                |
-| ----- | ----- | ---------------------------------------------------- |
-| xs    | 4px   | Icon gaps, inline padding                            |
-| sm    | 8px   | Header button padding, toast internal spacing        |
-| md    | 16px  | Landing page section gaps, card padding              |
-| lg    | 24px  | Landing page section vertical padding                |
-| xl    | 32px  | Landing page hero to feature section gap             |
-| 2xl   | 48px  | Landing page top/bottom padding                      |
-| 3xl   | 64px  | Landing page hero vertical padding (above the fold)  |
+| Token | Value | Usage                                               |
+| ----- | ----- | --------------------------------------------------- |
+| xs    | 4px   | Icon gaps, inline padding                           |
+| sm    | 8px   | Header button padding, toast internal spacing       |
+| md    | 16px  | Landing page section gaps, card padding             |
+| lg    | 24px  | Landing page section vertical padding               |
+| xl    | 32px  | Landing page hero to feature section gap            |
+| 2xl   | 48px  | Landing page top/bottom padding                     |
+| 3xl   | 64px  | Landing page hero vertical padding (above the fold) |
 
 Exceptions:
 
@@ -155,12 +155,12 @@ Inherited from Phase 1/2. No new sizes or weights.
 
 Inherited from Phase 1/2 shadcn-svelte stone theme. Uses CSS custom properties defined in `layout.css`.
 
-| Role            | CSS Variable    | Usage                                                    |
-| --------------- | --------------- | -------------------------------------------------------- |
-| Dominant (60%)  | `--background`  | Page background, landing page background                 |
-| Secondary (30%) | `--card`        | Feature cards, header background, shimmer container      |
-| Accent (10%)    | `--primary`     | "Sign In" CTA on landing, "Try as Guest" button          |
-| Destructive     | `--destructive` | Not used in Phase 3 (no destructive actions)             |
+| Role            | CSS Variable    | Usage                                               |
+| --------------- | --------------- | --------------------------------------------------- |
+| Dominant (60%)  | `--background`  | Page background, landing page background            |
+| Secondary (30%) | `--card`        | Feature cards, header background, shimmer container |
+| Accent (10%)    | `--primary`     | "Sign In" CTA on landing, "Try as Guest" button     |
+| Destructive     | `--destructive` | Not used in Phase 3 (no destructive actions)        |
 
 **Accent (`--primary` / stone-900 light, stone-100 dark) reserved for:**
 
@@ -191,28 +191,28 @@ Inherited from Phase 1/2 shadcn-svelte stone theme. Uses CSS custom properties d
 
 ## Copywriting Contract
 
-| Element                                     | Copy                                                                          |
-| ------------------------------------------- | ----------------------------------------------------------------------------- |
-| Landing page hero heading                   | "Track Your Diddl Collection"                                                 |
-| Landing page hero subtitle                  | "Browse the catalog, build lists, and track what you own — all in one place." |
-| Landing page primary CTA                    | "Try as Guest"                                                                |
-| Landing page secondary CTA                  | "Sign In"                                                                     |
-| Landing page feature 1 heading              | "Browse the Catalog"                                                          |
-| Landing page feature 1 body                 | "Explore thousands of Diddl products organized by type and number."           |
-| Landing page feature 2 heading              | "Track Your Collection"                                                       |
-| Landing page feature 2 body                 | "Create lists, set conditions, and see your completion progress."             |
-| Landing page feature 3 heading              | "Sync Across Devices"                                                         |
-| Landing page feature 3 body                 | "Sign in to save your collection and access it anywhere."                     |
-| Header sign-in button (guest)               | "Sign In"                                                                     |
-| Migration success toast                     | "Your collection has been saved to your account."                             |
-| Migration retry toast                       | "Could not save collection. Retrying..."                                      |
-| Migration final failure toast               | "Data safe in browser. We'll try again next time."                            |
-| Upgrade prompt (2nd list attempt)           | "Sign up to create more lists"                                                |
-| Upgrade prompt (lists page footer)          | "Sign up to sync across devices"                                              |
-| Shimmer loading (screen reader)             | "Loading your collection..."                                                  |
-| Sign-out redirect (landing page)            | No copy needed — user is redirected to `/`                                    |
-| Authed list cap reached toast               | "You can create up to 3 lists."                                               |
-| Footer text                                 | "Diddl Manager — A collector's companion"                                     |
+| Element                            | Copy                                                                          |
+| ---------------------------------- | ----------------------------------------------------------------------------- |
+| Landing page hero heading          | "Track Your Diddl Collection"                                                 |
+| Landing page hero subtitle         | "Browse the catalog, build lists, and track what you own — all in one place." |
+| Landing page primary CTA           | "Try as Guest"                                                                |
+| Landing page secondary CTA         | "Sign In"                                                                     |
+| Landing page feature 1 heading     | "Browse the Catalog"                                                          |
+| Landing page feature 1 body        | "Explore thousands of Diddl products organized by type and number."           |
+| Landing page feature 2 heading     | "Track Your Collection"                                                       |
+| Landing page feature 2 body        | "Create lists, set conditions, and see your completion progress."             |
+| Landing page feature 3 heading     | "Sync Across Devices"                                                         |
+| Landing page feature 3 body        | "Sign in to save your collection and access it anywhere."                     |
+| Header sign-in button (guest)      | "Sign In"                                                                     |
+| Migration success toast            | "Your collection has been saved to your account."                             |
+| Migration retry toast              | "Could not save collection. Retrying..."                                      |
+| Migration final failure toast      | "Data safe in browser. We'll try again next time."                            |
+| Upgrade prompt (2nd list attempt)  | "Sign up to create more lists"                                                |
+| Upgrade prompt (lists page footer) | "Sign up to sync across devices"                                              |
+| Shimmer loading (screen reader)    | "Loading your collection..."                                                  |
+| Sign-out redirect (landing page)   | No copy needed — user is redirected to `/`                                    |
+| Authed list cap reached toast      | "You can create up to 3 lists."                                               |
+| Footer text                        | "Diddl Manager — A collector's companion"                                     |
 
 **No destructive actions in Phase 3.** Sign-out is handled by Clerk's built-in UserButton and does not require a confirmation dialog.
 
@@ -222,23 +222,23 @@ Inherited from Phase 1/2 shadcn-svelte stone theme. Uses CSS custom properties d
 
 Components to implement in Phase 3:
 
-| Component                     | shadcn-svelte base | Notes                                                                     |
-| ----------------------------- | ------------------ | ------------------------------------------------------------------------- |
-| `LandingPage.svelte`          | none               | Page content for `/` — hero + feature cards + footer                      |
-| `LandingHeader.svelte`        | none               | Simplified header for landing page (logo + Sign In only)                  |
-| `AppHeader.svelte`            | none               | Updated header for `/app` — swaps Sign In button / Clerk UserButton       |
-| `UpgradePrompt.svelte`        | none (custom)      | Subtle inline prompt with text + link, used at friction points            |
-| `ShimmerGrid.svelte`          | none (custom)      | Animated placeholder grid matching list card layout during migration      |
-| `FeatureCard.svelte`          | Card               | Landing page feature card with icon + heading + body                      |
+| Component              | shadcn-svelte base | Notes                                                                |
+| ---------------------- | ------------------ | -------------------------------------------------------------------- |
+| `LandingPage.svelte`   | none               | Page content for `/` — hero + feature cards + footer                 |
+| `LandingHeader.svelte` | none               | Simplified header for landing page (logo + Sign In only)             |
+| `AppHeader.svelte`     | none               | Updated header for `/app` — swaps Sign In button / Clerk UserButton  |
+| `UpgradePrompt.svelte` | none (custom)      | Subtle inline prompt with text + link, used at friction points       |
+| `ShimmerGrid.svelte`   | none (custom)      | Animated placeholder grid matching list card layout during migration |
+| `FeatureCard.svelte`   | Card               | Landing page feature card with icon + heading + body                 |
 
 **Existing components modified (not new):**
 
-| Component                    | Modification                                                                    |
-| ---------------------------- | ------------------------------------------------------------------------------- |
-| `src/routes/+page.svelte`    | Replaced with landing page content (was demo page)                              |
-| `src/routes/app/+layout.svelte` | Conditional store creation: GuestListStore for guests, ConvexListStore for authed |
-| `ClerkWrapper.svelte`        | Updated `afterSignOutUrl` to `/` (D-05), Clerk appearance theming (D-03)        |
-| `ClerkStore` (`clerk.svelte.ts`) | Updated redirect URLs: `afterSignOutUrl: '/'`                               |
+| Component                        | Modification                                                                      |
+| -------------------------------- | --------------------------------------------------------------------------------- |
+| `src/routes/+page.svelte`        | Replaced with landing page content (was demo page)                                |
+| `src/routes/app/+layout.svelte`  | Conditional store creation: GuestListStore for guests, ConvexListStore for authed |
+| `ClerkWrapper.svelte`            | Updated `afterSignOutUrl` to `/` (D-05), Clerk appearance theming (D-03)          |
+| `ClerkStore` (`clerk.svelte.ts`) | Updated redirect URLs: `afterSignOutUrl: '/'`                                     |
 
 **No new shadcn-svelte components to install.** All needed primitives (Card, Button, Sonner) are already installed from Phase 1/2.
 
@@ -332,9 +332,9 @@ The landing page uses responsive grid for feature cards (`grid-cols-1 sm:grid-co
 
 ## Registry Safety
 
-| Registry               | Blocks Used                          | Safety Gate  |
-| ---------------------- | ------------------------------------ | ------------ |
-| shadcn-svelte official | No new blocks installed in Phase 3   | not required |
+| Registry               | Blocks Used                        | Safety Gate  |
+| ---------------------- | ---------------------------------- | ------------ |
+| shadcn-svelte official | No new blocks installed in Phase 3 | not required |
 
 No third-party registries declared for Phase 3. All required shadcn-svelte components (card, button, sonner) were installed in Phase 1/2.
 

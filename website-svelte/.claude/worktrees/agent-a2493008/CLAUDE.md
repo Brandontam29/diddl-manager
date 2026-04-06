@@ -14,6 +14,7 @@ Project guidelines:
 - run `bun run lint` to check for linting errors, `bun run format`, and `bun run check` to check for errors after making changes
 
 <!-- GSD:project-start source:PROJECT.md -->
+
 ## Project
 
 **Diddl Manager**
@@ -35,16 +36,22 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 <!-- GSD:project-end -->
 
 <!-- GSD:stack-start source:codebase/STACK.md -->
+
 ## Technology Stack
 
 ## Languages
+
 - TypeScript 5.9.3 - Full codebase including frontend components, Svelte files, and backend functions
 - JavaScript - Build configuration and linting setup files
+
 ## Runtime
+
 - Node.js (via Bun or standard Node.js environments)
 - Bun - Primary package manager for the project
 - Lockfile: Present (managed via Bun)
+
 ## Frameworks
+
 - SvelteKit 2.50.2 - Full-stack web framework
 - Svelte 5.51.0 - UI component framework with runes support
 - Vite 7.3.1 - Build tool and dev server
@@ -57,7 +64,9 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - @tailwindcss/typography 0.5.19 - Typography plugin for styled content
 - Svelte-check 4.4.2 - Svelte component type checking
 - SvelteKit sync utilities - Type generation for routes and configuration
+
 ## Key Dependencies
+
 - convex-helpers 0.1.114 - Utilities for custom function wrappers and authentication patterns
 - convex-svelte 0.0.12 - Svelte integration for Convex client
 - convex-vite-plugin 0.4.0 - Vite plugin for local Convex development
@@ -70,7 +79,9 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - prettier-plugin-tailwindcss 0.7.2 - TailwindCSS class sorting in Prettier
 - @sveltejs/adapter-vercel 6.3.1 - Vercel adapter for SvelteKit production builds
 - vite-plugin-devtools-json 1.0.0 - Development tools integration
+
 ## Configuration
+
 - Environment variables loaded from `.env` files (see `.env.example`)
 - Required variables:
 - Local development uses `USE_LOCAL_CONVEX=true` to run Convex locally on port 3210
@@ -80,20 +91,26 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - `tsconfig.json` - TypeScript compiler options with strict mode enabled
 - `eslint.config.js` - ESLint flat config with TypeScript, Svelte, and Prettier support
 - `.prettier` configuration inherited from Prettier defaults with Svelte and TailwindCSS plugins
+
 ## Platform Requirements
+
 - Bun (primary) or Node.js with npm/yarn (alternative)
 - Docker (optional, for running Convex dashboard via `convex:dash` script)
 - Git for version control
 - Vercel - Deployed using SvelteKit Vercel adapter
 - Convex cloud deployment - Backend functions and database
 - Clerk cloud instance - User authentication and management
+
 ## Build Scripts
+
 <!-- GSD:stack-end -->
 
 <!-- GSD:conventions-start source:CONVENTIONS.md -->
+
 ## Conventions
 
 ## Naming Patterns
+
 - Svelte components: PascalCase `.svelte` (e.g., `PageError.svelte`, `ConvexWrapper.svelte`)
 - TypeScript files: camelCase `.ts` or `.svelte.ts` (e.g., `convex-env.ts`, `clerk.svelte.ts`)
 - Route files: `+page.svelte`, `+layout.svelte`, `+layout.ts` (SvelteKit convention)
@@ -115,7 +132,9 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - Service classes extend `ServiceMap.Service` with suffix `Service` (e.g., `ConvexPrivateService`, `ClerkService`)
 - Custom function types use descriptive names with `Runner` suffix (e.g., `PrivateQueryRunner`)
 - Generic types use uppercase (e.g., `Args`, `Result`, `Type`)
+
 ## Code Style
+
 - Tool: Prettier 3.8.1
 - Tabs: enabled (useTabs: true)
 - Single quotes: enforced
@@ -132,12 +151,16 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - Force consistent casing: enabled
 - Allow JS checking: enabled with checkJs
 - Rewrite relative import extensions: enabled
+
 ## Import Organization
+
 - `$lib`: points to `src/lib/`
 - `$app`: points to SvelteKit's internal modules
 - `$env`: points to environment variables (static/public or static/private)
 - `@`: alias configured in vite.config.ts pointing to `src/`
+
 ## Error Handling
+
 - All custom errors extend `Data.TaggedError` from Effect library
 - Error structure includes: `message`, `kind`, `traceId` (UUID), `timestamp`, and optional `cause`
 - Example: `ConvexError` in `src/lib/services/convex.ts` includes operation type and function name
@@ -148,20 +171,26 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - Client receives sanitized error objects: `{ message, kind, timestamp, traceId }`
 - Used for sequential Effect operations with `yield*` syntax
 - Example in `src/lib/remote/demo.remote.ts` and `src/lib/services/clerk.ts`
+
 ## Logging
+
 - Backend logging via `console.error()` in error paths
 - Log structured objects with consistent properties
 - Include traceId, kind, timestamp for all significant operations
 - Serialized error causes to avoid circular references
 - Client-side errors logged with context (operation type, function name, component path)
 - Log statements at error points in Effect runtime handler
+
 ## Comments
+
 - Comment on `authed` vs `private` function setup (see `src/convex/authed/helpers.ts` and `src/convex/private/helpers.ts`)
 - Brief line comments explaining non-obvious logic (e.g., date conversions)
 - No JSDoc/TSDoc comments observed in codebase; types are inferred from function signatures
 - File-level comments explain intent (e.g., "authed" queries called from client vs "private" queries from backend)
 - Implementation details left to code clarity
+
 ## Function Design
+
 - Functions kept concise (5-20 lines typical)
 - Complex logic broken into smaller utilities (e.g., `serializeUnknown`, `formatDate`, `conferenceStatus`)
 - Use object destructuring for function arguments when multiple params needed
@@ -171,7 +200,9 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - Svelte components return JSX-like render output via `{@render children()}`
 - Page components return undefined (implicit SvelteKit pattern)
 - Type-safe returns with explicit Result type parameters
+
 ## Module Design
+
 - Named exports for functions and classes
 - Default export for Svelte components (implicit)
 - Service classes exported as classes (not singletons)
@@ -181,7 +212,9 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - Services use Effect `Layer` pattern for dependency injection
 - Services created via `Layer.sync()` or `Layer.mergeAll()`
 - Runtime instantiation via `ManagedRuntime.make(appLayer)` in `src/lib/runtime.ts`
+
 ## Svelte Component Patterns
+
 - Always use `<script lang="ts">` (TypeScript required)
 - Modern Svelte 5 runes: `$state()`, `$derived.by()`, `$effect()`, `onMount()`
 - Props via `let { prop } = $props()` in layout components
@@ -195,7 +228,9 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - List rendering: `{#each items as item}`
 - Keyed blocks: `{@key editingId}`
 - Lifecycle: use Svelte 5 effects and onMount
+
 ## Convex Function Patterns
+
 - `authed/` functions: client-side queries/mutations, protected by Clerk JWT token
 - `private/` functions: backend-only, protected by `CONVEX_PRIVATE_BRIDGE_KEY`
 - Both use custom function wrappers from `convex-helpers/server/customFunctions`
@@ -203,7 +238,9 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - Optional fields: `v.optional(v.type())`
 - ID references: `v.id('tableName')`
 - String, number, boolean directly: `v.string()`, `v.number()`, `v.boolean()`
+
 ## Backend Service Patterns
+
 - Services extend `ServiceMap.Service<Service, Definition>()`
 - Layer created via `Layer.sync()` with implementation
 - Used via `yield* ServiceName` in Effect.gen blocks
@@ -214,15 +251,19 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 <!-- GSD:conventions-end -->
 
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->
+
 ## Architecture
 
 ## Pattern Overview
+
 - Monolithic repository with client (SvelteKit) and backend (Convex) colocated
 - Server-side Effect (v4) runtime for composable error handling and dependency injection
 - Dual auth system: Clerk for user identity, Convex API key for private backend access
 - Real-time reactive queries via WebSocket, imperative mutations via client
 - Tagged error types (ConvexError, ClerkError, GenericError) flowing through Effect chains
+
 ## Layers
+
 - Purpose: Interactive UI for conference management, user authentication via Clerk
 - Location: `src/routes/**/*.svelte`, `src/lib/components/**`
 - Contains: Svelte components, reactive queries via `useQuery()`, imperative mutations via `useConvexClient()`
@@ -248,12 +289,16 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - Contains: ClerkStore (Svelte 5 runes-based state), Clerk listener subscriptions
 - Depends on: Clerk JS SDK
 - Used by: Components and wrappers for auth context
+
 ## Data Flow
+
 - Clerk user/session state maintained in `ClerkStore` singleton (initialized in `ClerkWrapper`)
 - State is reactive via Svelte 5 runes (`$state`)
 - Components access via `getClerkContext()` to subscribe to changes
 - Convex queries are real-time subscriptions (auto-update when data changes)
+
 ## Key Abstractions
+
 - Purpose: Protect Convex functions that require user identity
 - Examples: `src/convex/authed/conferences.ts`, `src/convex/authed/demo.ts`
 - Pattern: Wrapper using `customQuery()` from `convex-helpers` that validates `ctx.auth.getUserIdentity()` before handler execution; throws if identity is null
@@ -272,7 +317,9 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - Purpose: Execute an Effect chain, logging failures, mapping errors to SvelteKit responses
 - Location: `src/lib/runtime.ts`
 - Pattern: Takes an Effect, runs it via `ManagedRuntime`, extracts failure cause, logs tagged errors, returns `error(status, publicError)` or result value
+
 ## Entry Points
+
 - Location: `src/routes/+layout.svelte`
 - Triggers: Every page navigation
 - Responsibilities: Wraps app in HTML shell, loads favicon
@@ -288,12 +335,16 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - Location: `src/routes/+page.svelte`
 - Triggers: User navigates to `/`
 - Responsibilities: Demo page that calls `remoteDemoQuery()`, links to `/app`
+
 ## Error Handling
+
 - **Effect.gen() for composition**: Errors thrown in Effect chains bubble up; caught by `effectRunner` which inspects cause, logs, extracts first error, returns `error()` response
 - **Catch and rethrow**: ConvexPrivateService and ClerkService catch promise rejections, construct tagged error instances with traceId and timestamp
 - **Client-side try/catch**: Components wrap mutations in try/catch, display error messages directly (example: `/app/references/+page.svelte` line 34)
 - **Async boundary fallback**: `<svelte:boundary>` with `failed` snippet uses `PageError` component to parse `isHttpError()` and display App.Error shape (message, kind, timestamp, traceId)
+
 ## Cross-Cutting Concerns
+
 - Convex schema defines allowed fields and types (`src/convex/schema.ts`)
 - Convex function args validated via `v.string()`, `v.number()`, etc. in handler definitions
 - Client-side UI form validation (HTML5 required attributes)
@@ -307,21 +358,26 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 <!-- GSD:architecture-end -->
 
 <!-- GSD:workflow-start source:GSD defaults -->
+
 ## GSD Workflow Enforcement
 
 Before using Edit, Write, or other file-changing tools, start work through a GSD command so planning artifacts and execution context stay in sync.
 
 Use these entry points:
+
 - `/gsd:quick` for small fixes, doc updates, and ad-hoc tasks
 - `/gsd:debug` for investigation and bug fixing
 - `/gsd:execute-phase` for planned phase work
 
 Do not make direct repo edits outside a GSD workflow unless the user explicitly asks to bypass it.
+
 <!-- GSD:workflow-end -->
 
 <!-- GSD:profile-start -->
+
 ## Developer Profile
 
 > Profile not yet configured. Run `/gsd:profile-user` to generate your developer profile.
 > This section is managed by `generate-claude-profile` -- do not edit manually.
+
 <!-- GSD:profile-end -->

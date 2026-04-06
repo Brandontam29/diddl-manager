@@ -14,6 +14,7 @@ export const listByRange = query({
 			.withIndex('by_type_number', (q) =>
 				q.eq('type', args.type).gte('number', args.fromNumber).lte('number', args.toNumber)
 			)
+			.filter((q) => q.eq(q.field('status'), 'published'))
 			.order('asc')
 			.collect();
 
@@ -45,6 +46,7 @@ export const countByType = query({
 				const items = await ctx.db
 					.query('catalogItems')
 					.withIndex('by_type_number', (q) => q.eq('type', t.slug))
+					.filter((q) => q.eq(q.field('status'), 'published'))
 					.collect();
 				return { slug: t.slug, count: items.length };
 			})

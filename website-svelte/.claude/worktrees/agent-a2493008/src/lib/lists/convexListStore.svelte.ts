@@ -29,9 +29,8 @@ export function createConvexListStore(): ListStore {
 	let activeListId = $state<string | null>(null);
 
 	// Reactive query for active list items — skip when no active list
-	const itemsQuery = useQuery(
-		api.authed.listItems.byList,
-		() => (activeListId ? { listId: activeListId as Id<'lists'> } : 'skip')
+	const itemsQuery = useQuery(api.authed.listItems.byList, () =>
+		activeListId ? { listId: activeListId as Id<'lists'> } : 'skip'
 	);
 
 	// Auto-set activeListId when lists load and nothing is selected
@@ -150,18 +149,14 @@ export function createConvexListStore(): ListStore {
 		},
 
 		getCompletionPercent(listId) {
-			const listItems = (itemsQuery.data ?? []).filter(
-				(i) => (i.listId as string) === listId
-			);
+			const listItems = (itemsQuery.data ?? []).filter((i) => (i.listId as string) === listId);
 			if (listItems.length === 0) return 0;
 			const completeCount = listItems.filter((i) => i.complete).length;
 			return Math.round((completeCount / listItems.length) * 100);
 		},
 
 		getOwnedCatalogKeys(listId) {
-			const listItems = (itemsQuery.data ?? []).filter(
-				(i) => (i.listId as string) === listId
-			);
+			const listItems = (itemsQuery.data ?? []).filter((i) => (i.listId as string) === listId);
 			return new SvelteSet(
 				listItems.map((i) => {
 					const ref = i.catalogRef as CatalogReference;

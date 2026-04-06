@@ -32,7 +32,7 @@
 			<AlertDialog.Cancel>Keep List</AlertDialog.Cancel>
 			<AlertDialog.Action
 				onclick={handleDelete}
-				class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+				class="text-destructive-foreground bg-destructive hover:bg-destructive/90"
 			>
 				Delete
 			</AlertDialog.Action>

@@ -7,6 +7,7 @@
 **Overall:** Full-stack SvelteKit + Convex with Effect-based backend service composition.
 
 **Key Characteristics:**
+
 - Monolithic repository with client (SvelteKit) and backend (Convex) colocated
 - Server-side Effect (v4) runtime for composable error handling and dependency injection
 - Dual auth system: Clerk for user identity, Convex API key for private backend access
@@ -16,6 +17,7 @@
 ## Layers
 
 **Client (Browser):**
+
 - Purpose: Interactive UI for conference management, user authentication via Clerk
 - Location: `src/routes/**/*.svelte`, `src/lib/components/**`
 - Contains: Svelte components, reactive queries via `useQuery()`, imperative mutations via `useConvexClient()`
@@ -23,6 +25,7 @@
 - Used by: End users
 
 **SvelteKit Server:**
+
 - Purpose: Server-side logic, remote functions, request validation, effect orchestration
 - Location: `src/lib/remote/**/*.remote.ts`, `src/routes/**/*.ts` (server +page.ts, +layout.ts)
 - Contains: Remote functions using SvelteKit's `query()`, Effect generators, error handling
@@ -30,6 +33,7 @@
 - Used by: Client-side code fetching data, route handlers
 
 **Convex Backend:**
+
 - Purpose: Database operations, data validation, real-time subscriptions
 - Location: `src/convex/**`
 - Contains: Schema definitions, authed queries/mutations, private backend functions
@@ -37,6 +41,7 @@
 - Used by: Client directly (authed functions), SvelteKit server (private functions)
 
 **Services (Effect Layer):**
+
 - Purpose: Encapsulated, composable effects for external integrations
 - Location: `src/lib/services/**`
 - Contains: ConvexPrivateService, ClerkService (ServiceMap.Service instances)
@@ -44,6 +49,7 @@
 - Used by: Remote functions via Effect.gen() chains
 
 **State Management:**
+
 - Purpose: Client-side reactive state for UI
 - Location: `src/lib/stores/*.svelte.ts`
 - Contains: ClerkStore (Svelte 5 runes-based state), Clerk listener subscriptions
@@ -94,31 +100,37 @@
 ## Key Abstractions
 
 **authedQuery / authedMutation:**
+
 - Purpose: Protect Convex functions that require user identity
 - Examples: `src/convex/authed/conferences.ts`, `src/convex/authed/demo.ts`
 - Pattern: Wrapper using `customQuery()` from `convex-helpers` that validates `ctx.auth.getUserIdentity()` before handler execution; throws if identity is null
 
 **privateQuery / privateMutation:**
+
 - Purpose: Protect Convex functions called only from SvelteKit backend
 - Examples: `src/convex/private/demo.ts`
 - Pattern: Wrapper that validates `apiKey` argument against `CONVEX_PRIVATE_BRIDGE_KEY` environment variable; called via ConvexPrivateService
 
 **ConvexPrivateService:**
+
 - Purpose: Typed Effect service for backend-to-Convex communication with error handling
 - Location: `src/lib/services/convex.ts`
 - Pattern: ServiceMap.Service with three methods (query, mutation, action) that wrap ConvexHttpClient calls, inject API key, and catch errors into ConvexError instances
 
 **ClerkService:**
+
 - Purpose: Typed Effect service for backend auth validation
 - Location: `src/lib/services/clerk.ts`
 - Pattern: ServiceMap.Service with `validateAuth(event)` method that calls Clerk backend API, returns User or throws ClerkError
 
 **Remote Functions:**
+
 - Purpose: SvelteKit `query()` functions that compose services and return JSON to client
 - Location: `src/lib/remote/**/*.remote.ts`
 - Pattern: Use `Effect.gen()` to yield services, `effectRunner` to execute, handle errors via SvelteKit's `error()` function
 
 **effectRunner:**
+
 - Purpose: Execute an Effect chain, logging failures, mapping errors to SvelteKit responses
 - Location: `src/lib/runtime.ts`
 - Pattern: Takes an Effect, runs it via `ManagedRuntime`, extracts failure cause, logs tagged errors, returns `error(status, publicError)` or result value
@@ -126,26 +138,31 @@
 ## Entry Points
 
 **Root Layout (`src/routes/+layout.svelte`):**
+
 - Location: `src/routes/+layout.svelte`
 - Triggers: Every page navigation
 - Responsibilities: Wraps app in HTML shell, loads favicon
 
 **App Layout (`src/routes/app/+layout.svelte`):**
+
 - Location: `src/routes/app/+layout.svelte`
 - Triggers: Navigation to `/app/**` routes
 - Responsibilities: Wraps children in ClerkWrapper (auth UI) and ConvexWrapper (WebSocket setup)
 
 **Conferences Page (`src/routes/app/+page.svelte`):**
+
 - Location: `src/routes/app/+page.svelte`
 - Triggers: User navigates to `/app`
 - Responsibilities: Renders conference list via `useQuery()`, handles create/update/delete mutations, displays Clerk user button
 
 **References Page (`src/routes/app/references/+page.svelte`):**
+
 - Location: `src/routes/app/references/+page.svelte`
 - Triggers: User navigates to `/app/references`
 - Responsibilities: Demonstrates all integration patterns (client queries, mutations, remote functions, error handling)
 
 **Home Page (`src/routes/+page.svelte`):**
+
 - Location: `src/routes/+page.svelte`
 - Triggers: User navigates to `/`
 - Responsibilities: Demo page that calls `remoteDemoQuery()`, links to `/app`
@@ -165,17 +182,20 @@
 
 **Logging:** Structured logging in `effectRunner` (`src/lib/runtime.ts` lines 80-116): tagged error types logged with operation, function name, component path, and error cause
 
-**Validation:** 
+**Validation:**
+
 - Convex schema defines allowed fields and types (`src/convex/schema.ts`)
 - Convex function args validated via `v.string()`, `v.number()`, etc. in handler definitions
 - Client-side UI form validation (HTML5 required attributes)
 
 **Authentication:**
+
 - **Clerk JWT**: Client sends via `ConvexWrapper.setAuth()` → `convex.setAuth(getClerkAuthToken)` callback
 - **API key**: SvelteKit backend adds `CONVEX_PRIVATE_BRIDGE_KEY` to private function args
 - **Request validation**: `ClerkService.validateAuth(event)` checks session cookie/JWT from request object
 
 **Type Safety:**
+
 - TypeScript strict mode throughout
 - Convex API generated to `src/convex/_generated/api.d.ts` (run `bun run convex:gen` after schema changes)
 - Svelte components tagged with `lang="ts"`
@@ -183,4 +203,4 @@
 
 ---
 
-*Architecture analysis: 2026-04-02*
+_Architecture analysis: 2026-04-02_

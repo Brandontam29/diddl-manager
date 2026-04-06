@@ -9,8 +9,12 @@ export default defineSchema({
 		edition: v.optional(v.string()), // optional — not present in catalog.json
 		releaseDate: v.optional(v.number()), // optional — epoch ms; not in catalog.json
 		imageStorageIds: v.array(v.id('_storage')), // DATA-07: array, future-ready
-		imagePath: v.optional(v.string()) // raw path from catalog.json for reference
-	}).index('by_type_number', ['type', 'number']), // DATA-06: MUST exist before any catalog query
+		imagePath: v.optional(v.string()), // raw path from catalog.json for reference
+		status: v.union(v.literal('draft'), v.literal('published'), v.literal('archived'))
+	})
+		.index('by_type_number', ['type', 'number']) // DATA-06: MUST exist before any catalog query
+		.index('by_status', ['status'])
+		.index('by_type_status', ['type', 'status']),
 
 	diddlTypes: defineTable({
 		// DATA-05: managed collection, not hardcoded enum
@@ -45,7 +49,8 @@ export default defineSchema({
 		tags: v.array(v.string())
 	})
 		.index('by_list', ['listId'])
-		.index('by_list_catalog', ['listId', 'catalogItemId']),
+		.index('by_list_catalog', ['listId', 'catalogItemId'])
+		.index('by_catalogItemId', ['catalogItemId']),
 
 	migrationCompletions: defineTable({
 		ownerSubject: v.string(),

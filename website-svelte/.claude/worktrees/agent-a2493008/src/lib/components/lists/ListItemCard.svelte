@@ -43,16 +43,14 @@
 <Card.Root
 	class={cn(
 		'group relative overflow-hidden rounded-lg border bg-white transition-all',
-		isUnowned
-			? 'border-dashed border-stone-300 opacity-60'
-			: 'border-stone-200 hover:shadow-md',
+		isUnowned ? 'border-dashed border-stone-300 opacity-60' : 'border-stone-200 hover:shadow-md',
 		isSelected && 'ring-2 ring-stone-900 ring-offset-2',
 		className
 	)}
 >
 	<!-- Selection Checkbox (Owned only) -->
 	{#if !isUnowned}
-		<div class="absolute left-2 top-2 z-10">
+		<div class="absolute top-2 left-2 z-10">
 			<Checkbox
 				checked={isSelected}
 				onCheckedChange={(v) => onSelectChange?.(!!v)}
@@ -64,7 +62,7 @@
 
 	<!-- Completion Indicator (Owned only) -->
 	{#if ownedItem?.complete}
-		<div class="absolute right-2 top-2 z-10">
+		<div class="absolute top-2 right-2 z-10">
 			<div class="rounded-full bg-emerald-500 p-1 text-white shadow-sm">
 				<Check class="h-3 w-3" />
 			</div>
@@ -74,16 +72,13 @@
 	<!-- Image Area -->
 	<div class="relative aspect-square overflow-hidden bg-stone-50">
 		<LazyImage src={item.imageUrl} alt="{item.name ?? item.type} — image not yet available" />
-		
+
 		<!-- Unowned Add Overlay -->
 		{#if isUnowned}
-			<div class="absolute inset-0 flex items-center justify-center bg-stone-900/5 opacity-0 transition-opacity group-hover:opacity-100">
-				<Button
-					variant="secondary"
-					size="sm"
-					class="shadow-sm"
-					onclick={() => onAddUnowned?.()}
-				>
+			<div
+				class="absolute inset-0 flex items-center justify-center bg-stone-900/5 opacity-0 transition-opacity group-hover:opacity-100"
+			>
+				<Button variant="secondary" size="sm" class="shadow-sm" onclick={() => onAddUnowned?.()}>
 					<Plus class="mr-2 h-4 w-4" />
 					Add to List
 				</Button>
@@ -99,15 +94,15 @@
 			<p class="text-xs text-stone-400">
 				#{item.number}{item.edition ? ' · ' + item.edition : ''}
 			</p>
-			
+
 			<div class="mt-2 flex items-center justify-between">
 				{#if !isUnowned && ownedItem}
 					<QuantityStepper
 						value={ownedItem.quantity}
 						onValueChange={(v) => onQuantityChange?.(v)}
 					/>
-					
-					<span class="text-[10px] font-medium uppercase tracking-wider text-stone-400">
+
+					<span class="text-[10px] font-medium tracking-wider text-stone-400 uppercase">
 						{ownedItem.condition.replace('_', ' ')}
 					</span>
 				{:else if isUnowned}
@@ -117,7 +112,7 @@
 						class="h-7 px-2 text-xs text-stone-500 hover:text-stone-900"
 						onclick={() => onAddUnowned?.()}
 					>
-						<Plus class="mr-1 h-3.3 w-3.5" />
+						<Plus class="h-3.3 mr-1 w-3.5" />
 						Add
 					</Button>
 				{/if}

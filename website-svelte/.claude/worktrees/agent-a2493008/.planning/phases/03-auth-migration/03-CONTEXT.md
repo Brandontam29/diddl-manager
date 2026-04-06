@@ -58,6 +58,7 @@ Users can sign in with Clerk and have their guest data migrated to Convex automa
 </decisions>
 
 <canonical_refs>
+
 ## Canonical References
 
 **Downstream agents MUST read these before planning or implementing.**
@@ -93,6 +94,7 @@ Users can sign in with Clerk and have their guest data migrated to Convex automa
 </canonical_refs>
 
 <code_context>
+
 ## Existing Code Insights
 
 ### Reusable Assets

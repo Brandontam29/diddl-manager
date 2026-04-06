@@ -47,8 +47,8 @@
 		<div class="mt-16 rounded-xl border border-stone-200 bg-white p-8 text-center shadow-sm">
 			<h3 class="text-lg font-semibold">Guest Mode Active</h3>
 			<p class="mt-2 text-stone-500">
-				You're currently using guest mode. Sign up to sync your collection across devices and
-				unlock more lists.
+				You're currently using guest mode. Sign up to sync your collection across devices and unlock
+				more lists.
 			</p>
 			<Button variant="link" class="mt-4" onclick={() => clerkContext.clerk.openSignUp()}>
 				Create an account to sync

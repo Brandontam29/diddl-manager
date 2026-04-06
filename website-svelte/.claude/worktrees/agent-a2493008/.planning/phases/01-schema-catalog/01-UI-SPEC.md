@@ -15,13 +15,13 @@ created: 2026-04-02
 
 ## Design System
 
-| Property | Value |
-|----------|-------|
-| Tool | shadcn-svelte |
-| Preset | to be initialized before implementation begins (run `npx shadcn-svelte@latest init`) |
-| Component library | bits-ui (shadcn-svelte default) |
-| Icon library | lucide-svelte (shadcn-svelte default) |
-| Font | System font stack (Inter or system-ui) — no custom font load in Phase 1 |
+| Property          | Value                                                                                |
+| ----------------- | ------------------------------------------------------------------------------------ |
+| Tool              | shadcn-svelte                                                                        |
+| Preset            | to be initialized before implementation begins (run `npx shadcn-svelte@latest init`) |
+| Component library | bits-ui (shadcn-svelte default)                                                      |
+| Icon library      | lucide-svelte (shadcn-svelte default)                                                |
+| Font              | System font stack (Inter or system-ui) — no custom font load in Phase 1              |
 
 **shadcn-svelte initialization note:** The user has selected shadcn-svelte. RESEARCH.md noted Runes-mode issues as of early 2025, but the user decision takes precedence. Initialize with the stone theme to match the existing app's stone palette. Run `npx shadcn-svelte@latest init` and select the stone base color. Confirm `components.json` exists before writing any component code.
 
@@ -33,17 +33,18 @@ created: 2026-04-02
 
 Declared values (must be multiples of 4):
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| xs | 4px | Icon-to-label gaps, inline badge padding |
-| sm | 8px | Sidebar item padding, card inner gaps |
-| md | 16px | Card padding, section padding, form field gaps |
-| lg | 24px | Sidebar section breaks, grid row gap |
-| xl | 32px | Layout column gap (sidebar ↔ main content) |
-| 2xl | 48px | Page-level top/bottom padding |
-| 3xl | 64px | Not used in Phase 1 |
+| Token | Value | Usage                                          |
+| ----- | ----- | ---------------------------------------------- |
+| xs    | 4px   | Icon-to-label gaps, inline badge padding       |
+| sm    | 8px   | Sidebar item padding, card inner gaps          |
+| md    | 16px  | Card padding, section padding, form field gaps |
+| lg    | 24px  | Sidebar section breaks, grid row gap           |
+| xl    | 32px  | Layout column gap (sidebar ↔ main content)     |
+| 2xl   | 48px  | Page-level top/bottom padding                  |
+| 3xl   | 64px  | Not used in Phase 1                            |
 
 Exceptions:
+
 - Touch targets for sidebar tree items: minimum 44px height (accessibility requirement, not a spacing token override)
 - Catalog card image area: fixed-height container (160px), not governed by spacing scale
 
@@ -116,16 +117,17 @@ CatalogSidebar
 
 ## Typography
 
-| Role | Size | Weight | Line Height | Tailwind class |
-|------|------|--------|-------------|----------------|
-| Body | 14px | 400 (regular) | 1.5 | `text-sm` |
-| Label | 12px | 600 (semibold) | 1.4 | `text-xs font-semibold` |
-| Heading | 16px | 600 (semibold) | 1.25 | `text-base font-semibold` |
-| Display | 20px | 600 (semibold) | 1.2 | `text-xl font-semibold` |
+| Role    | Size | Weight         | Line Height | Tailwind class            |
+| ------- | ---- | -------------- | ----------- | ------------------------- |
+| Body    | 14px | 400 (regular)  | 1.5         | `text-sm`                 |
+| Label   | 12px | 600 (semibold) | 1.4         | `text-xs font-semibold`   |
+| Heading | 16px | 600 (semibold) | 1.25        | `text-base font-semibold` |
+| Display | 20px | 600 (semibold) | 1.2         | `text-xl font-semibold`   |
 
 **Two weights only:** 400 (regular) and 600 (semibold). No other weights are permitted anywhere in Phase 1.
 
 **Usage mapping:**
+
 - Sidebar DiddlType name: `text-sm font-semibold`
 - Sidebar range row: `text-sm` (regular)
 - Sidebar completion badge: `text-xs font-semibold`
@@ -139,24 +141,27 @@ CatalogSidebar
 
 ## Color
 
-| Role | Value | Tailwind | Usage |
-|------|-------|----------|-------|
-| Dominant (60%) | `#fafaf9` | `stone-50` | Page background, sidebar background |
-| Secondary (30%) | `#ffffff` | `white` | Card surfaces, header background |
-| Accent (10%) | `#1c1917` | `stone-900` | Active sidebar range row bg; see reserved list below |
-| Destructive | `#ef4444` | `red-500` | No destructive actions in Phase 1 — declared for completeness |
+| Role            | Value     | Tailwind    | Usage                                                         |
+| --------------- | --------- | ----------- | ------------------------------------------------------------- |
+| Dominant (60%)  | `#fafaf9` | `stone-50`  | Page background, sidebar background                           |
+| Secondary (30%) | `#ffffff` | `white`     | Card surfaces, header background                              |
+| Accent (10%)    | `#1c1917` | `stone-900` | Active sidebar range row bg; see reserved list below          |
+| Destructive     | `#ef4444` | `red-500`   | No destructive actions in Phase 1 — declared for completeness |
 
 **Accent (`stone-900`) reserved for:**
+
 1. Active/selected sidebar range row background (with `text-white` label)
 2. Primary action buttons (not present in Phase 1 catalog view — declared for Phase 2+)
 
 **Supporting colors (not accent — used freely):**
+
 - `stone-200`: borders on cards, sidebar dividers, input borders
 - `stone-400`: muted secondary text (item number, edition), placeholder icon
 - `stone-100`: image placeholder background, hover state on sidebar type rows
 - `stone-500`: disabled/secondary text (range row hover label)
 
 **Completion badge colors (authenticated sidebar only):**
+
 - 0–33%: `bg-red-50 text-red-600`
 - 34–66%: `bg-amber-50 text-amber-600`
 - 67–99%: `bg-blue-50 text-blue-600`
@@ -166,18 +171,18 @@ CatalogSidebar
 
 ## Copywriting Contract
 
-| Element | Copy |
-|---------|------|
-| Primary CTA | Not applicable — Phase 1 is read-only catalog browsing; no primary action |
-| Sidebar empty (no types loaded) | "Loading catalog..." |
-| Sidebar error | "Could not load catalog. Refresh to try again." |
-| Catalog grid empty state heading | "Select a range to browse" |
-| Catalog grid empty state body | "Choose a type and number range from the sidebar to see items." |
-| Catalog grid loading state | "Loading items..." (no skeleton in Phase 1 — simple text) |
-| Catalog grid error state | "Failed to load items. Refresh or select a different range." |
-| Image placeholder alt text | "{item name} — image not yet available" |
-| Completion badge tooltip (authenticated) | "{n} of {total} items in your collection" |
-| Completion badge tooltip (no items) | "No items collected yet in this range" |
+| Element                                  | Copy                                                                      |
+| ---------------------------------------- | ------------------------------------------------------------------------- |
+| Primary CTA                              | Not applicable — Phase 1 is read-only catalog browsing; no primary action |
+| Sidebar empty (no types loaded)          | "Loading catalog..."                                                      |
+| Sidebar error                            | "Could not load catalog. Refresh to try again."                           |
+| Catalog grid empty state heading         | "Select a range to browse"                                                |
+| Catalog grid empty state body            | "Choose a type and number range from the sidebar to see items."           |
+| Catalog grid loading state               | "Loading items..." (no skeleton in Phase 1 — simple text)                 |
+| Catalog grid error state                 | "Failed to load items. Refresh or select a different range."              |
+| Image placeholder alt text               | "{item name} — image not yet available"                                   |
+| Completion badge tooltip (authenticated) | "{n} of {total} items in your collection"                                 |
+| Completion badge tooltip (no items)      | "No items collected yet in this range"                                    |
 
 **No destructive actions in Phase 1.** Deletion, confirmation dialogs, and destructive copy are deferred to Phase 2 (list delete) and Phase 5 (admin delete).
 
@@ -187,17 +192,18 @@ CatalogSidebar
 
 Components to implement in Phase 1 (all using shadcn-svelte as base where applicable):
 
-| Component | shadcn-svelte base | Notes |
-|-----------|-------------------|-------|
-| `CatalogSidebar.svelte` | Accordion (for type rows) | Full sidebar wrapper with sticky positioning |
-| `SidebarTypeRow.svelte` | Accordion.Item | DiddlType label + chevron + optional completion badge |
-| `SidebarRangeRow.svelte` | none (plain `<a>`) | Range link; active state via URL param |
-| `CompletionBadge.svelte` | Badge | Color-coded by % threshold; authenticated only |
-| `CatalogGrid.svelte` | none | CSS grid wrapper; handles loading/empty/error states |
-| `CatalogItemCard.svelte` | Card | Image + name + number/edition |
-| `LazyImage.svelte` | none | Wraps `<img loading="lazy">` with intersection observer; shows placeholder until loaded |
+| Component                | shadcn-svelte base        | Notes                                                                                   |
+| ------------------------ | ------------------------- | --------------------------------------------------------------------------------------- |
+| `CatalogSidebar.svelte`  | Accordion (for type rows) | Full sidebar wrapper with sticky positioning                                            |
+| `SidebarTypeRow.svelte`  | Accordion.Item            | DiddlType label + chevron + optional completion badge                                   |
+| `SidebarRangeRow.svelte` | none (plain `<a>`)        | Range link; active state via URL param                                                  |
+| `CompletionBadge.svelte` | Badge                     | Color-coded by % threshold; authenticated only                                          |
+| `CatalogGrid.svelte`     | none                      | CSS grid wrapper; handles loading/empty/error states                                    |
+| `CatalogItemCard.svelte` | Card                      | Image + name + number/edition                                                           |
+| `LazyImage.svelte`       | none                      | Wraps `<img loading="lazy">` with intersection observer; shows placeholder until loaded |
 
 **shadcn-svelte components required from registry:**
+
 - `accordion` — for DiddlType expand/collapse in sidebar
 - `badge` — for completion percentage display
 - `card` — for catalog item cards
@@ -209,29 +215,34 @@ All three are from the shadcn-svelte official registry. No third-party registrie
 ## Interaction States
 
 ### Sidebar DiddlType Row
+
 - Default: closed accordion, shows type name + chevron-down icon
 - Hover: `bg-stone-100` background
 - Open: chevron rotates 180deg, range rows slide in below
 - Only one type open at a time is not enforced — multiple can be open simultaneously
 
 ### Sidebar Range Row
+
 - Default: `text-sm text-stone-600 pl-8 py-2`
 - Hover: `bg-stone-100 text-stone-900`
 - Active (selected): `bg-stone-900 text-white rounded-md`
 - Active state derives from URL search param (`?type=A4&from=1&to=100`)
 
 ### Catalog Item Card
+
 - Default: border + white bg
 - Hover: `shadow-md` elevation, no border color change
 - No click action in Phase 1 — cards are display-only (add-to-list is Phase 2)
 
 ### Image Loading
+
 - Before intersection: `bg-stone-100` placeholder with lucide `ImageOff` icon centered, `text-stone-300`
 - Loading (in viewport, fetch in progress): same placeholder (no spinner — lazy load is fast enough)
 - Loaded: fade-in via `transition-opacity duration-200`
 - Error (broken URL): fall back to placeholder permanently; no retry UI
 
 ### Completion Badge (authenticated)
+
 - Visible only when Clerk `user` is present in context
 - Positioned right-aligned in the range row
 - Not visible at the DiddlType header level in Phase 1 (aggregate % is Phase 2+)
@@ -240,8 +251,8 @@ All three are from the shadcn-svelte official registry. No third-party registrie
 
 ## Registry Safety
 
-| Registry | Blocks Used | Safety Gate |
-|----------|-------------|-------------|
+| Registry               | Blocks Used            | Safety Gate  |
+| ---------------------- | ---------------------- | ------------ |
 | shadcn-svelte official | accordion, badge, card | not required |
 
 No third-party registries declared for Phase 1.

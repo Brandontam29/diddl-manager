@@ -15,12 +15,12 @@ created: 2026-04-03
 
 ## Design System
 
-| Property          | Value                                          |
-| ----------------- | ---------------------------------------------- |
-| Tool              | shadcn-svelte                                  |
-| Preset            | stone base color, vega style                   |
-| Component library | bits-ui (shadcn-svelte default)                |
-| Icon library      | @lucide/svelte                                 |
+| Property          | Value                                           |
+| ----------------- | ----------------------------------------------- |
+| Tool              | shadcn-svelte                                   |
+| Preset            | stone base color, vega style                    |
+| Component library | bits-ui (shadcn-svelte default)                 |
+| Icon library      | @lucide/svelte                                  |
 | Font              | Inter Variable (via @fontsource-variable/inter) |
 
 Continues from Phase 1 design system. No changes to base configuration.
@@ -44,7 +44,7 @@ Declared values (must be multiples of 4):
 Exceptions:
 
 - Touch targets for toolbar actions and quantity stepper buttons: minimum 44px hit area (accessibility)
-- Color palette swatches: 28px diameter (7 * 4px, fits 8-point grid)
+- Color palette swatches: 28px diameter (7 \* 4px, fits 8-point grid)
 - Catalog card image area: fixed 160px height (inherited from Phase 1)
 
 ---
@@ -157,12 +157,12 @@ Inherited from Phase 1. No new sizes or weights.
 
 Inherited from Phase 1 shadcn-svelte stone theme. Uses CSS custom properties defined in `layout.css`.
 
-| Role            | CSS Variable        | Usage                                                         |
-| --------------- | ------------------- | ------------------------------------------------------------- |
-| Dominant (60%)  | `--background`      | Page background, sidebar background                           |
-| Secondary (30%) | `--card`            | Card surfaces, dialog surfaces, toolbar background            |
-| Accent (10%)    | `--primary`         | Primary action buttons, active sidebar row, select mode badge |
-| Destructive     | `--destructive`     | Delete list button, remove items action, destructive dialogs  |
+| Role            | CSS Variable    | Usage                                                         |
+| --------------- | --------------- | ------------------------------------------------------------- |
+| Dominant (60%)  | `--background`  | Page background, sidebar background                           |
+| Secondary (30%) | `--card`        | Card surfaces, dialog surfaces, toolbar background            |
+| Accent (10%)    | `--primary`     | Primary action buttons, active sidebar row, select mode badge |
+| Destructive     | `--destructive` | Delete list button, remove items action, destructive dialogs  |
 
 **Accent (`--primary` / stone-900) reserved for:**
 
@@ -221,45 +221,45 @@ Preset palette of 8 curated colors (D-02: Todoist/Google Keep style):
 
 ## Copywriting Contract
 
-| Element                               | Copy                                                                    |
-| ------------------------------------- | ----------------------------------------------------------------------- |
-| Primary CTA (lists overview)          | "Create List"                                                           |
-| Primary CTA (catalog select mode)     | "Add to List"                                                           |
-| Lists empty state heading             | "No lists yet"                                                          |
-| Lists empty state body                | "Create your first list to start tracking your Diddl collection."       |
-| Lists empty state CTA                 | "Create List"                                                           |
-| List detail empty state heading       | "This list is empty"                                                    |
-| List detail empty state body          | "Browse the catalog and add items, or toggle 'Show Unowned' to find items to add." |
-| Guest limit reached tooltip           | "Guests can create 1 list. Sign up for unlimited lists."                |
-| Delete list confirmation title        | "Delete List"                                                           |
-| Delete list confirmation body         | "Are you sure? This will permanently delete \"{listName}\" and {count} items." |
-| Delete list confirmation action       | "Delete"                                                                |
-| Delete list confirmation cancel       | "Keep List"                                                             |
-| Remove items confirmation (toolbar)   | "Remove {count} items from this list?"                                  |
-| Remove items action                   | "Remove"                                                                |
-| Toolbar selected count                | "{count} selected"                                                      |
-| Toolbar "Mark Complete" label         | "Complete"                                                              |
-| Toolbar "Mark Incomplete" label       | "Incomplete"                                                            |
-| Toolbar "Duplicate" label             | "Duplicate"                                                             |
-| Toolbar "Set Condition" label         | "Condition"                                                             |
-| Toolbar "Remove" label                | "Remove"                                                                |
-| Show unowned toggle label             | "Show Unowned"                                                          |
-| Show missing filter label             | "Missing Only"                                                          |
-| Condition values                      | Mint, Near Mint, Good, Poor, Damaged                                    |
-| Catalog select mode toggle            | "Select"                                                                |
-| Catalog select mode cancel            | "Done Selecting"                                                        |
-| Catalog select mode count             | "{count} selected"                                                      |
-| localStorage error toast              | "Storage full. Sign up to save your collection reliably."               |
-| localStorage unavailable toast        | "Local storage unavailable. Your changes won't be saved."               |
-| Sidebar owned/total format            | "{owned}/{total}"                                                       |
-| Completion percentage format          | "{percent}%"                                                            |
-| Create list dialog title              | "Create List"                                                           |
-| Create list dialog name label         | "Name"                                                                  |
-| Create list dialog name placeholder   | "My Collection"                                                         |
-| Create list dialog color label        | "Color"                                                                 |
-| Create list dialog submit             | "Create List"                                                           |
-| Edit list dialog title                | "Edit List"                                                             |
-| Edit list dialog submit               | "Save Changes"                                                          |
+| Element                             | Copy                                                                               |
+| ----------------------------------- | ---------------------------------------------------------------------------------- |
+| Primary CTA (lists overview)        | "Create List"                                                                      |
+| Primary CTA (catalog select mode)   | "Add to List"                                                                      |
+| Lists empty state heading           | "No lists yet"                                                                     |
+| Lists empty state body              | "Create your first list to start tracking your Diddl collection."                  |
+| Lists empty state CTA               | "Create List"                                                                      |
+| List detail empty state heading     | "This list is empty"                                                               |
+| List detail empty state body        | "Browse the catalog and add items, or toggle 'Show Unowned' to find items to add." |
+| Guest limit reached tooltip         | "Guests can create 1 list. Sign up for unlimited lists."                           |
+| Delete list confirmation title      | "Delete List"                                                                      |
+| Delete list confirmation body       | "Are you sure? This will permanently delete \"{listName}\" and {count} items."     |
+| Delete list confirmation action     | "Delete"                                                                           |
+| Delete list confirmation cancel     | "Keep List"                                                                        |
+| Remove items confirmation (toolbar) | "Remove {count} items from this list?"                                             |
+| Remove items action                 | "Remove"                                                                           |
+| Toolbar selected count              | "{count} selected"                                                                 |
+| Toolbar "Mark Complete" label       | "Complete"                                                                         |
+| Toolbar "Mark Incomplete" label     | "Incomplete"                                                                       |
+| Toolbar "Duplicate" label           | "Duplicate"                                                                        |
+| Toolbar "Set Condition" label       | "Condition"                                                                        |
+| Toolbar "Remove" label              | "Remove"                                                                           |
+| Show unowned toggle label           | "Show Unowned"                                                                     |
+| Show missing filter label           | "Missing Only"                                                                     |
+| Condition values                    | Mint, Near Mint, Good, Poor, Damaged                                               |
+| Catalog select mode toggle          | "Select"                                                                           |
+| Catalog select mode cancel          | "Done Selecting"                                                                   |
+| Catalog select mode count           | "{count} selected"                                                                 |
+| localStorage error toast            | "Storage full. Sign up to save your collection reliably."                          |
+| localStorage unavailable toast      | "Local storage unavailable. Your changes won't be saved."                          |
+| Sidebar owned/total format          | "{owned}/{total}"                                                                  |
+| Completion percentage format        | "{percent}%"                                                                       |
+| Create list dialog title            | "Create List"                                                                      |
+| Create list dialog name label       | "Name"                                                                             |
+| Create list dialog name placeholder | "My Collection"                                                                    |
+| Create list dialog color label      | "Color"                                                                            |
+| Create list dialog submit           | "Create List"                                                                      |
+| Edit list dialog title              | "Edit List"                                                                        |
+| Edit list dialog submit             | "Save Changes"                                                                     |
 
 ---
 
@@ -267,30 +267,30 @@ Preset palette of 8 curated colors (D-02: Todoist/Google Keep style):
 
 Components to implement in Phase 2:
 
-| Component                    | shadcn-svelte base | Notes                                                          |
-| ---------------------------- | ------------------ | -------------------------------------------------------------- |
-| `ListOverviewPage.svelte`    | none               | Page content for `/app/lists` — grid of list cards + create    |
-| `ListCard.svelte`            | Card               | Color bar, name, completion %, item count, edit/delete actions  |
-| `CreateListDialog.svelte`    | Dialog             | Name input + ColorPalette, enforces guest 1-list limit         |
-| `EditListDialog.svelte`      | Dialog             | Reuses same form as create, pre-populated                      |
-| `DeleteListDialog.svelte`    | AlertDialog        | Confirmation with item count in body                           |
-| `ListDetailPage.svelte`      | none               | Page content for `/app/lists/[id]` — sidebar + toolbar + grid  |
-| `ListItemCard.svelte`        | Card               | Image, name, quantity stepper, checkbox for selection           |
-| `ListToolbar.svelte`         | none               | Action bar: show unowned, missing filter, bulk actions          |
-| `ListSidebar.svelte`         | Accordion          | Category tree with owned/total counts toggle                   |
-| `ColorPalette.svelte`        | none (custom)      | 8 color swatches, selected state, callback prop                |
-| `QuantityStepper.svelte`     | Button             | Minus / count / Plus inline control                            |
-| `CatalogSelectToolbar.svelte`| none               | Toolbar overlay for catalog select mode                        |
+| Component                     | shadcn-svelte base | Notes                                                          |
+| ----------------------------- | ------------------ | -------------------------------------------------------------- |
+| `ListOverviewPage.svelte`     | none               | Page content for `/app/lists` — grid of list cards + create    |
+| `ListCard.svelte`             | Card               | Color bar, name, completion %, item count, edit/delete actions |
+| `CreateListDialog.svelte`     | Dialog             | Name input + ColorPalette, enforces guest 1-list limit         |
+| `EditListDialog.svelte`       | Dialog             | Reuses same form as create, pre-populated                      |
+| `DeleteListDialog.svelte`     | AlertDialog        | Confirmation with item count in body                           |
+| `ListDetailPage.svelte`       | none               | Page content for `/app/lists/[id]` — sidebar + toolbar + grid  |
+| `ListItemCard.svelte`         | Card               | Image, name, quantity stepper, checkbox for selection          |
+| `ListToolbar.svelte`          | none               | Action bar: show unowned, missing filter, bulk actions         |
+| `ListSidebar.svelte`          | Accordion          | Category tree with owned/total counts toggle                   |
+| `ColorPalette.svelte`         | none (custom)      | 8 color swatches, selected state, callback prop                |
+| `QuantityStepper.svelte`      | Button             | Minus / count / Plus inline control                            |
+| `CatalogSelectToolbar.svelte` | none               | Toolbar overlay for catalog select mode                        |
 
 **Existing components reused:**
 
-| Component                | Reuse Strategy                                                   |
-| ------------------------ | ---------------------------------------------------------------- |
-| `CatalogGrid.svelte`     | Used in list detail "show unowned" mode for unowned items        |
-| `CatalogItemCard.svelte` | Extended with optional checkbox prop for select mode             |
-| `CatalogSidebar.svelte`  | Pattern replicated in `ListSidebar.svelte` with count toggle     |
-| `CompletionBadge.svelte`  | Reused on list cards and list detail header                      |
-| `LazyImage.svelte`        | Reused in `ListItemCard.svelte` for item images                  |
+| Component                | Reuse Strategy                                               |
+| ------------------------ | ------------------------------------------------------------ |
+| `CatalogGrid.svelte`     | Used in list detail "show unowned" mode for unowned items    |
+| `CatalogItemCard.svelte` | Extended with optional checkbox prop for select mode         |
+| `CatalogSidebar.svelte`  | Pattern replicated in `ListSidebar.svelte` with count toggle |
+| `CompletionBadge.svelte` | Reused on list cards and list detail header                  |
+| `LazyImage.svelte`       | Reused in `ListItemCard.svelte` for item images              |
 
 **shadcn-svelte components to install (new for Phase 2):**
 
@@ -304,6 +304,7 @@ Components to implement in Phase 2:
 - `sonner` -- error toasts for localStorage failures (D-23)
 
 Install command:
+
 ```bash
 bun x shadcn-svelte@latest add dialog alert-dialog button checkbox dropdown-menu separator toggle sonner
 ```
@@ -416,8 +417,8 @@ Desktop-first for Phase 2 (consistent with Phase 1). No mobile breakpoints speci
 
 ## Registry Safety
 
-| Registry               | Blocks Used                                                                           | Safety Gate  |
-| ---------------------- | ------------------------------------------------------------------------------------- | ------------ |
+| Registry               | Blocks Used                                                                                                                | Safety Gate  |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------ |
 | shadcn-svelte official | accordion, badge, card (existing) + dialog, alert-dialog, button, checkbox, dropdown-menu, separator, toggle, sonner (new) | not required |
 
 No third-party registries declared for Phase 2.

@@ -81,64 +81,66 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ## Out of Scope
 
-| Feature | Reason |
-|---------|--------|
-| Marketplace / trading | No active Diddl secondary market; adds escrow/trust complexity |
-| Real-time price tracking | No market data source for Diddl collectibles |
-| Barcode / image scanning | Diddl items have no standardized barcodes |
-| Real-time collaborative list editing | Single-user tracker; collaboration adds conflict resolution |
-| Mobile native app | Web-first for v1; responsive web with good touch targets |
-| Notification / wantlist system | No active listings to notify about |
-| Complex grading rubric | Simple dropdown sufficient for non-traded collectibles |
-| Public collection profiles | Privacy-first for v1; revisit if community demand |
+| Feature                              | Reason                                                         |
+| ------------------------------------ | -------------------------------------------------------------- |
+| Marketplace / trading                | No active Diddl secondary market; adds escrow/trust complexity |
+| Real-time price tracking             | No market data source for Diddl collectibles                   |
+| Barcode / image scanning             | Diddl items have no standardized barcodes                      |
+| Real-time collaborative list editing | Single-user tracker; collaboration adds conflict resolution    |
+| Mobile native app                    | Web-first for v1; responsive web with good touch targets       |
+| Notification / wantlist system       | No active listings to notify about                             |
+| Complex grading rubric               | Simple dropdown sufficient for non-traded collectibles         |
+| Public collection profiles           | Privacy-first for v1; revisit if community demand              |
 
 ## Traceability
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
-| DATA-04 | Phase 1 | Pending |
-| DATA-05 | Phase 1 | Pending |
-| DATA-06 | Phase 1 | Pending |
-| DATA-07 | Phase 1 | Pending |
-| CATL-01 | Phase 1 | Pending |
-| CATL-02 | Phase 1 | Pending |
-| CATL-03 | Phase 1 | Pending |
-| CATL-04 | Phase 1 | Pending |
-| LIST-01 | Phase 2 | Pending |
-| LIST-02 | Phase 2 | Pending |
-| LIST-03 | Phase 2 | Pending |
-| LIST-04 | Phase 2 | Pending |
-| LIST-05 | Phase 2 | Pending |
-| LIST-06 | Phase 2 | Pending |
-| LIST-07 | Phase 2 | Pending |
-| LIST-08 | Phase 2 | Pending |
-| LIST-09 | Phase 2 | Pending |
-| LIST-10 | Phase 2 | Pending |
-| LIST-11 | Phase 2 | Pending |
-| LIST-12 | Phase 2 | Pending |
-| AUTH-01 | Phase 3 | Pending |
-| AUTH-02 | Phase 3 | Pending |
-| AUTH-03 | Phase 3 | Complete |
-| AUTH-04 | Phase 3 | Complete |
-| AUTH-05 | Phase 3 | Pending |
-| PROF-01 | Phase 4 | Pending |
-| PROF-02 | Phase 4 | Pending |
-| ADMN-01 | Phase 5 | Pending |
-| ADMN-02 | Phase 5 | Pending |
-| ADMN-03 | Phase 5 | Pending |
-| ADMN-04 | Phase 5 | Pending |
-| ADMN-05 | Phase 5 | Pending |
+| Requirement | Phase   | Status   |
+| ----------- | ------- | -------- |
+| DATA-01     | Phase 1 | Pending  |
+| DATA-02     | Phase 1 | Pending  |
+| DATA-03     | Phase 1 | Pending  |
+| DATA-04     | Phase 1 | Pending  |
+| DATA-05     | Phase 1 | Pending  |
+| DATA-06     | Phase 1 | Pending  |
+| DATA-07     | Phase 1 | Pending  |
+| CATL-01     | Phase 1 | Pending  |
+| CATL-02     | Phase 1 | Pending  |
+| CATL-03     | Phase 1 | Pending  |
+| CATL-04     | Phase 1 | Pending  |
+| LIST-01     | Phase 2 | Pending  |
+| LIST-02     | Phase 2 | Pending  |
+| LIST-03     | Phase 2 | Pending  |
+| LIST-04     | Phase 2 | Pending  |
+| LIST-05     | Phase 2 | Pending  |
+| LIST-06     | Phase 2 | Pending  |
+| LIST-07     | Phase 2 | Pending  |
+| LIST-08     | Phase 2 | Pending  |
+| LIST-09     | Phase 2 | Pending  |
+| LIST-10     | Phase 2 | Pending  |
+| LIST-11     | Phase 2 | Pending  |
+| LIST-12     | Phase 2 | Pending  |
+| AUTH-01     | Phase 3 | Pending  |
+| AUTH-02     | Phase 3 | Pending  |
+| AUTH-03     | Phase 3 | Complete |
+| AUTH-04     | Phase 3 | Complete |
+| AUTH-05     | Phase 3 | Pending  |
+| PROF-01     | Phase 4 | Pending  |
+| PROF-02     | Phase 4 | Pending  |
+| ADMN-01     | Phase 5 | Pending  |
+| ADMN-02     | Phase 5 | Pending  |
+| ADMN-03     | Phase 5 | Pending  |
+| ADMN-04     | Phase 5 | Pending  |
+| ADMN-05     | Phase 5 | Pending  |
 
 **Coverage:**
+
 - v1 requirements: 35 total
 - Mapped to phases: 35
 - Unmapped: 0
 
 ---
-*Requirements defined: 2026-04-02*
-*Last updated: 2026-04-02 — traceability populated after roadmap creation*
+
+_Requirements defined: 2026-04-02_
+_Last updated: 2026-04-02 — traceability populated after roadmap creation_

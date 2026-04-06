@@ -22,6 +22,7 @@ The top risks are (1) Convex catalog queries written without the `(type, number)
 The stack is brownfield-locked. The only additions required are three packages: `runed` for Svelte 5-native localStorage persistence (the only runes-idiomatic solution; `svelte-persisted-store` is explicitly unsettled for Svelte 5), `zod` promoted to a direct dependency at v4 (v4 is stable, the existing `convex-helpers` peer dep supports `^3.25.0 || ^4.0.0`, and riding it as a transitive dep is fragile), and `papaparse` for browser/server CSV parsing in the admin bulk import flow. Virtual scrolling is deferred — sidebar-range pagination keeps each view to ~100 items, which is well within direct DOM rendering limits. shadcn-svelte is deferred — Runes mode issues as of early 2025 make it inconsistent with the existing codebase pattern of raw Tailwind.
 
 **Core technologies:**
+
 - SvelteKit 2.55.0: Full-stack framework and routing — locked
 - Svelte 5 (Runes mode) 5.53.11: UI primitives; use `$state`, `$derived`, `$effect`, `$props` exclusively — locked
 - Convex 1.33.0: Database, reactive queries, file storage, serverless functions — locked
@@ -39,6 +40,7 @@ The stack is brownfield-locked. The only additions required are three packages: 
 Collector app research (Discogs, Panini Collectors, Coleka, TCGPlayer, MyFigureCollection) establishes a clear feature hierarchy for this domain.
 
 **Must have (table stakes):**
+
 - Catalog browsing with images — visual recognition is how collectors identify items; text-only fails
 - Add item to a list from catalog view — one-click or two-tap; the primary user action
 - Multiple lists per user — collectors segment by "Owned", "Wishlist", "For Trade", "Duplicate"
@@ -52,6 +54,7 @@ Collector app research (Discogs, Panini Collectors, Coleka, TCGPlayer, MyFigureC
 - Auth (Clerk login/signup) — persistent data across devices
 
 **Should have (differentiators):**
+
 - Duplicate a list item to tag differently — same catalog item, two physical copies in different condition; Discogs handles this poorly
 - "Missing items" filtered view per list — most common question after setup; reduces cognitive load
 - User profile page — personal identity layer; community foundation
@@ -60,6 +63,7 @@ Collector app research (Discogs, Panini Collectors, Coleka, TCGPlayer, MyFigureC
 - Add items to list from within list detail view — friction-reducing; ship after catalog-to-list flow works
 
 **Defer (v2+):**
+
 - Global search across all types — meaningful only after catalog is fully populated and users are power users
 - Multi-image UI — schema is ready; surface when catalog images are more complete
 - Social features, marketplace, public collection profiles, real-time price tracking, barcode scanning — all explicitly out of scope per PROJECT.md or have no data source for this niche collectible
@@ -69,6 +73,7 @@ Collector app research (Discogs, Panini Collectors, Coleka, TCGPlayer, MyFigureC
 The recommended architecture builds directly on the existing wired infrastructure (Clerk auth, Convex bindings, Effect service layer, SvelteKit routing) without re-architecting anything. The most important structural decision is the `ListStore` interface as an abstract seam between `GuestListStore` (Svelte 5 rune class, localStorage-backed) and `ConvexListStore` (Svelte 5 rune class, Convex-backed). Both implement the same interface so list UI components are identical regardless of auth state. The switchover from guest to authed store happens atomically in the root layout's `$effect` when Clerk signals a sign-in. All catalog queries must use the `(type, number)` compound Convex index and return image URLs (`ctx.storage.getUrl(storageId)`) alongside catalog data — the client should never call storage APIs directly. Admin write operations must go through `private/` Convex functions called from SvelteKit server routes, never through `authed/` functions called from the browser.
 
 **Major components:**
+
 1. `CatalogSidebar` + `CatalogGrid` + `CatalogItemCard` — catalog browsing layer; sidebar is pure navigation (no data fetch), grid fetches one bounded range via `useQuery` with `by_type_number` index
 2. `ListStore` interface / `GuestListStore` / `ConvexListStore` — list management seam; `ListsSidebar` and `ListDetail` consume only the interface
 3. `MigrationService` + `AuthStateWatcher` — guest-to-auth migration; reads localStorage, calls `authed/migration.importGuestData`, clears localStorage only on confirmed success
@@ -156,10 +161,12 @@ Based on research, the dependency graph is clear and dictates a five-phase order
 ### Research Flags
 
 Phases likely needing deeper research during planning:
+
 - **Phase 3 (Auth + Migration):** The exact `guestSessionId` idempotency key mechanism and Convex action coordination pattern for multi-step migration needs implementation-level design before coding starts.
 - **Phase 5 (Admin):** The `importJobs` progress tracking pattern (Convex document polled by `useQuery`) and the CSV validation/deduplication strategy for re-imports need upfront design. The Clerk admin role metadata field path in `ctx.auth.getUserIdentity()` needs verification during implementation.
 
 Phases with standard patterns (skip research-phase):
+
 - **Phase 1 (Schema + Catalog):** Convex schema definition and indexed queries are well-documented with official sources. The `storageId`/`getUrl` pattern is confirmed. No additional research needed.
 - **Phase 2 (Guest List Mode):** `runed` `PersistedState` is documented; `ListStore` interface is a standard strategy pattern. No additional research needed.
 - **Phase 4 (Profile):** Standard CRUD with Convex + image upload using the same flow established in Phase 1. No additional research needed.
@@ -168,12 +175,12 @@ Phases with standard patterns (skip research-phase):
 
 ## Confidence Assessment
 
-| Area | Confidence | Notes |
-|------|------------|-------|
-| Stack | HIGH | Existing stack is inspected from the codebase directly; new additions (runed, zod, papaparse) confirmed from official npm and docs |
-| Features | HIGH | Validated against 6+ comparable apps (Discogs, Panini Collectors, Coleka, TCGPlayer, MyFigureCollection, Classifier); feature set is well-understood for this domain |
-| Architecture | HIGH | Existing infrastructure inspected from codebase; Convex patterns verified from official docs; all major decisions have documented sources |
-| Pitfalls | HIGH | Pitfalls sourced from official Convex limits docs, official Svelte 5 GitHub issues, and confirmed real-world case studies (OpenClaw 17MB → 20KB optimization) |
+| Area         | Confidence | Notes                                                                                                                                                                |
+| ------------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Stack        | HIGH       | Existing stack is inspected from the codebase directly; new additions (runed, zod, papaparse) confirmed from official npm and docs                                   |
+| Features     | HIGH       | Validated against 6+ comparable apps (Discogs, Panini Collectors, Coleka, TCGPlayer, MyFigureCollection, Classifier); feature set is well-understood for this domain |
+| Architecture | HIGH       | Existing infrastructure inspected from codebase; Convex patterns verified from official docs; all major decisions have documented sources                            |
+| Pitfalls     | HIGH       | Pitfalls sourced from official Convex limits docs, official Svelte 5 GitHub issues, and confirmed real-world case studies (OpenClaw 17MB → 20KB optimization)        |
 
 **Overall confidence:** HIGH
 
@@ -189,6 +196,7 @@ Phases with standard patterns (skip research-phase):
 ## Sources
 
 ### Primary (HIGH confidence)
+
 - [Convex Paginated Queries](https://docs.convex.dev/database/pagination)
 - [Convex Queries That Scale](https://stack.convex.dev/queries-that-scale)
 - [Convex File Storage: Upload Files](https://docs.convex.dev/file-storage/upload-files)
@@ -204,6 +212,7 @@ Phases with standard patterns (skip research-phase):
 - Existing codebase inspection (`src/convex/`, `src/lib/`, `models/`)
 
 ### Secondary (MEDIUM confidence)
+
 - [Discogs Collection Feature](https://support.discogs.com/hc/en-us/articles/360007331534) — list and folder structure patterns
 - [Panini Collectors App](https://www.paninigroup.com/en/gb/panini-collectors-app) — completion tracking UX patterns
 - [Coleka on Google Play](https://play.google.com/store/apps/details?id=com.xnview.coleka) — general collectible tracker patterns
@@ -215,5 +224,6 @@ Phases with standard patterns (skip research-phase):
 - [shadcn-svelte Svelte 5 migration](https://www.shadcn-svelte.com/docs/migration/svelte-5)
 
 ---
-*Research completed: 2026-04-02*
-*Ready for roadmap: yes*
+
+_Research completed: 2026-04-02_
+_Ready for roadmap: yes_

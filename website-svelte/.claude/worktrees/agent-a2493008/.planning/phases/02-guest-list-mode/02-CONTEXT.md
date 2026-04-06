@@ -14,6 +14,7 @@ Users can create and manage collection lists with full item-level detail — all
 ## Implementation Decisions
 
 ### List Management UX
+
 - **D-01:** List creation uses a dialog/modal with name + color picker fields
 - **D-02:** Colors are a preset palette of 6-8 curated colors (Todoist/Google Keep style)
 - **D-03:** Lists live on a dedicated `/app/lists` page (not in the catalog sidebar)
@@ -21,6 +22,7 @@ Users can create and manage collection lists with full item-level detail — all
 - **D-05:** Guests are limited to 1 list. This is a hard constraint — incentivizes sign-up
 
 ### Adding Items to Lists
+
 - **D-06:** Catalog view uses select mode + bulk add — enter selection mode, check multiple items, then "Add selected to list"
 - **D-07:** List picker (when user has multiple lists — authed only since guests have 1): Claude's discretion on dropdown vs popover
 - **D-08:** List detail page has a "show unowned" toggle button — when enabled, shows catalog items NOT in the list alongside owned items
@@ -28,6 +30,7 @@ Users can create and manage collection lists with full item-level detail — all
 - **D-10:** No visual indicator on catalog cards showing whether item is in a list — keep catalog view clean
 
 ### Item Detail Editing (List Detail Page)
+
 - **D-11:** List items display as a grid of cards — each card shows image + name, with a quantity stepper (- / count / +) on the bottom-left corner
 - **D-12:** Multi-select by clicking top-left corner of cards (checkbox/selection indicator)
 - **D-13:** Action taskbar appears at top when 1+ cards selected. Actions: Duplicate, Mark Complete, Mark Incomplete, Set Condition (dropdown), Remove
@@ -38,6 +41,7 @@ Users can create and manage collection lists with full item-level detail — all
 - **D-18:** Sidebar in list detail page has a toggle to show owned/total counts per type (e.g., "A4 Sheets (12/150)")
 
 ### localStorage Store Design
+
 - **D-19:** Build the abstract ListStore interface now — GuestListStore (localStorage) and future ConvexListStore both implement it. Components code against the interface.
 - **D-20:** Simplified localStorage data shape — NOT an exact mirror of Convex schema. Use natural keys (type+number) to reference catalog items instead of Convex IDs. Phase 3 migration mapper transforms to Convex shape.
 - **D-21:** Svelte 5 runes ($state/$derived) for the store API. Reactive properties that components subscribe to. Consistent with modern Svelte 5 patterns and enables fine-grained reactivity for frequently-changing list data.
@@ -46,6 +50,7 @@ Users can create and manage collection lists with full item-level detail — all
 - **D-24:** Svelte reactivity handles cross-component updates — no custom event bus. Mutations to $state trigger reactive updates automatically.
 
 ### Claude's Discretion
+
 - List picker UI for authed users with multiple lists (D-07)
 - Exact preset color palette choices
 - Taskbar visual design and positioning
@@ -54,15 +59,18 @@ Users can create and manage collection lists with full item-level detail — all
 </decisions>
 
 <canonical_refs>
+
 ## Canonical References
 
 **Downstream agents MUST read these before planning or implementing.**
 
 ### Schema & Data Model
+
 - `src/convex/schema.ts` — Defines `lists` and `listItems` tables with all fields, indexes, and condition enum values
 - `models/list-models.ts` — Original Zod schemas for list/listItem (reference only — Convex schema is source of truth for field names)
 
 ### Existing UI Patterns
+
 - `src/lib/components/catalog/CatalogGrid.svelte` — Grid layout pattern to follow for list item grid
 - `src/lib/components/catalog/CatalogItemCard.svelte` — Card component pattern for catalog items
 - `src/lib/components/catalog/CatalogSidebar.svelte` — Sidebar with category tree to replicate in list detail page
@@ -70,21 +78,26 @@ Users can create and manage collection lists with full item-level detail — all
 - `src/lib/components/catalog/LazyImage.svelte` — Image lazy loading pattern
 
 ### Store Patterns
+
 - `src/lib/stores/clerk.svelte.ts` — Existing Svelte 5 runes store pattern (context-based with getters/setters)
 
 ### UI Framework
+
 - `src/lib/components/ui/` — shadcn-svelte components (badge, card, accordion already installed)
 
 ### State & Architecture
+
 - `.planning/STATE.md` — Notes on ListStore abstract seam decision and migration idempotency key
 - `.planning/research/SUMMARY.md` — Research summary noting ListStore interface must be defined before list UI
 
 </canonical_refs>
 
 <code_context>
+
 ## Existing Code Insights
 
 ### Reusable Assets
+
 - `CatalogGrid.svelte` — Responsive grid layout; pattern can be replicated for list item grid
 - `CatalogItemCard.svelte` — Card component with image display; list item cards follow similar structure
 - `CatalogSidebar.svelte` — Category tree sidebar; reuse in list detail page for filtering
@@ -93,12 +106,14 @@ Users can create and manage collection lists with full item-level detail — all
 - shadcn-svelte `Badge`, `Card`, `Accordion` components installed
 
 ### Established Patterns
+
 - Svelte 5 runes for state management ($state, $derived, $props)
 - Convex `useQuery()` for reactive data fetching (will inform ConvexListStore interface)
 - URL search params for filtering (type, from, to in catalog page)
 - ClerkStore: context-based store with getter/setter functions
 
 ### Integration Points
+
 - `/app/lists` — New route for list overview page
 - `/app/lists/[id]` — New route for list detail page
 - `src/routes/app/+layout.svelte` — May need nav updates to include lists link
@@ -128,5 +143,5 @@ None — discussion stayed within phase scope
 
 ---
 
-*Phase: 02-guest-list-mode*
-*Context gathered: 2026-04-03*
+_Phase: 02-guest-list-mode_
+_Context gathered: 2026-04-03_

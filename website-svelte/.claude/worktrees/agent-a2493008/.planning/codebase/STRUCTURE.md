@@ -62,62 +62,73 @@ website-svelte/
 ## Directory Purposes
 
 **`src/routes/`:**
+
 - Purpose: SvelteKit page and layout files (file-based routing)
 - Contains: +page.svelte (pages), +layout.svelte (layouts), +page.ts (server loaders), +layout.ts (route config)
 - Key files: `+layout.svelte` (root HTML shell), `app/+layout.svelte` (auth wrapper), `app/+page.svelte` (main app)
 
 **`src/convex/`:**
+
 - Purpose: Convex backend schema, auth config, and functions (client-facing and private)
 - Contains: Schema definitions, function handlers, auth configuration
 - Key files: `schema.ts` (database tables), `auth.config.ts` (Clerk JWT), `authed/` (public functions), `private/` (backend-only functions)
 
 **`src/convex/_generated/`:**
+
 - Purpose: Auto-generated type definitions from Convex schema and functions
 - Contains: Type stubs for client imports, data model types
 - Key files: `api.d.ts` (import this as `import { api } from 'path/to/_generated/api'`)
 - **IMPORTANT:** Auto-generated; never edit directly. Regenerate after schema changes with `bun run convex:gen`
 
 **`src/convex/authed/`:**
+
 - Purpose: Functions that require user authentication (called from client)
 - Contains: Wrapped queries/mutations using `authedQuery()`, `authedMutation()` helpers
 - Pattern: Each handler receives `ctx` with identity, args validated via `v.*` validators
 - Examples: `conferences.ts` (list/create/update/delete), `demo.ts` (demo query)
 
 **`src/convex/private/`:**
+
 - Purpose: Functions called only from SvelteKit backend via API key
 - Contains: Wrapped queries/mutations using `privateQuery()`, `privateMutation()` helpers
 - Pattern: Each handler receives `ctx`, validates `CONVEX_PRIVATE_BRIDGE_KEY` via helper
 - Examples: `demo.ts` (demo query)
 
 **`src/lib/`:**
+
 - Purpose: Reusable code shared across routes (components, stores, services)
 - Contains: Services (Effect), stores (state), components, wrappers, utilities
 - Key files: `runtime.ts` (Effect setup), `convex-env.ts` (URL resolution), `app.d.ts` (types)
 
 **`src/lib/services/`:**
+
 - Purpose: Effect service definitions for external integrations
 - Contains: ConvexPrivateService, ClerkService as ServiceMap.Service instances
 - Pattern: Each service is a `Layer` factory that returns typed operation methods
 - Usage: Composed in Effect.gen() chains, injected by ManagedRuntime
 
 **`src/lib/remote/`:**
+
 - Purpose: SvelteKit remote functions (server-side queries, called from components)
 - Contains: Functions using SvelteKit's `query()` from `$app/server`, Effect.gen() chains
 - Pattern: Each function yields services, returns JSON to client, errors caught by effectRunner
 - Examples: `demo.remote.ts` (privateDemoQuery, authedDemoQuery)
 
 **`src/lib/stores/`:**
+
 - Purpose: Reactive client-side state
 - Contains: Svelte 5 runes-based state classes and helpers
 - Pattern: Extend state via `$state`, computed via `$derived`, effects via `$effect`
 - Examples: `clerk.svelte.ts` (ClerkStore singleton with user/session/org)
 
 **`src/lib/components/`:**
+
 - Purpose: Reusable Svelte components
 - Contains: UI components (buttons, forms, error displays)
 - Examples: `PageError.svelte` (parses and displays App.Error)
 
 **`src/lib/wrappers/`:**
+
 - Purpose: Context-providing wrapper components
 - Contains: Svelte components that set up providers and state
 - Examples: `ClerkWrapper.svelte` (initializes Clerk), `ConvexWrapper.svelte` (sets up WebSocket)
@@ -125,18 +136,21 @@ website-svelte/
 ## Key File Locations
 
 **Entry Points:**
+
 - `src/routes/+layout.svelte`: Root HTML shell, loaded for all routes
 - `src/routes/app/+layout.svelte`: Wraps `/app/**` routes in auth/Convex context
 - `src/routes/app/+page.svelte`: Main application UI (conferences list)
 - `src/routes/app/references/+page.svelte`: Pattern reference page
 
 **Configuration:**
+
 - `convex.json`: Convex deployment URL, API credentials (checked into git, secrets in env)
 - `tsconfig.json`: TypeScript compiler options
 - `svelte.config.js`: SvelteKit adapter (Vercel), preprocessing
 - `vite.config.ts`: Bundler config, Convex plugin
 
 **Core Logic:**
+
 - `src/lib/runtime.ts`: Effect runtime, effectRunner, error types (GenericError, ConvexError, ClerkError)
 - `src/lib/services/convex.ts`: ConvexPrivateService (backend→Convex calls with error handling)
 - `src/lib/services/clerk.ts`: ClerkService (backend auth validation)
@@ -144,11 +158,13 @@ website-svelte/
 - `src/convex/authed/conferences.ts`: Conference CRUD mutations/queries
 
 **Testing:**
+
 - No test files detected in codebase (testing setup not implemented)
 
 ## Naming Conventions
 
 **Files:**
+
 - `.svelte` for Svelte components (e.g., `PageError.svelte`, `ConvexWrapper.svelte`)
 - `.ts` for TypeScript utilities and scripts (e.g., `runtime.ts`, `convex.ts`)
 - `.remote.ts` for SvelteKit remote functions (e.g., `demo.remote.ts`)
@@ -158,21 +174,25 @@ website-svelte/
 - `schema.ts` for Convex data model definitions
 
 **Directories:**
+
 - `authed/` for client-facing Convex functions
 - `private/` for backend-only Convex functions
 - `_generated/` for auto-generated code (never edit)
 - `src/routes/` follows URL structure (e.g., `app/references/+page.svelte` → `/app/references`)
 
 **Functions:**
+
 - camelCase for function names (e.g., `authedQuery`, `privateMutation`, `effectRunner`)
 - Uppercase for class names (e.g., `ClerkStore`, `ConvexError`, `ClerkService`)
 - Suffixed with `Service` for Effect service classes (e.g., `ConvexPrivateService`)
 
 **Variables:**
+
 - camelCase for variables and constants (e.g., `clerkContext`, `convex`, `CONVEX_URL`)
 - UPPERCASE for environment variables (e.g., `CONVEX_PRIVATE_BRIDGE_KEY`, `PUBLIC_CLERK_PUBLISHABLE_KEY`)
 
 **Types:**
+
 - PascalCase for types and interfaces (e.g., `ClerkError`, `ConvexError`, `GenericError`)
 - Suffixed with `Error` for error types
 - Suffixed with `Service` for Effect service types
@@ -180,50 +200,58 @@ website-svelte/
 ## Where to Add New Code
 
 **New Feature (Conference Management):**
+
 - Convex mutations: `src/convex/authed/conferences.ts` (add new mutation export)
 - Convex queries: `src/convex/authed/conferences.ts` (add new query export)
 - UI component: `src/routes/app/+page.svelte` (add form/list section)
 - After changes: Run `bun run convex:gen` to regenerate types
 
 **New External Service Integration:**
+
 - Create service: `src/lib/services/newservice.ts` (extend ServiceMap.Service, define Layer)
 - Add to runtime: `src/lib/runtime.ts` (merge layer into appLayer)
 - Create error type: Define in service file (e.g., `NewServiceError extends Data.TaggedError`)
 - Add to effectRunner: Handle error in logging and status code mapping
-- Use in remote: `src/lib/remote/*.remote.ts` (yield* NewService in Effect.gen())
+- Use in remote: `src/lib/remote/*.remote.ts` (yield\* NewService in Effect.gen())
 
 **New Route/Page:**
+
 - Create layout: `src/routes/[section]/+layout.svelte` (wrap with wrappers if under `/app`)
 - Create page: `src/routes/[section]/+page.svelte` (use useQuery/useConvexClient for Convex, await remote functions)
 - Server loader: `src/routes/[section]/+page.ts` (optional, for load function or page config)
 
 **New Component:**
+
 - Create file: `src/lib/components/NewComponent.svelte` with `lang="ts"`
 - Import in routes: `import NewComponent from '$lib/components/NewComponent.svelte'`
 - Use Tailwind for styling, avoid custom CSS unless necessary
 
 **Utilities/Helpers:**
+
 - Shared helpers: `src/lib/` (create new .ts file, e.g., `formatters.ts`, `validators.ts`)
 - Component utilities: `src/lib/components/` (if tightly coupled to components)
 
 ## Special Directories
 
 **`src/convex/_generated/`:**
+
 - Purpose: Auto-generated type stubs from Convex backend
 - Generated: Yes (by `bun run convex:gen`)
 - Committed: Yes (commit generated code to git)
 - **Action required:** After modifying `schema.ts` or any function signature, run `bun run convex:gen` before committing
 
 **`node_modules/`:**
+
 - Purpose: Installed npm/bun dependencies
 - Generated: Yes (from package.json + lockfile)
 - Committed: No (use .gitignore)
 
 **`.svelte-kit/`:**
+
 - Purpose: SvelteKit build cache and generated types
 - Generated: Yes (by `svelte-kit sync`)
 - Committed: No (use .gitignore)
 
 ---
 
-*Structure analysis: 2026-04-02*
+_Structure analysis: 2026-04-02_

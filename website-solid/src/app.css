@@ -1,0 +1,126 @@
+@import "@fontsource-variable/manrope";
+@import "@fontsource-variable/newsreader";
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  --background: 36 100% 98%;
+  --foreground: 20 28% 14%;
+  --card: 35 57% 96%;
+  --card-foreground: 20 28% 14%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 28% 14%;
+  --primary: 18 75% 48%;
+  --primary-foreground: 44 100% 98%;
+  --secondary: 40 61% 92%;
+  --secondary-foreground: 24 22% 20%;
+  --muted: 35 44% 92%;
+  --muted-foreground: 24 10% 42%;
+  --accent: 148 32% 90%;
+  --accent-foreground: 156 44% 20%;
+  --destructive: 3 76% 56%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 27 33% 82%;
+  --input: 27 33% 82%;
+  --ring: 18 75% 48%;
+  --success: 144 45% 88%;
+  --success-foreground: 155 56% 28%;
+  --warning: 45 100% 88%;
+  --warning-foreground: 26 86% 38%;
+  --error: 6 100% 93%;
+  --error-foreground: 4 78% 43%;
+  --radius: 1.5rem;
+}
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-error: hsl(var(--error));
+  --color-error-foreground: hsl(var(--error-foreground));
+  --radius-sm: calc(var(--radius) - 0.5rem);
+  --radius-md: calc(var(--radius) - 0.25rem);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.5rem);
+  --font-sans: "Manrope Variable", "Manrope", sans-serif;
+  --font-serif: "Newsreader Variable", serif;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen bg-background font-sans text-foreground antialiased;
+    background-image:
+      radial-gradient(circle at top left, rgba(246, 143, 86, 0.18), transparent 32%),
+      radial-gradient(circle at 85% 18%, rgba(108, 170, 138, 0.18), transparent 28%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 250, 243, 0.94));
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.18);
+  }
+}
+
+@layer utilities {
+  .page-shell {
+    position: relative;
+  }
+
+  .page-shell::before {
+    content: "";
+    position: fixed;
+    inset: auto auto -10rem -8rem;
+    height: 22rem;
+    width: 22rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(217, 114, 58, 0.18), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .page-shell::after {
+    content: "";
+    position: fixed;
+    inset: 6rem -8rem auto auto;
+    height: 20rem;
+    width: 20rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(85, 152, 121, 0.15), transparent 68%);
+    pointer-events: none;
+    z-index: -1;
+  }
+}

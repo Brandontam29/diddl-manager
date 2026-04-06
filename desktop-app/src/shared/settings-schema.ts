@@ -4,15 +4,6 @@ const ZOOM_HEIGHT_MAP = { sm: 215, md: 240, lg: 280, xl: 320 } as const;
 
 type ZoomLevel = keyof typeof ZOOM_HEIGHT_MAP;
 
-type Invert<TObj extends Record<PropertyKey, PropertyKey>> = {
-  [K in keyof TObj as TObj[K]]: K;
-};
-
-const HEIGHT_ZOOM_MAP = Object.entries(ZOOM_HEIGHT_MAP).reduce((acc, [key, value]) => {
-  acc[value] = key;
-  return acc;
-}, {}) as Invert<typeof ZOOM_HEIGHT_MAP>;
-
 export type { ZoomLevel };
 
 export const settingsSchema = z.object({

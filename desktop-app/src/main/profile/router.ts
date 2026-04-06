@@ -1,11 +1,10 @@
 import { copyFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { updateProfileSchema } from "../../shared";
-import { logging } from "../logging";
+import { toTrpcError } from "../errors";
 import { userImagesPath } from "../pathing";
 import { publicProcedure, router } from "../trpc/trpc";
 
@@ -32,8 +31,10 @@ export const profileRouter = router({
 
       return profile;
     } catch (e) {
-      logging.error(`Error fetching profile: ${e}`);
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to fetch profile" });
+      throw toTrpcError(e, {
+        fallbackMessage: "Failed to fetch profile",
+        operation: "profile.get",
+      });
     }
   }),
 
@@ -63,10 +64,9 @@ export const profileRouter = router({
 
       return profile;
     } catch (e) {
-      logging.error(`Error updating user profile: ${e}`);
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to update profile",
+      throw toTrpcError(e, {
+        fallbackMessage: "Failed to update profile",
+        operation: "profile.update",
       });
     }
   }),
@@ -86,10 +86,10 @@ export const profileRouter = router({
 
         return { path: destPath };
       } catch (e) {
-        logging.error(`Error updating user picture: ${e}`);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to update profile picture",
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to update profile picture",
+          operation: "profile.updatePicture",
+          details: { sourcePath: input.filePath },
         });
       }
     }),

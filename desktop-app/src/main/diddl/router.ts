@@ -1,42 +1,54 @@
 import { rm } from "node:fs/promises";
 
-import { TRPCError } from "@trpc/server";
-
-import { logging } from "../logging";
+import { toTrpcError } from "../errors";
 import { diddlImagesPath } from "../pathing";
 import { publicProcedure, router } from "../trpc/trpc";
 import setupDiddlImages from "./setupDiddlImages";
 
 export const diddlRouter = router({
   getAll: publicProcedure.query(async ({ ctx }) => {
-    const diddls = await ctx.db
-      .selectFrom("diddl")
-      .select([
-        "diddl.id",
-        "diddl.name",
-        "diddl.type",
-        "diddl.imagePath",
-        "diddl.imageWidth",
-        "diddl.imageHeight",
-      ])
-      .execute();
+    try {
+      const diddls = await ctx.db
+        .selectFrom("diddl")
+        .select([
+          "diddl.id",
+          "diddl.name",
+          "diddl.type",
+          "diddl.imagePath",
+          "diddl.imageWidth",
+          "diddl.imageHeight",
+        ])
+        .execute();
 
-    return diddls;
+      return diddls;
+    } catch (e) {
+      throw toTrpcError(e, {
+        fallbackMessage: "Failed to fetch diddls",
+        operation: "diddl.getAll",
+      });
+    }
   }),
 
   fixImages: publicProcedure.mutation(async () => {
     try {
       await rm(diddlImagesPath(), { recursive: true, force: true });
-      logging.info(`Directory ${diddlImagesPath()} deleted successfully.`);
     } catch (err) {
-      logging.error(`Error deleting directory: ${err}`);
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to delete diddl images directory",
+      throw toTrpcError(err, {
+        fallbackMessage: "Failed to delete diddl images directory",
+        operation: "diddl.fixImages",
+        details: { imagePath: diddlImagesPath() },
       });
     }
 
-    await setupDiddlImages();
-    return { success: true };
+    try {
+      await setupDiddlImages();
+      return { success: true };
+    } catch (error) {
+      throw toTrpcError(error, {
+        fallbackMessage: "Failed to rebuild diddl images directory",
+        operation: "diddl.fixImages",
+        details: { imagePath: diddlImagesPath() },
+      });
+    }
   }),
 });

@@ -6,6 +6,7 @@ import type { Document } from "yaml";
 import YAML from "yaml";
 import { z } from "zod";
 
+import { AppError, internalAppError, preconditionFailedError } from "../errors";
 import { logging } from "../logging";
 import ensureFileExists from "../utils/ensureFileExists";
 
@@ -23,17 +24,47 @@ export class YamlHandler<TSchema extends z.ZodType> {
 
   public load() {
     return ResultAsync.fromPromise(fs.readFile(this.filePath, "utf8"), toError)
-      .map((content) => {
+      .andThen((content) => {
         this.document = YAML.parseDocument(content);
-        return null;
+
+        if (this.document.errors.length > 0) {
+          return this.liftResult(
+            err(
+              preconditionFailedError(
+                "CONFIG_INVALID",
+                "Configuration file contains invalid YAML",
+                {
+                  filePath: this.filePath,
+                  issues: this.document.errors.map((error) => error.message),
+                },
+              ),
+            ),
+          );
+        }
+
+        return this.liftResult(ok(null));
       })
       .orElse((e) => {
         if ((e as any).code === "ENOENT") {
           this.document = new YAML.Document({});
           return ok(null);
         }
+
+        if (e instanceof AppError) {
+          return err(e);
+        }
+
         logging.error("YamlHandler", e);
-        return err(e);
+        return err(
+          internalAppError(
+            "CONFIG_READ_FAILED",
+            "Failed to read configuration file",
+            {
+              filePath: this.filePath,
+            },
+            e,
+          ),
+        );
       });
   }
 
@@ -80,7 +111,21 @@ export class YamlHandler<TSchema extends z.ZodType> {
     if (result.success) {
       return ok(result.data);
     }
-    return err(result.error);
+    return err(
+      preconditionFailedError(
+        "CONFIG_INVALID",
+        "Configuration file does not match the expected schema",
+        {
+          filePath: this.filePath,
+          issues: result.error.issues.map((issue) => ({
+            code: issue.code,
+            path: issue.path.join("."),
+            message: issue.message,
+          })),
+        },
+        result.error,
+      ),
+    );
   }
 
   private saveToDisk(content: string) {
@@ -89,7 +134,15 @@ export class YamlHandler<TSchema extends z.ZodType> {
         await ensureFileExists(this.filePath);
         await fs.writeFile(this.filePath, content, "utf8");
       })(),
-      toError,
+      (error) =>
+        internalAppError(
+          "CONFIG_WRITE_FAILED",
+          "Failed to write configuration file",
+          {
+            filePath: this.filePath,
+          },
+          toError(error),
+        ),
     );
   }
 }

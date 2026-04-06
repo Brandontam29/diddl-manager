@@ -1,8 +1,8 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { settingsSchema } from "../../shared/settings-schema";
 import { uiStateSchema } from "../../shared/ui-state-schema";
+import { toTrpcError } from "../errors";
 import { settingsPath, uiStatePath } from "../pathing";
 import { publicProcedure, router } from "../trpc/trpc";
 import { YamlHandler } from "./yaml-handler";
@@ -16,10 +16,10 @@ export const configRouter = router({
     return result.match(
       (data) => data,
       (e) => {
-        console.error(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to read settings",
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to read settings",
+          operation: "config.getSettings",
+          details: { file: "settings" },
         });
       },
     );
@@ -32,10 +32,10 @@ export const configRouter = router({
       return result.match(
         () => ({ success: true as const }),
         (e) => {
-          console.error(e);
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to update setting",
+          throw toTrpcError(e, {
+            fallbackMessage: "Failed to update setting",
+            operation: "config.updateSetting",
+            details: { file: "settings", keyPath: input.keyPath },
           });
         },
       );
@@ -46,10 +46,10 @@ export const configRouter = router({
     return result.match(
       (data) => data,
       (e) => {
-        console.error(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to read UI state",
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to read UI state",
+          operation: "config.getUiState",
+          details: { file: "uiState" },
         });
       },
     );
@@ -62,10 +62,10 @@ export const configRouter = router({
       return result.match(
         () => ({ success: true as const }),
         (e) => {
-          console.error(e);
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to update UI state",
+          throw toTrpcError(e, {
+            fallbackMessage: "Failed to update UI state",
+            operation: "config.updateUiState",
+            details: { file: "uiState", keyPath: input.keyPath },
           });
         },
       );

@@ -1,11 +1,10 @@
 import fs from "node:fs/promises";
-import path from "path";
 
-import { afterEach, beforeEach, describe, expect, it, mock, spyOn } from "bun:test";
+import { beforeEach, describe, expect, it, mock, spyOn } from "bun:test";
 import { z } from "zod";
 
+import { AppError } from "../errors/app-error";
 import * as ensureFileExistsModule from "../utils/ensureFileExists";
-import { YamlHandler } from "./yaml-handler";
 
 // Mock Electron module to handle deep imports
 mock.module("electron", () => ({
@@ -40,6 +39,8 @@ mock.module("../logging", () => ({
   },
 }));
 
+const { YamlHandler } = await import("./yaml-handler");
+
 describe("YamlHandler", () => {
   const schema = z.object({
     name: z.string(),
@@ -47,7 +48,7 @@ describe("YamlHandler", () => {
   });
 
   const filePath = "test-config.yaml";
-  let handler: YamlHandler<typeof schema>;
+  let handler = new YamlHandler(schema, filePath);
 
   beforeEach(() => {
     handler = new YamlHandler(schema, filePath);
@@ -69,7 +70,7 @@ describe("YamlHandler", () => {
     });
 
     it("should handle ENOENT by creating an empty document", async () => {
-      const error: any = new Error("File not found");
+      const error: Error & { code?: string } = new Error("File not found");
       error.code = "ENOENT";
       mockReadFile.mockRejectedValue(error);
 
@@ -86,6 +87,21 @@ describe("YamlHandler", () => {
       const result = await handler.load();
       expect(result.isErr()).toBe(true);
       expect(mockLoggingError).toHaveBeenCalled();
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppError);
+    });
+
+    it("should return a config validation error for malformed YAML", async () => {
+      mockReadFile.mockResolvedValue("name: broken\nvalue: [");
+
+      const result = await handler.load();
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppError);
+      const appError = result._unsafeUnwrapErr();
+      if (!(appError instanceof AppError)) {
+        throw new Error("Expected AppError");
+      }
+      expect(appError.appCode).toBe("CONFIG_INVALID");
     });
   });
 
@@ -101,6 +117,12 @@ describe("YamlHandler", () => {
       mockReadFile.mockResolvedValue("name: valid\nvalue: not-a-number");
       const result = await handler.read();
       expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppError);
+      const appError = result._unsafeUnwrapErr();
+      if (!(appError instanceof AppError)) {
+        throw new Error("Expected AppError");
+      }
+      expect(appError.appCode).toBe("CONFIG_INVALID");
     });
   });
 
@@ -129,6 +151,12 @@ describe("YamlHandler", () => {
       const result = await handler.update(["value"], "invalid-string");
       expect(result.isErr()).toBe(true);
       expect(mockWriteFile).not.toHaveBeenCalled();
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppError);
+      const appError = result._unsafeUnwrapErr();
+      if (!(appError instanceof AppError)) {
+        throw new Error("Expected AppError");
+      }
+      expect(appError.appCode).toBe("CONFIG_INVALID");
     });
   });
 

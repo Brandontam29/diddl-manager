@@ -1,7 +1,7 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { addListItemSchema, listItemFilterSchema } from "../../shared";
+import { notFoundError, toTrpcError } from "../errors";
 import { logging } from "../logging";
 import { publicProcedure, router } from "../trpc/trpc";
 
@@ -31,8 +31,10 @@ export const listRouter = router({
 
       return lists;
     } catch (e) {
-      logging.error(e);
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to fetch lists" });
+      throw toTrpcError(e, {
+        fallbackMessage: "Failed to fetch lists",
+        operation: "list.getAll",
+      });
     }
   }),
 
@@ -80,8 +82,11 @@ export const listRouter = router({
           return newList;
         });
       } catch (e) {
-        logging.error(e);
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create list" });
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to create list",
+          operation: "list.create",
+          details: { diddlCount: input.diddlIds.length },
+        });
       }
     }),
 
@@ -89,14 +94,21 @@ export const listRouter = router({
     .input(z.object({ listId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.db
+        const result = await ctx.db
           .updateTable("list")
           .set({ deletedAt: new Date().toISOString() })
           .where("id", "=", input.listId)
-          .execute();
+          .executeTakeFirst();
+
+        if (!result || Number(result.numUpdatedRows) === 0) {
+          throw notFoundError("List not found", { listId: input.listId });
+        }
       } catch (e) {
-        logging.error(e);
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to delete list" });
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to delete list",
+          operation: "list.delete",
+          details: { listId: input.listId },
+        });
       }
     }),
 
@@ -104,16 +116,20 @@ export const listRouter = router({
     .input(z.object({ listId: z.number(), color: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.db
+        const result = await ctx.db
           .updateTable("list")
           .set({ color: input.color })
           .where("id", "=", input.listId)
-          .execute();
+          .executeTakeFirst();
+
+        if (!result || Number(result.numUpdatedRows) === 0) {
+          throw notFoundError("List not found", { listId: input.listId });
+        }
       } catch (e) {
-        logging.error(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to update list color",
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to update list color",
+          operation: "list.updateColor",
+          details: { listId: input.listId },
         });
       }
     }),
@@ -122,16 +138,20 @@ export const listRouter = router({
     .input(z.object({ listId: z.number(), name: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.db
+        const result = await ctx.db
           .updateTable("list")
           .set({ name: input.name, updatedAt: new Date().toISOString() })
           .where("id", "=", input.listId)
-          .execute();
+          .executeTakeFirst();
+
+        if (!result || Number(result.numUpdatedRows) === 0) {
+          throw notFoundError("List not found", { listId: input.listId });
+        }
       } catch (e) {
-        logging.error(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to update list name",
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to update list name",
+          operation: "list.updateName",
+          details: { listId: input.listId },
         });
       }
     }),
@@ -148,7 +168,7 @@ export const listRouter = router({
           .executeTakeFirst();
 
         if (!list) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "List not found" });
+          throw notFoundError("List not found", { listId: input.listId });
         }
 
         let query = ctx.db
@@ -194,11 +214,10 @@ export const listRouter = router({
 
         return items;
       } catch (e) {
-        if (e instanceof TRPCError) throw e;
-        logging.error(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch list details",
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to fetch list details",
+          operation: "list.items",
+          details: { listId: input.listId },
         });
       }
     }),
@@ -219,10 +238,10 @@ export const listRouter = router({
 
         return { success: true as const };
       } catch (e) {
-        logging.error(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to add list items",
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to add list items",
+          operation: "list.addItems",
+          details: { listId: input.listId, itemCount: input.items.length },
         });
       }
     }),
@@ -239,10 +258,10 @@ export const listRouter = router({
 
         return { success: true as const };
       } catch (e) {
-        logging.error(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to remove list items",
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to remove list items",
+          operation: "list.removeItems",
+          details: { listId: input.listId, listItemIds: input.listItemIds },
         });
       }
     }),
@@ -258,7 +277,7 @@ export const listRouter = router({
           .executeTakeFirst();
 
         if (!sourceItem) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "List item not found" });
+          throw notFoundError("List item not found", { listItemId: input.listItemId });
         }
 
         await ctx.db
@@ -274,11 +293,10 @@ export const listRouter = router({
 
         return { success: true as const };
       } catch (e) {
-        if (e instanceof TRPCError) throw e;
-        logging.error(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to duplicate list item",
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to duplicate list item",
+          operation: "list.duplicateItem",
+          details: { listItemId: input.listItemId },
         });
       }
     }),
@@ -328,10 +346,10 @@ export const listRouter = router({
 
         return { success: true as const, data: updateResult };
       } catch (e) {
-        logging.error(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to update list items",
+        throw toTrpcError(e, {
+          fallbackMessage: "Failed to update list items",
+          operation: "list.updateItems",
+          details: { listId: input.listId, listItemIds: input.listItemIds },
         });
       }
     }),

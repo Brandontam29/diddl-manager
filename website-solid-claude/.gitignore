@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.output/
+.vinxi/
+.solid/
+.env
+.env.local
+.env.*.local
+*.log

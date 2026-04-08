@@ -32,3 +32,4 @@ coverage/
 # Diddl Specific
 diddl-images/
 extra-images/
+.svelte-kit/

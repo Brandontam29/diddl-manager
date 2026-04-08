@@ -70,13 +70,9 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - convex-helpers 0.1.114 - Utilities for custom function wrappers and authentication patterns
 - convex-svelte 0.0.12 - Svelte integration for Convex client
 - convex-vite-plugin 0.4.0 - Vite plugin for local Convex development
-- ESLint 9.39.2 - JavaScript/TypeScript linting
-- eslint-config-prettier 10.1.8 - Disables ESLint rules that conflict with Prettier
-- eslint-plugin-svelte 3.14.0 - ESLint plugin for Svelte files
-- typescript-eslint 8.54.0 - TypeScript support for ESLint
-- Prettier 3.8.1 - Code formatter
-- prettier-plugin-svelte 3.4.1 - Svelte support for Prettier
-- prettier-plugin-tailwindcss 0.7.2 - TailwindCSS class sorting in Prettier
+- Oxlint - Repository linter for supported JS and TS files
+- Oxfmt - Repository formatter for supported source and config files
+- tsgolint - Type-aware linting driven by project tsconfig files
 - @sveltejs/adapter-vercel 6.3.1 - Vercel adapter for SvelteKit production builds
 - vite-plugin-devtools-json 1.0.0 - Development tools integration
 
@@ -89,8 +85,8 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - `vite.config.ts` - Vite configuration with Tailwind, SvelteKit, and Convex local plugin support
 - `svelte.config.js` - SvelteKit configuration using Vercel adapter with experimental remote functions
 - `tsconfig.json` - TypeScript compiler options with strict mode enabled
-- `eslint.config.js` - ESLint flat config with TypeScript, Svelte, and Prettier support
-- `.prettier` configuration inherited from Prettier defaults with Svelte and TailwindCSS plugins
+- `../../.oxlintrc.json` - Shared Oxlint configuration for supported JS and TS files
+- `../../.oxfmtrc.json` - Shared Oxfmt configuration for supported source and config files
 
 ## Platform Requirements
 
@@ -135,17 +131,13 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 
 ## Code Style
 
-- Tool: Prettier 3.8.1
-- Tabs: enabled (useTabs: true)
-- Single quotes: enforced
+- Tool: Oxfmt
 - Print width: 100 characters
-- Trailing commas: disabled (trailingComma: none)
-- Tailwind class sorting: enabled via `prettier-plugin-tailwindcss`
-- Tool: ESLint 9.39.2 with TypeScript ESLint 8.54.0
-- Config: `eslint.config.js` (flat config format)
-- Rules include: Prettier integration, Svelte plugin, TypeScript recommended, no-undef disabled
-- Special handling for `.svelte` files with TypeScript parser
-- TypeScript 5.9.3
+- Two-space indentation and semicolons
+- Double quotes by default
+- Tool: Oxlint with type-aware rules enabled where the project tsconfig allows it
+- Shared config: `../../.oxlintrc.json`
+- tsgolint runs alongside Svelte-specific checks for semantic coverage
 - Strict mode: enabled
 - Module resolution: bundler
 - Force consistent casing: enabled
@@ -219,7 +211,7 @@ A web application for Diddl collectors to browse a master catalog of ~10,000 Did
 - Modern Svelte 5 runes: `$state()`, `$derived.by()`, `$effect()`, `onMount()`
 - Props via `let { prop } = $props()` in layout components
 - Context via `createContext()` and getter/setter functions
-- Tailwind CSS classes exclusively (see `prettier-plugin-tailwindcss` integration)
+- Tailwind CSS classes exclusively
 - Custom CSS only when Tailwind insufficient
 - Layout CSS in `src/routes/layout.css`
 - Event handling: `on:submit={handleSubmit}`

@@ -2,10 +2,12 @@
   "name": "@diddl/data-migrations",
   "private": true,
   "type": "module",
+  "scripts": {
+    "format": "oxfmt --config ../../.oxfmtrc.json .",
+    "lint": "oxlint --config ../../.oxlintrc.json .",
+    "typecheck": "oxlint --config ../../.oxlintrc.json --tsconfig tsconfig.json --type-aware --type-check ."
+  },
   "devDependencies": {
     "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
   }
 }

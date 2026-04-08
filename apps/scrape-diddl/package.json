@@ -9,19 +9,12 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "format": "prettier --write .",
-    "lint-staged": "lint-staged"
+    "format": "oxfmt --config ../../.oxfmtrc.json .",
+    "lint": "oxlint --config ../../.oxlintrc.json src",
+    "typecheck": "oxlint --config ../../.oxlintrc.json --tsconfig tsconfig.json --type-aware --type-check src"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "lint-staged": "^16.2.7",
-    "prettier": "^3.7.4"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "@types/bun": "latest"
   },
   "trustedDependencies": [
     "puppeteer"

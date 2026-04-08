@@ -7,7 +7,23 @@
   ],
   "scripts": {
     "prepare": "husky",
-    "lint-staged": "bun run --filter @diddl/desktop-app lint-staged && bun run --filter @diddl/scrape-diddl lint-staged",
+    "format": "oxfmt --config ./.oxfmtrc.json .",
+    "format:check": "oxfmt --config ./.oxfmtrc.json --check .",
+    "lint-staged": "lint-staged",
+    "lint:desktop": "bun run --filter @diddl/desktop-app lint",
+    "lint:website-svelte": "bun run --filter @diddl/website-svelte lint",
+    "lint:website-solid-claude": "bun run --filter @diddl/website-solid-claude lint",
+    "lint:website-solid-codex": "bun run --filter @diddl/website-solid-codex lint",
+    "lint:data-migrations": "bun run --filter @diddl/data-migrations lint",
+    "lint:scrape-diddl": "bun run --filter @diddl/scrape-diddl lint",
+    "lint": "bun run lint:desktop && bun run lint:website-svelte && bun run lint:website-solid-claude && bun run lint:website-solid-codex && bun run lint:data-migrations && bun run lint:scrape-diddl",
+    "typecheck:desktop": "bun run --filter @diddl/desktop-app typecheck",
+    "typecheck:website-svelte": "bun run --filter @diddl/website-svelte typecheck",
+    "typecheck:website-solid-claude": "bun run --filter @diddl/website-solid-claude typecheck",
+    "typecheck:website-solid-codex": "bun run --filter @diddl/website-solid-codex typecheck",
+    "typecheck:data-migrations": "bun run --filter @diddl/data-migrations typecheck",
+    "typecheck:scrape-diddl": "bun run --filter @diddl/scrape-diddl typecheck",
+    "typecheck": "bun run typecheck:desktop && bun run typecheck:website-svelte && bun run typecheck:website-solid-claude && bun run typecheck:website-solid-codex && bun run typecheck:data-migrations && bun run typecheck:scrape-diddl",
     "dev:desktop": "bun run --filter @diddl/desktop-app dev",
     "build:desktop": "bun run --filter @diddl/desktop-app build",
     "test:desktop": "bun run --filter @diddl/desktop-app test:unit",
@@ -16,7 +32,14 @@
     "dev:website-solid-codex": "bun run --filter @diddl/website-solid-codex dev"
   },
   "devDependencies": {
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "oxfmt": "^0.44.0",
+    "oxlint": "^1.59.0",
+    "oxlint-tsgolint": "^0.20.0"
+  },
+  "lint-staged": {
+    "**/*": "oxfmt --config ./.oxfmtrc.json --no-error-on-unmatched-pattern"
   },
   "trustedDependencies": [
     "@clerk/shared",

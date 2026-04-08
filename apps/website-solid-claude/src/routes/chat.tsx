@@ -1,11 +1,5 @@
 import { createSignal, Show, For, Suspense, onMount } from "solid-js";
-import {
-  useAuth,
-  useUser,
-  SignedIn,
-  SignedOut,
-  SignInButton,
-} from "clerk-solidjs";
+import { useAuth, useUser, SignedIn, SignedOut, SignInButton } from "clerk-solidjs";
 import { useQuery, useMutation } from "convex-solidjs";
 import { api } from "../../convex/_generated/api";
 import { Effect, pipe, runPromise } from "~/lib/effect";
@@ -46,8 +40,7 @@ function ChatRoom() {
     const body = newMessage().trim();
     if (!body || !userId()) return;
 
-    const userName =
-      user()?.firstName ?? user()?.username ?? "Anonymous";
+    const userName = user()?.firstName ?? user()?.username ?? "Anonymous";
 
     await runPromise(
       pipe(
@@ -64,9 +57,9 @@ function ChatRoom() {
           Effect.sync(() => {
             setNewMessage("");
             scrollToBottom();
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
   };
 
@@ -76,13 +69,9 @@ function ChatRoom() {
         <div class="flex items-center justify-between">
           <div>
             <CardTitle>Chat</CardTitle>
-            <CardDescription>
-              Real-time messaging powered by Convex
-            </CardDescription>
+            <CardDescription>Real-time messaging powered by Convex</CardDescription>
           </div>
-          <Badge variant="outline">
-            {messages.data()?.length ?? 0} messages
-          </Badge>
+          <Badge variant="outline">{messages.data()?.length ?? 0} messages</Badge>
         </div>
       </CardHeader>
       <Separator />
@@ -91,9 +80,7 @@ function ChatRoom() {
           when={!messages.isLoading()}
           fallback={
             <div class="flex items-center justify-center h-full">
-              <div class="animate-pulse text-muted-foreground">
-                Loading messages...
-              </div>
+              <div class="animate-pulse text-muted-foreground">Loading messages...</div>
             </div>
           }
         >
@@ -111,27 +98,19 @@ function ChatRoom() {
               {(message) => {
                 const isOwn = () => message.userId === userId();
                 return (
-                  <div
-                    class={`flex ${isOwn() ? "justify-end" : "justify-start"}`}
-                  >
+                  <div class={`flex ${isOwn() ? "justify-end" : "justify-start"}`}>
                     <div
                       class={`max-w-[75%] rounded-lg px-4 py-2 ${
-                        isOwn()
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted"
+                        isOwn() ? "bg-primary text-primary-foreground" : "bg-muted"
                       }`}
                     >
                       <Show when={!isOwn()}>
-                        <p class="text-xs font-medium mb-1 opacity-70">
-                          {message.userName}
-                        </p>
+                        <p class="text-xs font-medium mb-1 opacity-70">{message.userName}</p>
                       </Show>
                       <p class="text-sm">{message.body}</p>
                       <Show when={isOwn()}>
                         <button
-                          onClick={() =>
-                            removeMessage.mutate({ id: message._id })
-                          }
+                          onClick={() => removeMessage.mutate({ id: message._id })}
                           class="text-xs opacity-50 hover:opacity-100 mt-1"
                         >
                           delete
@@ -143,7 +122,11 @@ function ChatRoom() {
               }}
             </For>
           </Show>
-          <div ref={messagesEndRef} />
+          <div
+            ref={(element) => {
+              messagesEndRef = element;
+            }}
+          />
         </Show>
       </CardContent>
       <Separator />
@@ -175,9 +158,7 @@ export default function Chat() {
     <div class="flex flex-col items-center space-y-8 max-w-2xl mx-auto">
       <div class="text-center space-y-2">
         <h1 class="text-3xl font-bold tracking-tight">Chat</h1>
-        <p class="text-muted-foreground">
-          Real-time messaging with Convex subscriptions
-        </p>
+        <p class="text-muted-foreground">Real-time messaging with Convex subscriptions</p>
       </div>
 
       <SignedIn>
@@ -185,9 +166,7 @@ export default function Chat() {
           fallback={
             <Card class="w-full h-[600px]">
               <CardContent class="flex items-center justify-center h-full">
-                <div class="animate-pulse text-muted-foreground">
-                  Loading chat...
-                </div>
+                <div class="animate-pulse text-muted-foreground">Loading chat...</div>
               </CardContent>
             </Card>
           }
@@ -201,8 +180,7 @@ export default function Chat() {
           <CardHeader class="text-center">
             <CardTitle>Sign in to join the chat</CardTitle>
             <CardDescription>
-              Chat messages are synced in real-time across all connected users
-              via Convex.
+              Chat messages are synced in real-time across all connected users via Convex.
             </CardDescription>
           </CardHeader>
           <CardFooter class="justify-center">

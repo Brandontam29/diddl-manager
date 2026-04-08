@@ -11,4 +11,4 @@ Project guidelines:
 - use tailwindcss for styling whenever possible, only resort to custom css if needed
 - every svelte component should have `lang="ts"`
 - after making changes to convex, run `bun run convex:gen` to generate the new api
-- run `bun run lint` to check for linting errors, `bun run format`, and `bun run check` to check for errors after making changes
+- run `bun run lint`, `bun run format`, and `bun run typecheck` after making changes

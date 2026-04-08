@@ -4,7 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "check": "tsc --noEmit",
+    "format": "oxfmt --config ../../.oxfmtrc.json .",
+    "lint": "oxlint --config ../../.oxlintrc.json .",
+    "typecheck": "oxlint --config ../../.oxlintrc.json --tsconfig tsconfig.json --type-aware --type-check .",
+    "check": "bun run typecheck",
     "build": "vite build",
     "start": "vite start",
     "preview": "vite preview",

@@ -94,12 +94,7 @@
 
 	// Exit select mode when changing catalog range
 	$effect(() => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		selectedType;
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		selectedFrom;
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		selectedTo;
+		void [selectedType, selectedFrom, selectedTo];
 
 		if (selectMode) {
 			handleExitSelectMode();

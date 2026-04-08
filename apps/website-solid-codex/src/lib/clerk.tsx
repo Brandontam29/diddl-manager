@@ -9,7 +9,7 @@ import {
   useContext,
   type Accessor,
   type JSX,
-  type ParentComponent
+  type ParentComponent,
 } from "solid-js";
 
 type EmittedResources = Parameters<Parameters<Clerk["addListener"]>[0]>[0];
@@ -33,7 +33,7 @@ function getClerkKey() {
   return import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim() ?? "";
 }
 
-export const ClerkProvider: ParentComponent = props => {
+export const ClerkProvider: ParentComponent = (props) => {
   const [clerk, setClerk] = createSignal<Clerk>();
   const [isLoaded, setIsLoaded] = createSignal(false);
   const [session, setSession] = createSignal<SessionResource | null>(null);
@@ -49,7 +49,7 @@ export const ClerkProvider: ParentComponent = props => {
     }
 
     const instance = new Clerk(getClerkKey());
-    const unsubscribe = instance.addListener(emission => {
+    const unsubscribe = instance.addListener((emission) => {
       setOrganization(emission.organization ?? null);
       setSession(emission.session ?? null);
       setUser(emission.user ?? null);
@@ -61,9 +61,9 @@ export const ClerkProvider: ParentComponent = props => {
       .load({
         afterSignOutUrl: "/",
         signInForceRedirectUrl: "/",
-        signUpForceRedirectUrl: "/"
+        signUpForceRedirectUrl: "/",
       })
-      .catch(cause => {
+      .catch((cause) => {
         setError(cause instanceof Error ? cause.message : "Failed to load Clerk");
       })
       .finally(() => {
@@ -84,7 +84,7 @@ export const ClerkProvider: ParentComponent = props => {
         organization,
         session,
         user,
-        error
+        error,
       }}
     >
       {props.children}
@@ -124,12 +124,21 @@ export function ClerkUserButton(props: { class?: string }) {
 
   return (
     <Show when={clerk.user()}>
-      <div ref={buttonRef} class={props.class} />
+      <div
+        ref={(element) => {
+          buttonRef = element;
+        }}
+        class={props.class}
+      />
     </Show>
   );
 }
 
 export function ClerkOnly(props: { children: JSX.Element; fallback?: JSX.Element }) {
   const clerk = useClerk();
-  return <Show when={clerk.user()} fallback={props.fallback}>{props.children}</Show>;
+  return (
+    <Show when={clerk.user()} fallback={props.fallback}>
+      {props.children}
+    </Show>
+  );
 }

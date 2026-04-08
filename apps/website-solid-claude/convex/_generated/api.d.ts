@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* oxlint-disable */
 /**
  * Generated `api` utility.
  *
@@ -23,12 +23,7 @@ declare const fullApi: {
   };
   tasks: {
     list: FunctionReference<"query", "public", { userId: string }, any>;
-    create: FunctionReference<
-      "mutation",
-      "public",
-      { userId: string; title: string },
-      any
-    >;
+    create: FunctionReference<"mutation", "public", { userId: string; title: string }, any>;
     toggle: FunctionReference<"mutation", "public", { id: any }, any>;
     remove: FunctionReference<"mutation", "public", { id: any }, any>;
   };

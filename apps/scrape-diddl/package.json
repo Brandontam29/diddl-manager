@@ -1,0 +1,29 @@
+{
+  "name": "@diddl/scrape-diddl",
+  "private": true,
+  "dependencies": {
+    "image-size": "^1.1.1",
+    "nanoid": "^5.0.7",
+    "puppeteer": "^23.2.1"
+  },
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint-staged": "lint-staged"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  },
+  "trustedDependencies": [
+    "puppeteer"
+  ]
+}

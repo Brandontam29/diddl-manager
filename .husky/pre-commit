@@ -1,5 +1,3 @@
 #!/bin/sh
 
-# Run in subdirectories if they exist
-(cd desktop-app && npx lint-staged)
-(cd scrape-diddl && npx lint-staged)
+bun run lint-staged

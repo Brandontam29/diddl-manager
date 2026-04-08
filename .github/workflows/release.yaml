@@ -13,25 +13,24 @@ jobs:
         permissions:
             contents: write
 
-        defaults:
-            run:
-                working-directory: ./desktop-app
-
         steps:
             - name: Checkout Code
               uses: actions/checkout@v6
+
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: 1.3.10
 
             - name: Setup Node.js
               uses: actions/setup-node@v6
               with:
                   node-version: v22.17.0
-                  cache: "npm"
-                  cache-dependency-path: ./desktop-app/package-lock.json
 
             - name: Install Dependencies
-              run: npm ci
+              run: bun install --frozen-lockfile
 
             - name: Build and Publish
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: npm run build && npx electron-builder --win --publish always
+              run: bun run --filter @diddl/desktop-app build:win

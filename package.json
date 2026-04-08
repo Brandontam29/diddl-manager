@@ -1,28 +1,34 @@
 {
   "name": "diddl-manager",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "packageManager": "bun@1.3.10",
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint-staged": "bun run --filter @diddl/desktop-app lint-staged && bun run --filter @diddl/scrape-diddl lint-staged",
+    "dev:desktop": "bun run --filter @diddl/desktop-app dev",
+    "build:desktop": "bun run --filter @diddl/desktop-app build",
+    "test:desktop": "bun run --filter @diddl/desktop-app test:unit",
+    "dev:website-svelte": "bun run --filter @diddl/website-svelte dev",
+    "dev:website-solid-claude": "bun run --filter @diddl/website-solid-claude dev",
+    "dev:website-solid-codex": "bun run --filter @diddl/website-solid-codex dev"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Brandontam29/diddl-manager.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/Brandontam29/diddl-manager/issues"
-  },
-  "homepage": "https://github.com/Brandontam29/diddl-manager#readme",
   "devDependencies": {
     "husky": "^9.1.7"
   },
-  "dependencies": {
-    "yaml": "^2.8.2"
-  }
+  "trustedDependencies": [
+    "@clerk/shared",
+    "@diddl/desktop-app",
+    "@diddl/website-svelte",
+    "@parcel/watcher",
+    "browser-tabs-lock",
+    "bufferutil",
+    "core-js",
+    "electron-winstaller",
+    "esbuild",
+    "msgpackr-extract",
+    "utf-8-validate"
+  ]
 }

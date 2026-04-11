@@ -5,10 +5,11 @@ import type {
   TextFieldInputProps,
   TextFieldLabelProps,
   TextFieldRootProps,
+  TextFieldTextAreaProps,
 } from "@kobalte/core/text-field";
 import { TextField as TextFieldPrimitive } from "@kobalte/core/text-field";
 import { cva } from "class-variance-authority";
-import type { ValidComponent, VoidProps } from "solid-js";
+import type { ParentProps, ValidComponent, VoidProps } from "solid-js";
 import { splitProps } from "solid-js";
 
 import { cn } from "@renderer/libs/cn";
@@ -107,6 +108,28 @@ export const TextField = <T extends ValidComponent = "input">(
     <TextFieldPrimitive.Input
       class={cn(
         "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-shadow file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        local.class,
+      )}
+      {...rest}
+    />
+  );
+};
+
+type textFieldTextAreaProps<T extends ValidComponent = "textarea"> = ParentProps<
+  TextFieldTextAreaProps<T> & {
+    class?: string;
+  }
+>;
+
+export const TextFieldTextArea = <T extends ValidComponent = "textarea">(
+  props: PolymorphicProps<T, textFieldTextAreaProps<T>>,
+) => {
+  const [local, rest] = splitProps(props as textFieldTextAreaProps, ["class"]);
+
+  return (
+    <TextFieldPrimitive.TextArea
+      class={cn(
+        "flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-shadow placeholder:text-muted-foreground focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
         local.class,
       )}
       {...rest}

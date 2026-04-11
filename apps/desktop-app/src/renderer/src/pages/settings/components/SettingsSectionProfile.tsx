@@ -1,15 +1,22 @@
-import { AnyFieldApi, createForm } from "@tanstack/solid-form";
-import { Component, For, Show, createMemo } from "solid-js";
+import { createForm } from "@tanstack/solid-form";
+import { For, Show } from "solid-js";
 import { z } from "zod";
 
-import {
-  Section,
-  SectionContent,
-  SectionDescription,
-  SectionHeader,
-  SectionTitle,
-} from "@renderer/components/section/two-column";
 import { Button } from "@renderer/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@renderer/components/ui/card";
+import {
+  TextField,
+  TextFieldErrorMessage,
+  TextFieldLabel,
+  TextFieldRoot,
+  TextFieldTextArea,
+} from "@renderer/components/ui/textfield";
 import { useProfile } from "@renderer/features/profile/profile-state";
 
 const formSchema = z.object({
@@ -22,6 +29,7 @@ const formSchema = z.object({
 
 export default function SettingsSectionProfile() {
   const { profile, actions } = useProfile();
+  let fileInputRef: HTMLInputElement | undefined;
 
   const form = createForm(() => ({
     defaultValues: {
@@ -52,141 +60,165 @@ export default function SettingsSectionProfile() {
   }));
 
   return (
-    <Section>
-      <SectionHeader>
-        <SectionTitle>Edit Profile</SectionTitle>
-        <SectionDescription>Let us know who you are!</SectionDescription>
-      </SectionHeader>
-      <SectionContent>
+    <Card>
+      <CardHeader>
+        <CardTitle class="text-lg">Profile</CardTitle>
+        <CardDescription>Let us know who you are!</CardDescription>
+      </CardHeader>
+      <CardContent>
         <form
+          class="flex flex-col gap-8 md:flex-row"
           onSubmit={(e) => {
             e.preventDefault();
             e.stopPropagation();
             form.handleSubmit();
           }}
         >
-          {/* Name Field */}
-          <form.Field name="name">
-            {(field) => (
-              <div style={{ "margin-bottom": "1rem" }}>
-                <label style={{ display: "block" }}>Name:</label>
-                <input
-                  value={field().state.value}
-                  onInput={(e) => field().handleChange(e.currentTarget.value)}
-                  onBlur={field().handleBlur}
-                  style={{ width: "100%", padding: "8px" }}
-                />
-                <FieldInfo field={field()} />
-              </div>
-            )}
-          </form.Field>
-
-          {/* Description Field */}
-          <form.Field name="description">
-            {(field) => (
-              <div style={{ "margin-bottom": "1rem" }}>
-                <label style={{ display: "block" }}>Description:</label>
-                <textarea
-                  value={field().state.value}
-                  onInput={(e) => field().handleChange(e.currentTarget.value)}
-                  onBlur={field().handleBlur}
-                  rows={4}
-                  style={{ width: "100%", padding: "8px" }}
-                />
-                <FieldInfo field={field()} />
-              </div>
-            )}
-          </form.Field>
-
-          {/* Hobbies Field */}
-          <form.Field name="hobbies">
-            {(field) => (
-              <div style={{ "margin-bottom": "1rem" }}>
-                <label style={{ display: "block" }}>Hobbies:</label>
-                <input
-                  value={field().state.value}
-                  onInput={(e) => field().handleChange(e.currentTarget.value)}
-                  onBlur={field().handleBlur}
-                  style={{ width: "100%", padding: "8px" }}
-                />
-                <FieldInfo field={field()} />
-              </div>
-            )}
-          </form.Field>
-
-          {/* Birthdate Field */}
-          <form.Field name="birthdate">
-            {(field) => (
-              <div style={{ "margin-bottom": "1rem" }}>
-                <label style={{ display: "block" }}>Birthdate:</label>
-                <input
-                  type="date"
-                  value={field().state.value}
-                  onInput={(e) => field().handleChange(e.currentTarget.value)}
-                  onBlur={field().handleBlur}
-                  style={{ width: "100%", padding: "8px" }}
-                />
-                <FieldInfo field={field()} />
-              </div>
-            )}
-          </form.Field>
-
-          {/* Picture Field */}
+          {/* Avatar */}
           <form.Field name="picture">
             {(field) => (
-              <div style={{ "margin-bottom": "1rem" }}>
-                <label style={{ display: "block" }}>Profile Picture:</label>
-
-                <Show when={typeof field().state.value === "string" && field().state.value}>
+              <div class="flex shrink-0 flex-col items-center gap-3">
+                <Show
+                  when={typeof field().state.value === "string" && field().state.value}
+                  fallback={
+                    <div class="flex h-40 w-40 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground">
+                      No photo
+                    </div>
+                  }
+                >
                   <img
                     src={`file://${field().state.value}`}
                     alt="Profile"
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      "object-fit": "cover",
-                      "margin-bottom": "10px",
-                    }}
+                    class="h-40 w-40 rounded-full object-cover"
                   />
                 </Show>
-
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept="image/*"
+                  class="hidden"
                   onChange={(e) => {
-                    const file = e.currentTarget.files?.[0] || null;
-                    if (file) {
-                      field().handleChange(file);
-                    }
+                    const file = e.currentTarget.files?.[0];
+                    if (file) field().handleChange(file);
                   }}
                 />
-                <FieldInfo field={field()} />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef?.click()}
+                >
+                  Change Avatar
+                </Button>
               </div>
             )}
           </form.Field>
 
-          <form.Subscribe
-            selector={(state) => ({ canSubmit: state.canSubmit, isSubmitting: state.isSubmitting })}
-          >
-            {(state) => (
-              <Button type="submit" disabled={!state().canSubmit}>
-                {state().isSubmitting ? "Saving..." : "Save Profile"}
-              </Button>
-            )}
-          </form.Subscribe>
+          {/* Form fields */}
+          <div class="flex-1 space-y-4">
+            <form.Field name="name">
+              {(field) => (
+                <TextFieldRoot
+                  value={field().state.value}
+                  onChange={(v) => field().handleChange(v)}
+                  validationState={
+                    field().state.meta.isTouched && field().state.meta.errors.length > 0
+                      ? "invalid"
+                      : "valid"
+                  }
+                >
+                  <TextFieldLabel>Name</TextFieldLabel>
+                  <TextField onFocusOut={() => field().handleBlur()} />
+                  <TextFieldErrorMessage>
+                    <For each={field().state.meta.errors}>
+                      {(error) => <div>{error?.message}</div>}
+                    </For>
+                  </TextFieldErrorMessage>
+                </TextFieldRoot>
+              )}
+            </form.Field>
+
+            <form.Field name="description">
+              {(field) => (
+                <TextFieldRoot
+                  value={field().state.value}
+                  onChange={(v) => field().handleChange(v)}
+                  validationState={
+                    field().state.meta.isTouched && field().state.meta.errors.length > 0
+                      ? "invalid"
+                      : "valid"
+                  }
+                >
+                  <TextFieldLabel>Description</TextFieldLabel>
+                  <TextFieldTextArea rows={3} onFocusOut={() => field().handleBlur()} />
+                  <TextFieldErrorMessage>
+                    <For each={field().state.meta.errors}>
+                      {(error) => <div>{error?.message}</div>}
+                    </For>
+                  </TextFieldErrorMessage>
+                </TextFieldRoot>
+              )}
+            </form.Field>
+
+            <form.Field name="hobbies">
+              {(field) => (
+                <TextFieldRoot
+                  value={field().state.value}
+                  onChange={(v) => field().handleChange(v)}
+                  validationState={
+                    field().state.meta.isTouched && field().state.meta.errors.length > 0
+                      ? "invalid"
+                      : "valid"
+                  }
+                >
+                  <TextFieldLabel>Hobbies</TextFieldLabel>
+                  <TextField onFocusOut={() => field().handleBlur()} />
+                  <TextFieldErrorMessage>
+                    <For each={field().state.meta.errors}>
+                      {(error) => <div>{error?.message}</div>}
+                    </For>
+                  </TextFieldErrorMessage>
+                </TextFieldRoot>
+              )}
+            </form.Field>
+
+            <form.Field name="birthdate">
+              {(field) => (
+                <TextFieldRoot
+                  value={field().state.value}
+                  onChange={(v) => field().handleChange(v)}
+                  validationState={
+                    field().state.meta.isTouched && field().state.meta.errors.length > 0
+                      ? "invalid"
+                      : "valid"
+                  }
+                >
+                  <TextFieldLabel>Birthdate</TextFieldLabel>
+                  <TextField type="date" onFocusOut={() => field().handleBlur()} />
+                  <TextFieldErrorMessage>
+                    <For each={field().state.meta.errors}>
+                      {(error) => <div>{error?.message}</div>}
+                    </For>
+                  </TextFieldErrorMessage>
+                </TextFieldRoot>
+              )}
+            </form.Field>
+
+            <form.Subscribe
+              selector={(state) => ({
+                canSubmit: state.canSubmit,
+                isSubmitting: state.isSubmitting,
+              })}
+            >
+              {(state) => (
+                <Button type="submit" disabled={!state().canSubmit}>
+                  {state().isSubmitting ? "Saving..." : "Save Profile"}
+                </Button>
+              )}
+            </form.Subscribe>
+          </div>
         </form>
-      </SectionContent>
-    </Section>
+      </CardContent>
+    </Card>
   );
 }
-
-const FieldInfo: Component<{ field: AnyFieldApi }> = (props) => {
-  const meta = createMemo(() => props.field.state.meta);
-  return (
-    <div style={{ "font-size": "0.8rem", color: "red", "margin-top": "4px" }}>
-      <Show when={meta().isTouched && meta().errors.length > 0}>
-        <For each={meta().errors}>{(error) => <div>{error.message}</div>}</For>
-      </Show>
-    </div>
-  );
-};

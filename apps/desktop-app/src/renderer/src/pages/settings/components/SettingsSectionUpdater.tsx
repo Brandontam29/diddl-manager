@@ -1,13 +1,13 @@
 import { Match, Switch, createMemo, createSignal } from "solid-js";
 
-import {
-  Section,
-  SectionContent,
-  SectionDescription,
-  SectionHeader,
-  SectionTitle,
-} from "@renderer/components/section/two-column";
 import { Button } from "@renderer/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@renderer/components/ui/card";
 import {
   appVersion,
   checkForUpdate,
@@ -61,12 +61,12 @@ export default function SettingsSectionUpdater() {
   });
 
   return (
-    <Section>
-      <SectionHeader>
-        <SectionTitle>Updates</SectionTitle>
-        <SectionDescription>Check for new versions of the application.</SectionDescription>
-      </SectionHeader>
-      <SectionContent class="space-y-2">
+    <Card>
+      <CardHeader>
+        <CardTitle class="text-lg">App Updates</CardTitle>
+        <CardDescription>Check for new versions of the application.</CardDescription>
+      </CardHeader>
+      <CardContent class="space-y-2">
         <Switch>
           <Match when={isDownloading()}>
             <Button disabled>Downloading...</Button>
@@ -85,7 +85,7 @@ export default function SettingsSectionUpdater() {
         {error() && <p class="text-sm text-destructive">{error()}</p>}
 
         {!error() && statusText() && <p class="text-sm text-muted-foreground">{statusText()}</p>}
-      </SectionContent>
-    </Section>
+      </CardContent>
+    </Card>
   );
 }

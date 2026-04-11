@@ -1,12 +1,4 @@
-import { createSignal } from "solid-js";
-
-import {
-  Section,
-  SectionContent,
-  SectionHeader,
-  SectionTitle,
-} from "@renderer/components/section/two-column";
-import { Button } from "@renderer/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@renderer/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -29,18 +21,17 @@ const ZOOM_OPTIONS = [
 ] as const;
 
 const SettingsSectionUx = () => {
-  const [zoomOption, setZoomOption] = createSignal(
+  const currentOption = () =>
     ZOOM_OPTIONS.find((option) => option.value === HEIGHT_ZOOM_MAP[uiStore.cardHeight]) ||
-      ZOOM_OPTIONS[1],
-  );
-  return (
-    <Section>
-      <SectionHeader>
-        <SectionTitle>Settings</SectionTitle>
-      </SectionHeader>
+    ZOOM_OPTIONS[1];
 
-      <SectionContent class="space-y-2">
-        <label class="block">Card Sizes</label>
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle class="text-lg">Display Preferences</CardTitle>
+      </CardHeader>
+      <CardContent class="space-y-2">
+        <label class="text-sm font-medium">Card Size</label>
         <Select
           options={ZOOM_OPTIONS as DeepMutable<typeof ZOOM_OPTIONS>}
           optionTextValue="label"
@@ -48,8 +39,10 @@ const SettingsSectionUx = () => {
           itemComponent={(props) => (
             <SelectItem item={props.item}>{props.item.rawValue.label}</SelectItem>
           )}
-          value={zoomOption()}
-          onChange={(value) => setZoomOption(value || ZOOM_OPTIONS[1])}
+          value={currentOption()}
+          onChange={(value) => {
+            if (value) setCardZoomLevel(value.value);
+          }}
         >
           <SelectTrigger>
             <SelectValue<(typeof ZOOM_OPTIONS)[number]>>
@@ -58,17 +51,8 @@ const SettingsSectionUx = () => {
           </SelectTrigger>
           <SelectContent />
         </Select>
-
-        <Button
-          class="mt-4"
-          onClick={() => {
-            setCardZoomLevel(zoomOption().value);
-          }}
-        >
-          Save changes
-        </Button>
-      </SectionContent>
-    </Section>
+      </CardContent>
+    </Card>
   );
 };
 

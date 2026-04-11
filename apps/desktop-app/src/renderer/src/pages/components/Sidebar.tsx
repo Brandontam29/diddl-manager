@@ -180,13 +180,9 @@ const Sidebar: Component<{ currentPath: string }> = (props) => {
 
   return (
     <nav
-      class={cn(
-        "flex flex-col gap-4 border-r border-gray-200 py-4",
-        "sticky top-0 h-screen w-64 min-w-64 overflow-y-auto",
-        "scrollbar-thin scrollbar-thumb-purple-200 scrollbar-track-transparent",
-      )}
+      class={cn("flex flex-col border-r border-gray-200", "sticky top-0 h-screen w-64 min-w-64")}
     >
-      <TopLinkContainer>
+      <TopLinkContainer class="border-b py-4">
         <SidebarLink href="/" currentPath={props.currentPath} icon={BiRegularHomeHeart} size={24}>
           Home
         </SidebarLink>
@@ -199,7 +195,12 @@ const Sidebar: Component<{ currentPath: string }> = (props) => {
           Lists
         </SidebarLink>
       </TopLinkContainer>
-      <TopLinkContainer>
+      <TopLinkContainer
+        class={cn(
+          "grow overflow-y-auto",
+          "scrollbar-thin scrollbar-thumb-purple-200 scrollbar-track-transparent",
+        )}
+      >
         <For each={links()}>
           {(group) => (
             <div>
@@ -221,7 +222,7 @@ const Sidebar: Component<{ currentPath: string }> = (props) => {
           )}
         </For>
       </TopLinkContainer>
-      <div>
+      <div class="border-t py-4">
         <SidebarLink href="/settings" currentPath={props.currentPath} icon={CogIcon}>
           Settings
         </SidebarLink>
@@ -230,8 +231,8 @@ const Sidebar: Component<{ currentPath: string }> = (props) => {
   );
 };
 
-const TopLinkContainer: Component<{ children: JSXElement }> = (props) => {
-  return <div class={cn("space-y-2")}>{props.children}</div>;
+const TopLinkContainer: Component<{ class?: string; children: JSXElement }> = (props) => {
+  return <div class={cn("space-y-2", props.class)}>{props.children}</div>;
 };
 
 const SubLinkContainer: Component<{ children: JSXElement }> = (props) => {

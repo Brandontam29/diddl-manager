@@ -1,0 +1,22 @@
+{
+  "name": "@diddl/scrape-diddl",
+  "private": true,
+  "dependencies": {
+    "image-size": "^1.1.1",
+    "nanoid": "^5.0.7",
+    "puppeteer": "^23.2.1"
+  },
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "format": "oxfmt --config ../../.oxfmtrc.json .",
+    "lint": "oxlint --config ../../.oxlintrc.json src",
+    "typecheck": "oxlint --config ../../.oxlintrc.json --tsconfig tsconfig.json --type-aware --type-check src"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "trustedDependencies": [
+    "puppeteer"
+  ]
+}

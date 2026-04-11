@@ -1,0 +1,29 @@
+{
+  "semi": true,
+  "singleQuote": false,
+  "printWidth": 100,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "**/bun.lock",
+    "**/bun.lockb",
+    "**/package-lock.json",
+    "**/pnpm-lock.yaml",
+    "**/yarn.lock",
+    "**/.svelte-kit/**",
+    "**/.output/**",
+    "**/coverage/**",
+    "**/playwright-report/**",
+    "**/test-results/**",
+    "apps/desktop-app/out/**",
+    "apps/desktop-app/dist/**",
+    "apps/desktop-app/src/renderer/assets/**",
+    "apps/website-svelte/static/**",
+    "apps/desktop-app/src/main/database/diddls.json",
+    "apps/website-svelte/scripts/catalog.json",
+    "apps/**/json-files/**",
+    "apps/**/legacy-json-files/**",
+    "**/tsconfig.node.tsbuildinfo"
+  ]
+}

@@ -95,7 +95,7 @@ function TaskList() {
           <Show
             when={totalCount() > 0}
             fallback={
-              <p class="text-center text-sm text-muted-foreground py-8">
+              <p class="py-8 text-center text-sm text-muted-foreground">
                 No tasks yet. Add one above!
               </p>
             }
@@ -107,9 +107,9 @@ function TaskList() {
                     <div class="flex items-center gap-3">
                       <button
                         onClick={() => toggleTask.mutate({ id: task._id })}
-                        class={`h-5 w-5 rounded-full border-2 transition-colors flex items-center justify-center ${
+                        class={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${
                           task.completed
-                            ? "bg-primary border-primary text-primary-foreground"
+                            ? "border-primary bg-primary text-primary-foreground"
                             : "border-muted-foreground/30 hover:border-primary"
                         }`}
                       >
@@ -130,7 +130,7 @@ function TaskList() {
                       </button>
                       <span
                         class={`text-sm ${
-                          task.completed ? "line-through text-muted-foreground" : ""
+                          task.completed ? "text-muted-foreground line-through" : ""
                         }`}
                       >
                         {task.title}
@@ -170,8 +170,8 @@ function TaskList() {
 
 export default function Dashboard() {
   return (
-    <div class="flex flex-col items-center space-y-8 max-w-2xl mx-auto">
-      <div class="text-center space-y-2">
+    <div class="mx-auto flex max-w-2xl flex-col items-center space-y-8">
+      <div class="space-y-2 text-center">
         <h1 class="text-3xl font-bold tracking-tight">Dashboard</h1>
         <p class="text-muted-foreground">Your personal task manager with real-time Convex sync</p>
       </div>

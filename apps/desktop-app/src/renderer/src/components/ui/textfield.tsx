@@ -26,14 +26,14 @@ export const TextFieldRoot = <T extends ValidComponent = "div">(
 };
 
 export const textfieldLabel = cva(
-  "text-sm data-disabled:cursor-not-allowed data-disabled:opacity-70 font-medium",
+  "text-sm font-medium data-disabled:cursor-not-allowed data-disabled:opacity-70",
   {
     variants: {
       label: {
         true: "data-invalid:text-destructive",
       },
       error: {
-        true: "text-destructive text-xs",
+        true: "text-xs text-destructive",
       },
       description: {
         true: "font-normal text-muted-foreground",
@@ -106,7 +106,7 @@ export const TextField = <T extends ValidComponent = "input">(
   return (
     <TextFieldPrimitive.Input
       class={cn(
-        "border-input placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-shadow file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-[1.5px] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-shadow file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
         local.class,
       )}
       {...rest}

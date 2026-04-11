@@ -6,7 +6,7 @@ import { splitProps } from "solid-js";
 import { cn } from "@renderer/libs/cn";
 
 export const cardVariants = cva(
-  "rounded-xl shadow-xs border border-white dark:shadow-none dark:-outline-offset-1 text-card-foreground",
+  "rounded-xl border border-white text-card-foreground shadow-xs dark:shadow-none dark:-outline-offset-1",
   {
     variants: {
       color: {
@@ -44,7 +44,7 @@ export const CardTitle: ParentComponent<ComponentProps<"h1">> = (props) => {
 export const CardDescription: ParentComponent<ComponentProps<"h3">> = (props) => {
   const [local, rest] = splitProps(props, ["class"]);
 
-  return <h3 class={cn("text-muted-foreground text-sm", local.class)} {...rest} />;
+  return <h3 class={cn("text-sm text-muted-foreground", local.class)} {...rest} />;
 };
 
 export const CardContent = (props: ComponentProps<"div">) => {

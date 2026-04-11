@@ -12,7 +12,7 @@ export function ThemeToggle() {
     <Button variant="ghost" size="icon" onClick={toggleColorMode} aria-label="Toggle theme">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+        class="h-5 w-5 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -32,7 +32,7 @@ export function ThemeToggle() {
       </svg>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+        class="absolute h-5 w-5 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"

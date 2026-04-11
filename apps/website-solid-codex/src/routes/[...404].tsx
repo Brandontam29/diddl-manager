@@ -8,7 +8,7 @@ export default function NotFound() {
     <main class="mx-auto flex min-h-[calc(100vh-5rem)] max-w-3xl items-center px-4 py-10 sm:px-6">
       <Card class="w-full">
         <CardHeader>
-          <p class="text-sm uppercase tracking-[0.3em] text-primary">404</p>
+          <p class="text-sm tracking-[0.3em] text-primary uppercase">404</p>
           <CardTitle class="text-4xl">That route is not part of `website-solid`.</CardTitle>
         </CardHeader>
         <CardContent class="flex flex-wrap items-center gap-3">

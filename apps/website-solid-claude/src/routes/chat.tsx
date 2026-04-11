@@ -64,7 +64,7 @@ function ChatRoom() {
   };
 
   return (
-    <Card class="w-full h-[600px] flex flex-col">
+    <Card class="flex h-[600px] w-full flex-col">
       <CardHeader class="flex-none">
         <div class="flex items-center justify-between">
           <div>
@@ -75,11 +75,11 @@ function ChatRoom() {
         </div>
       </CardHeader>
       <Separator />
-      <CardContent class="flex-1 overflow-y-auto p-4 space-y-3">
+      <CardContent class="flex-1 space-y-3 overflow-y-auto p-4">
         <Show
           when={!messages.isLoading()}
           fallback={
-            <div class="flex items-center justify-center h-full">
+            <div class="flex h-full items-center justify-center">
               <div class="animate-pulse text-muted-foreground">Loading messages...</div>
             </div>
           }
@@ -87,8 +87,8 @@ function ChatRoom() {
           <Show
             when={(messages.data()?.length ?? 0) > 0}
             fallback={
-              <div class="flex items-center justify-center h-full">
-                <p class="text-muted-foreground text-sm">
+              <div class="flex h-full items-center justify-center">
+                <p class="text-sm text-muted-foreground">
                   No messages yet. Start the conversation!
                 </p>
               </div>
@@ -105,13 +105,13 @@ function ChatRoom() {
                       }`}
                     >
                       <Show when={!isOwn()}>
-                        <p class="text-xs font-medium mb-1 opacity-70">{message.userName}</p>
+                        <p class="mb-1 text-xs font-medium opacity-70">{message.userName}</p>
                       </Show>
                       <p class="text-sm">{message.body}</p>
                       <Show when={isOwn()}>
                         <button
                           onClick={() => removeMessage.mutate({ id: message._id })}
-                          class="text-xs opacity-50 hover:opacity-100 mt-1"
+                          class="mt-1 text-xs opacity-50 hover:opacity-100"
                         >
                           delete
                         </button>
@@ -132,7 +132,7 @@ function ChatRoom() {
       <Separator />
       <CardFooter class="flex-none p-4">
         <form
-          class="flex gap-2 w-full"
+          class="flex w-full gap-2"
           onSubmit={(e) => {
             e.preventDefault();
             handleSend();
@@ -155,8 +155,8 @@ function ChatRoom() {
 
 export default function Chat() {
   return (
-    <div class="flex flex-col items-center space-y-8 max-w-2xl mx-auto">
-      <div class="text-center space-y-2">
+    <div class="mx-auto flex max-w-2xl flex-col items-center space-y-8">
+      <div class="space-y-2 text-center">
         <h1 class="text-3xl font-bold tracking-tight">Chat</h1>
         <p class="text-muted-foreground">Real-time messaging with Convex subscriptions</p>
       </div>
@@ -164,8 +164,8 @@ export default function Chat() {
       <SignedIn>
         <Suspense
           fallback={
-            <Card class="w-full h-[600px]">
-              <CardContent class="flex items-center justify-center h-full">
+            <Card class="h-[600px] w-full">
+              <CardContent class="flex h-full items-center justify-center">
                 <div class="animate-pulse text-muted-foreground">Loading chat...</div>
               </CardContent>
             </Card>

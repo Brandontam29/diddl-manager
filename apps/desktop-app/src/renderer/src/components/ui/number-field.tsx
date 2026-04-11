@@ -89,7 +89,7 @@ export const NumberFieldGroup = (props: ComponentProps<"div">) => {
   return (
     <div
       class={cn(
-        "focus-within:ring-ring relative rounded-md transition-shadow focus-within:ring-[1.5px] focus-within:outline-none",
+        "relative rounded-md transition-shadow focus-within:ring-[1.5px] focus-within:ring-ring focus-within:outline-none",
         local.class,
       )}
       {...rest}
@@ -109,7 +109,7 @@ export const NumberFieldInput = <T extends ValidComponent = "input">(
   return (
     <NumberFieldPrimitive.Input
       class={cn(
-        "border-input placeholder:text-muted-foreground flex h-9 w-full rounded-md border bg-transparent px-10 py-1 text-center text-sm shadow-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-9 w-full rounded-md border border-input bg-transparent px-10 py-1 text-center text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
         local.class,
       )}
       {...rest}

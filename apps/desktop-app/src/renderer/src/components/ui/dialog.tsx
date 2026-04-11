@@ -28,19 +28,19 @@ export const DialogContent = <T extends ValidComponent = "div">(
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay
         class={cn(
-          "data-expanded:animate-in data-closed:animate-out data-closed:fade-out-0 data-expanded:fade-in-0 fixed inset-0 z-50 bg-black/80",
+          "fixed inset-0 z-50 bg-black/80 data-closed:animate-out data-closed:fade-out-0 data-expanded:animate-in data-expanded:fade-in-0",
         )}
         {...rest}
       />
       <DialogPrimitive.Content
         class={cn(
-          "bg-background data-expanded:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95 data-[closed]:slide-out-to-left-1/2 data-[closed]:slide-out-to-top-[48%] data-[expanded]:slide-in-from-left-1/2 data-[expanded]:slide-in-from-top-[48%] fixed top-[50%] left-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg data-closed:duration-200 data-expanded:duration-200 sm:rounded-lg md:w-full",
+          "fixed top-[50%] left-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg data-closed:duration-200 data-expanded:animate-in data-expanded:duration-200 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[closed]:slide-out-to-left-1/2 data-[closed]:slide-out-to-top-[48%] data-[expanded]:fade-in-0 data-[expanded]:zoom-in-95 data-[expanded]:slide-in-from-left-1/2 data-[expanded]:slide-in-from-top-[48%] sm:rounded-lg md:w-full",
           local.class,
         )}
         {...rest}
       >
         {local.children}
-        <DialogPrimitive.CloseButton class="ring-offset-background focus:ring-ring absolute top-4 right-4 rounded-sm opacity-70 transition-[opacity,box-shadow] hover:opacity-100 focus:ring-[1.5px] focus:ring-offset-2 focus:outline-none disabled:pointer-events-none">
+        <DialogPrimitive.CloseButton class="absolute top-4 right-4 rounded-sm opacity-70 ring-offset-background transition-[opacity,box-shadow] hover:opacity-100 focus:ring-[1.5px] focus:ring-ring focus:ring-offset-2 focus:outline-none disabled:pointer-events-none">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4">
             <path
               fill="none"
@@ -69,7 +69,7 @@ export const DialogTitle = <T extends ValidComponent = "h2">(
 
   return (
     <DialogPrimitive.Title
-      class={cn("text-foreground text-lg font-semibold", local.class)}
+      class={cn("text-lg font-semibold text-foreground", local.class)}
       {...rest}
     />
   );
@@ -86,7 +86,7 @@ export const DialogDescription = <T extends ValidComponent = "p">(
 
   return (
     <DialogPrimitive.Description
-      class={cn("text-muted-foreground text-sm", local.class)}
+      class={cn("text-sm text-muted-foreground", local.class)}
       {...rest}
     />
   );

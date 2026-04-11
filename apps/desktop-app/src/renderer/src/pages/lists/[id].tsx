@@ -62,7 +62,7 @@ const ListIdPage = () => {
             <h1 class="px-4 pt-8 text-2xl font-bold">{list()?.name}</h1>
           </Show>
           <Show when={totalQuantity()}>
-            <h1 class="text-muted-foreground px-4 pt-8 text-2xl font-bold">
+            <h1 class="px-4 pt-8 text-2xl font-bold text-muted-foreground">
               {totalQuantity()} items
             </h1>
           </Show>

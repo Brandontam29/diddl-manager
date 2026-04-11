@@ -20,10 +20,10 @@ export const buttonVariants = cva("", {
       link: "text-primary underline-offset-4 hover:underline",
       none: "",
 
-      pink: "bg-pink-100 hover:bg-pink-200 shadow text-pink-950",
+      pink: "bg-pink-100 text-pink-950 shadow hover:bg-pink-200",
     },
     size: {
-      default: "h-9 px-4 rounded-md",
+      default: "h-9 rounded-md px-4",
       sm: "h-8 rounded-md px-3 text-xs",
       lg: "h-10 rounded-md px-8",
       icon: "h-9 w-9",
@@ -39,7 +39,7 @@ export const buttonVariants = cva("", {
       variant: ["default", "pink", "destructive", "secondary", "ghost", "link"],
       size: ["default", "sm", "lg", "icon"],
       class:
-        "relative inline-flex items-center justify-center rounded-md text-sm font-medium transition-[color,background-color,box-shadow] focus-visible:outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+        "relative inline-flex items-center justify-center rounded-md text-sm font-medium transition-[color,background-color,box-shadow] focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
     },
   ],
 });

@@ -19,7 +19,7 @@ const CardHeader = (props: JSX.HTMLAttributes<HTMLDivElement>) => {
 const CardTitle = (props: JSX.HTMLAttributes<HTMLHeadingElement>) => {
   const [local, others] = splitProps(props, ["class"]);
   return (
-    <h3 class={cn("text-2xl font-semibold leading-none tracking-tight", local.class)} {...others} />
+    <h3 class={cn("text-2xl leading-none font-semibold tracking-tight", local.class)} {...others} />
   );
 };
 

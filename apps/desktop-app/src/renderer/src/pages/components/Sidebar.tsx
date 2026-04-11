@@ -183,7 +183,7 @@ const Sidebar: Component<{ currentPath: string }> = (props) => {
       class={cn(
         "flex flex-col gap-4 border-r border-gray-200 py-4",
         "sticky top-0 h-screen w-64 min-w-64 overflow-y-auto",
-        "scrollbar-thumb-purple-200 scrollbar-track-transparent scrollbar-thin",
+        "scrollbar-thin scrollbar-thumb-purple-200 scrollbar-track-transparent",
       )}
     >
       <TopLinkContainer>

@@ -21,7 +21,7 @@ export default function Nav() {
         <div class="flex items-center gap-3">
           <A href="/" class="group">
             <div class="flex flex-col">
-              <span class="text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-primary">
+              <span class="text-[0.65rem] font-semibold tracking-[0.35em] text-primary uppercase">
                 Diddl Manager
               </span>
               <span class="font-serif text-xl text-foreground transition-colors group-hover:text-primary">

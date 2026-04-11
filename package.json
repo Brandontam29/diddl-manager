@@ -23,7 +23,7 @@
     "typecheck:data-migrations": "bun run --filter @diddl/data-migrations typecheck",
     "typecheck:scrape-diddl": "bun run --filter @diddl/scrape-diddl typecheck",
     "typecheck": "bun run typecheck:desktop && bun run typecheck:website-svelte && bun run typecheck:website-solid-claude && bun run typecheck:website-solid-codex && bun run typecheck:data-migrations && bun run typecheck:scrape-diddl",
-    "dev:desktop": "bun run --filter @diddl/desktop-app dev --elide-lines=0",
+    "dev:desktop": "bun run --filter @diddl/desktop-app --elide-lines=0 dev",
     "build:desktop": "bun run --filter @diddl/desktop-app build",
     "test:desktop": "bun run --filter @diddl/desktop-app test:unit",
     "dev:website-svelte": "bun run --filter @diddl/website-svelte dev",

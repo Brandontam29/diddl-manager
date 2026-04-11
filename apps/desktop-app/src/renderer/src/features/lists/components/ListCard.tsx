@@ -26,14 +26,14 @@ const ListCard: Component<{ list: List }> = (props) => {
       <CardContent>
         <div class="space-y-4">
           <div class="flex items-center space-x-2">
-            <CalendarDays class="text-muted-foreground h-5 w-5" />
-            <span class="text-muted-foreground text-sm">
+            <CalendarDays class="h-5 w-5 text-muted-foreground" />
+            <span class="text-sm text-muted-foreground">
               Last modified: {displayDate(props.list.updatedAt)}
             </span>
           </div>
           <div class="flex items-center space-x-2">
-            <FileText class="text-muted-foreground h-5 w-5" />
-            <span class="text-muted-foreground text-sm">
+            <FileText class="h-5 w-5 text-muted-foreground" />
+            <span class="text-sm text-muted-foreground">
               Created: {displayDate(props.list.createdAt)}
             </span>
           </div>

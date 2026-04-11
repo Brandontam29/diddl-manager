@@ -17,12 +17,12 @@ export default function Nav() {
       <div class="container mx-auto flex h-14 items-center px-4">
         <div class="mr-4 flex">
           <A href="/" class="mr-6 flex items-center space-x-2">
-            <span class="font-bold text-lg">SolidClaude</span>
+            <span class="text-lg font-bold">SolidClaude</span>
           </A>
           <nav class="flex items-center gap-4 text-sm">
             <A
               href="/"
-              class="transition-colors hover:text-foreground/80 text-foreground/60"
+              class="text-foreground/60 transition-colors hover:text-foreground/80"
               activeClass="text-foreground"
               end
             >
@@ -30,14 +30,14 @@ export default function Nav() {
             </A>
             <A
               href="/dashboard"
-              class="transition-colors hover:text-foreground/80 text-foreground/60"
+              class="text-foreground/60 transition-colors hover:text-foreground/80"
               activeClass="text-foreground"
             >
               Dashboard
             </A>
             <A
               href="/chat"
-              class="transition-colors hover:text-foreground/80 text-foreground/60"
+              class="text-foreground/60 transition-colors hover:text-foreground/80"
               activeClass="text-foreground"
             >
               Chat

@@ -37,7 +37,7 @@ export default function App() {
                 <main class="container mx-auto px-4 py-8">
                   <Suspense
                     fallback={
-                      <div class="flex items-center justify-center min-h-[50vh]">
+                      <div class="flex min-h-[50vh] items-center justify-center">
                         <div class="animate-pulse text-muted-foreground">Loading...</div>
                       </div>
                     }

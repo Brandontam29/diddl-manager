@@ -70,7 +70,7 @@ export default function SettingsSectionUpdater() {
         <Switch>
           <Match when={isDownloading()}>
             <Button disabled>Downloading...</Button>
-            <p class="text-muted-foreground text-sm">
+            <p class="text-sm text-muted-foreground">
               A notification will appear when the download is finished. You can continue using the
               app in the meantime.
             </p>
@@ -82,9 +82,9 @@ export default function SettingsSectionUpdater() {
           </Match>
         </Switch>
 
-        {error() && <p class="text-destructive text-sm">{error()}</p>}
+        {error() && <p class="text-sm text-destructive">{error()}</p>}
 
-        {!error() && statusText() && <p class="text-muted-foreground text-sm">{statusText()}</p>}
+        {!error() && statusText() && <p class="text-sm text-muted-foreground">{statusText()}</p>}
       </SectionContent>
     </Section>
   );

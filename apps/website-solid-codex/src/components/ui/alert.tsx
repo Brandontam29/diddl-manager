@@ -7,7 +7,7 @@ import { splitProps } from "solid-js";
 import { cn } from "~/lib/utils";
 
 const alertVariants = cva(
-  "relative w-full rounded-lg border p-4 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground [&>svg~*]:pl-7",
+  "relative w-full rounded-lg border p-4 [&>svg]:absolute [&>svg]:top-4 [&>svg]:left-4 [&>svg]:text-foreground [&>svg+div]:translate-y-[-3px] [&>svg~*]:pl-7",
   {
     variants: {
       variant: {
@@ -38,7 +38,7 @@ const Alert = <T extends ValidComponent = "div">(props: PolymorphicProps<T, Aler
 
 const AlertTitle: Component<ComponentProps<"h5">> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
-  return <h5 class={cn("mb-1 font-medium leading-none tracking-tight", local.class)} {...others} />;
+  return <h5 class={cn("mb-1 leading-none font-medium tracking-tight", local.class)} {...others} />;
 };
 
 const AlertDescription: Component<ComponentProps<"div">> = (props) => {

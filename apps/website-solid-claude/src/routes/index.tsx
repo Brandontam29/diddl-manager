@@ -69,7 +69,7 @@ export default function Home() {
   return (
     <div class="flex flex-col items-center space-y-12 py-12">
       {/* Hero Section */}
-      <section class="flex flex-col items-center text-center space-y-6 max-w-3xl">
+      <section class="flex max-w-3xl flex-col items-center space-y-6 text-center">
         <Badge variant="secondary" class="text-sm">
           {appInfo()?.version ? `v${appInfo()!.version}` : "Loading..."}
         </Badge>
@@ -79,7 +79,7 @@ export default function Home() {
             SolidClaude
           </span>
         </h1>
-        <p class="text-xl text-muted-foreground max-w-2xl">
+        <p class="max-w-2xl text-xl text-muted-foreground">
           A modern full-stack application built with SolidStart 2.0, Effect, TailwindCSS, Solid UI,
           Convex, and Clerk. Powered by fine-grained reactivity and type-safe functional
           programming.
@@ -105,8 +105,8 @@ export default function Home() {
 
       {/* Tech Stack Section */}
       <section class="w-full max-w-5xl space-y-6">
-        <h2 class="text-2xl font-bold text-center">Tech Stack</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <h2 class="text-center text-2xl font-bold">Tech Stack</h2>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {techStack.map((tech) => (
             <Card class="transition-shadow hover:shadow-md">
               <CardHeader>
@@ -125,7 +125,7 @@ export default function Home() {
 
       {/* Features Section */}
       <section class="w-full max-w-3xl space-y-6">
-        <h2 class="text-2xl font-bold text-center">Features</h2>
+        <h2 class="text-center text-2xl font-bold">Features</h2>
         <div class="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -175,7 +175,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer class="text-center text-sm text-muted-foreground pt-8 border-t w-full max-w-3xl">
+      <footer class="w-full max-w-3xl border-t pt-8 text-center text-sm text-muted-foreground">
         <p>Built with SolidStart 2.0 + Effect + TailwindCSS + Solid UI + Convex + Clerk</p>
       </footer>
     </div>

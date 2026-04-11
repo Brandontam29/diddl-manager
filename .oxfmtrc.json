@@ -6,6 +6,10 @@
   "tabWidth": 2,
   "trailingComma": "all",
   "sortPackageJson": true,
+  "sortTailwindcss": {
+    "stylesheet": "apps/desktop-app/src/renderer/src/styles/index.css",
+    "functions": ["cn", "cva", "clsx"]
+  },
   "ignorePatterns": [
     "**/bun.lock",
     "**/bun.lockb",

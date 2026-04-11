@@ -152,7 +152,7 @@ export default function Home() {
                 </AvatarFallback>
               </Avatar>
               <div class="space-y-1">
-                <p class="text-sm uppercase tracking-[0.28em] text-muted-foreground">Viewer</p>
+                <p class="text-sm tracking-[0.28em] text-muted-foreground uppercase">Viewer</p>
                 <p class="text-xl font-semibold">{clerk.user()?.fullName ?? "Anonymous visitor"}</p>
                 <p class="text-sm text-muted-foreground">
                   {clerk.user()?.primaryEmailAddress?.emailAddress ??

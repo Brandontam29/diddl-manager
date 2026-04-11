@@ -22,10 +22,10 @@ export const CheckboxControl = <T extends ValidComponent = "div">(
 
   return (
     <>
-      <CheckboxPrimitive.Input class="[&:focus-visible+div]:ring-ring [&:focus-visible+div]:ring-offset-background [&:focus-visible+div]:ring-[1.5px] [&:focus-visible+div]:ring-offset-2 [&:focus-visible+div]:outline-none" />
+      <CheckboxPrimitive.Input class="[&:focus-visible+div]:ring-[1.5px] [&:focus-visible+div]:ring-ring [&:focus-visible+div]:ring-offset-2 [&:focus-visible+div]:ring-offset-background [&:focus-visible+div]:outline-none" />
       <CheckboxPrimitive.Control
         class={cn(
-          "border-primary focus-visible:ring-ring data-[checked]:bg-primary data-[checked]:text-primary-foreground h-4 w-4 shrink-0 rounded-sm border shadow transition-shadow focus-visible:ring-[1.5px] focus-visible:outline-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
+          "h-4 w-4 shrink-0 rounded-sm border border-primary shadow transition-shadow focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:outline-none data-[checked]:bg-primary data-[checked]:text-primary-foreground data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
           local.class,
         )}
         {...rest}

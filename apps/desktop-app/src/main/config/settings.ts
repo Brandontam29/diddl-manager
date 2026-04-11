@@ -16,6 +16,7 @@ export const createDefaultSetting = () => {
     cwd,
     name,
     defaults,
+    deserialize: (text) => (text.trim() ? JSON.parse(text) : {}),
   });
 
   return store;

@@ -64,7 +64,4 @@ writeJsonToFile(
   path.join(projectRoot(), "json-files", "missingFromDisk.json"),
   result.missingFromDisk,
 );
-writeJsonToFile(
-  path.join(projectRoot(), "json-files", "extraOnDisk.json"),
-  result.extraOnDisk,
-);
+writeJsonToFile(path.join(projectRoot(), "json-files", "extraOnDisk.json"), result.extraOnDisk);

@@ -26,9 +26,10 @@ export const getAllImages = async (url: string, puppeteerBrowser?: Browser) => {
   }
 };
 
-const pages = (await Bun.file(
-  path.join(projectRoot(), "json-files", "pages.json"),
-).json()) as { link: string; name: string }[];
+const pages = (await Bun.file(path.join(projectRoot(), "json-files", "pages.json")).json()) as {
+  link: string;
+  name: string;
+}[];
 
 const data: Record<string, string[]> = {};
 
@@ -45,7 +46,4 @@ try {
   await browser.close();
 }
 
-writeJsonToFile(
-  path.join(projectRoot(), "json-files", "image-urls-2.json"),
-  data,
-);
+writeJsonToFile(path.join(projectRoot(), "json-files", "image-urls-2.json"), data);

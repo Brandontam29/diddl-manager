@@ -8,13 +8,13 @@ const libraryMap = (await readJsonFile(libraryMapPath())) as any[];
 const collection = (await readJsonFile(collectionPath())) as any[];
 
 const itemsWithCorrectid = collection.map((item) => {
-    return {
-        ...item,
-        id: libraryMap[item.id],
-    };
+  return {
+    ...item,
+    id: libraryMap[item.id],
+  };
 });
 
 writeJsonToFile(
-    path.join(projectRoot(), "json-files", "lists", "new-collection.json"),
-    itemsWithCorrectid
+  path.join(projectRoot(), "json-files", "lists", "new-collection.json"),
+  itemsWithCorrectid,
 );

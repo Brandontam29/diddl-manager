@@ -1,10 +1,11 @@
 {
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "semi": true,
   "singleQuote": false,
   "printWidth": 100,
   "tabWidth": 2,
   "trailingComma": "all",
-  "sortPackageJson": false,
+  "sortPackageJson": true,
   "ignorePatterns": [
     "**/bun.lock",
     "**/bun.lockb",

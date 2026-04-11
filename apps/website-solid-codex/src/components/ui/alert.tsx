@@ -13,13 +13,13 @@ const alertVariants = cva(
       variant: {
         default: "bg-background text-foreground",
         destructive:
-          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive"
-      }
+          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+      },
     },
     defaultVariants: {
-      variant: "default"
-    }
-  }
+      variant: "default",
+    },
+  },
 );
 
 type AlertRootProps<T extends ValidComponent = "div"> = AlertPrimitive.AlertRootProps<T> &
@@ -36,12 +36,12 @@ const Alert = <T extends ValidComponent = "div">(props: PolymorphicProps<T, Aler
   );
 };
 
-const AlertTitle: Component<ComponentProps<"h5">> = props => {
+const AlertTitle: Component<ComponentProps<"h5">> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
   return <h5 class={cn("mb-1 font-medium leading-none tracking-tight", local.class)} {...others} />;
 };
 
-const AlertDescription: Component<ComponentProps<"div">> = props => {
+const AlertDescription: Component<ComponentProps<"div">> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
   return <div class={cn("text-sm [&_p]:leading-relaxed", local.class)} {...others} />;
 };

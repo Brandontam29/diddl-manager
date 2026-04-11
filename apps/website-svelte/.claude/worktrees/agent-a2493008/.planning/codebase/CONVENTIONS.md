@@ -129,14 +129,14 @@ Effect.tryPromise({
 **Logging Structure Example:**
 
 ```typescript
-console.error('Convex error', {
-	traceId: errorValue.traceId,
-	kind: errorValue.kind,
-	timestamp: errorValue.timestamp,
-	operation: errorValue.operation,
-	functionName: errorValue.functionName,
-	message: errorValue.message,
-	cause: serializeUnknown(errorValue.cause)
+console.error("Convex error", {
+  traceId: errorValue.traceId,
+  kind: errorValue.kind,
+  timestamp: errorValue.timestamp,
+  operation: errorValue.operation,
+  functionName: errorValue.functionName,
+  message: errorValue.message,
+  cause: serializeUnknown(errorValue.cause),
 });
 ```
 
@@ -229,10 +229,10 @@ console.error('Convex error', {
 
 ```typescript
 export const functionName = authedQuery({
-	args: { field: v.type() },
-	handler: async (ctx, args) => {
-		// implementation
-	}
+  args: { field: v.type() },
+  handler: async (ctx, args) => {
+    // implementation
+  },
 });
 ```
 

@@ -10,14 +10,17 @@ export async function getStackSnapshotEffect(): Promise<StackSnapshot> {
   return Effect.gen(function* () {
     const versions = yield* Effect.tryPromise(async () => {
       const { readFile } = await import("node:fs/promises");
-      const rawPackageJson = await readFile(new URL("../../../package.json", import.meta.url), "utf8");
+      const rawPackageJson = await readFile(
+        new URL("../../../package.json", import.meta.url),
+        "utf8",
+      );
       const parsed = JSON.parse(rawPackageJson) as PackageJson;
 
       return {
         clerk: parsed.dependencies?.["@clerk/clerk-js"] ?? "unknown",
         convex: parsed.dependencies?.["convex"] ?? "unknown",
         effect: parsed.dependencies?.["effect"] ?? "unknown",
-        solidStart: parsed.dependencies?.["@solidjs/start"] ?? "unknown"
+        solidStart: parsed.dependencies?.["@solidjs/start"] ?? "unknown",
       };
     });
     const bunVersion =
@@ -31,14 +34,14 @@ export async function getStackSnapshotEffect(): Promise<StackSnapshot> {
         clerkSecretKey: Boolean(process.env.CLERK_SECRET_KEY),
         clerkJwtIssuerDomain: Boolean(process.env.CLERK_JWT_ISSUER_DOMAIN),
         convexUrl: Boolean(process.env.VITE_CONVEX_URL),
-        convexDeployment: Boolean(process.env.CONVEX_DEPLOYMENT)
+        convexDeployment: Boolean(process.env.CONVEX_DEPLOYMENT),
       },
       runtime: {
         bun: bunVersion,
-        node: process.version
+        node: process.version,
       },
       timestamp: new Date().toISOString(),
-      versions
+      versions,
     };
   }).pipe(Effect.runPromise);
 }

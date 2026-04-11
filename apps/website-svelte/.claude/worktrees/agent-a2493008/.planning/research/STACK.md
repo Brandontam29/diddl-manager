@@ -53,9 +53,9 @@ bun add runed
 
 ```typescript
 // guest-lists.svelte.ts
-import { PersistedState } from 'runed';
+import { PersistedState } from "runed";
 
-const guestLists = new PersistedState('diddl-guest-lists', [] as GuestList[]);
+const guestLists = new PersistedState("diddl-guest-lists", [] as GuestList[]);
 ```
 
 ---

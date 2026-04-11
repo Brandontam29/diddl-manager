@@ -210,63 +210,63 @@ src/
 
 ```typescript
 // src/convex/schema.ts
-import { defineSchema, defineTable } from 'convex/server';
-import { v } from 'convex/values';
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
 
 export default defineSchema({
-	catalogItems: defineTable({
-		type: v.string(), // "A4", "sticker", etc. — matches diddlTypes.slug
-		number: v.number(), // sequential integer extracted from filename
-		name: v.optional(v.string()), // human-readable display name (optional for seeding)
-		edition: v.optional(v.string()), // optional — not present in catalog.json
-		releaseDate: v.optional(v.number()), // optional — epoch ms; not present in catalog.json
-		imageStorageIds: v.array(v.id('_storage')), // DATA-07: array, future-ready
-		imagePath: v.optional(v.string()) // raw path from catalog.json for reference
-	}).index('by_type_number', ['type', 'number']), // DATA-06: MUST define before any query
+  catalogItems: defineTable({
+    type: v.string(), // "A4", "sticker", etc. — matches diddlTypes.slug
+    number: v.number(), // sequential integer extracted from filename
+    name: v.optional(v.string()), // human-readable display name (optional for seeding)
+    edition: v.optional(v.string()), // optional — not present in catalog.json
+    releaseDate: v.optional(v.number()), // optional — epoch ms; not present in catalog.json
+    imageStorageIds: v.array(v.id("_storage")), // DATA-07: array, future-ready
+    imagePath: v.optional(v.string()), // raw path from catalog.json for reference
+  }).index("by_type_number", ["type", "number"]), // DATA-06: MUST define before any query
 
-	diddlTypes: defineTable({
-		// DATA-05: managed collection, not hardcoded enum
-		slug: v.string(), // "A4", "sticker", etc. — matches catalogItems.type
-		displayName: v.string(), // "A4 Sheets", "Stickers", etc.
-		sortOrder: v.number() // controls sidebar display order
-	})
-		.index('by_slug', ['slug'])
-		.index('by_sort_order', ['sortOrder']),
+  diddlTypes: defineTable({
+    // DATA-05: managed collection, not hardcoded enum
+    slug: v.string(), // "A4", "sticker", etc. — matches catalogItems.type
+    displayName: v.string(), // "A4 Sheets", "Stickers", etc.
+    sortOrder: v.number(), // controls sidebar display order
+  })
+    .index("by_slug", ["slug"])
+    .index("by_sort_order", ["sortOrder"]),
 
-	lists: defineTable({
-		// DATA-02: declared now, used in Phase 2
-		name: v.string(),
-		description: v.optional(v.string()),
-		color: v.string(),
-		ownerSubject: v.string() // Clerk identity.subject — NOT email
-	}).index('by_owner', ['ownerSubject']),
+  lists: defineTable({
+    // DATA-02: declared now, used in Phase 2
+    name: v.string(),
+    description: v.optional(v.string()),
+    color: v.string(),
+    ownerSubject: v.string(), // Clerk identity.subject — NOT email
+  }).index("by_owner", ["ownerSubject"]),
 
-	listItems: defineTable({
-		// DATA-03: declared now, used in Phase 2
-		listId: v.id('lists'),
-		catalogItemId: v.id('catalogItems'),
-		condition: v.union(
-			v.literal('mint'),
-			v.literal('near_mint'),
-			v.literal('good'),
-			v.literal('poor'),
-			v.literal('damaged')
-		),
-		quantity: v.number(),
-		complete: v.boolean(),
-		tags: v.array(v.string())
-	})
-		.index('by_list', ['listId'])
-		.index('by_list_catalog', ['listId', 'catalogItemId']),
+  listItems: defineTable({
+    // DATA-03: declared now, used in Phase 2
+    listId: v.id("lists"),
+    catalogItemId: v.id("catalogItems"),
+    condition: v.union(
+      v.literal("mint"),
+      v.literal("near_mint"),
+      v.literal("good"),
+      v.literal("poor"),
+      v.literal("damaged"),
+    ),
+    quantity: v.number(),
+    complete: v.boolean(),
+    tags: v.array(v.string()),
+  })
+    .index("by_list", ["listId"])
+    .index("by_list_catalog", ["listId", "catalogItemId"]),
 
-	userProfiles: defineTable({
-		// DATA-04: declared now, used in Phase 4
-		ownerSubject: v.string(),
-		name: v.optional(v.string()),
-		bio: v.optional(v.string()),
-		hobbies: v.array(v.string()),
-		pictureStorageId: v.optional(v.id('_storage'))
-	}).index('by_owner', ['ownerSubject'])
+  userProfiles: defineTable({
+    // DATA-04: declared now, used in Phase 4
+    ownerSubject: v.string(),
+    name: v.optional(v.string()),
+    bio: v.optional(v.string()),
+    hobbies: v.array(v.string()),
+    pictureStorageId: v.optional(v.id("_storage")),
+  }).index("by_owner", ["ownerSubject"]),
 });
 ```
 
@@ -280,35 +280,35 @@ export default defineSchema({
 
 ```typescript
 // src/convex/authed/catalog.ts
-import { v } from 'convex/values';
-import { authedQuery } from './helpers';
+import { v } from "convex/values";
+import { authedQuery } from "./helpers";
 
 export const listByRange = authedQuery({
-	args: {
-		type: v.string(),
-		fromNumber: v.number(),
-		toNumber: v.number()
-	},
-	handler: async (ctx, args) => {
-		const items = await ctx.db
-			.query('catalogItems')
-			.withIndex('by_type_number', (q) =>
-				q.eq('type', args.type).gte('number', args.fromNumber).lte('number', args.toNumber)
-			)
-			.order('asc')
-			.collect();
+  args: {
+    type: v.string(),
+    fromNumber: v.number(),
+    toNumber: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const items = await ctx.db
+      .query("catalogItems")
+      .withIndex("by_type_number", (q) =>
+        q.eq("type", args.type).gte("number", args.fromNumber).lte("number", args.toNumber),
+      )
+      .order("asc")
+      .collect();
 
-		// Resolve first image URL for each item; client never calls storage APIs directly
-		return await Promise.all(
-			items.map(async (item) => {
-				const imageUrl =
-					item.imageStorageIds.length > 0
-						? await ctx.storage.getUrl(item.imageStorageIds[0])
-						: null;
-				return { ...item, imageUrl };
-			})
-		);
-	}
+    // Resolve first image URL for each item; client never calls storage APIs directly
+    return await Promise.all(
+      items.map(async (item) => {
+        const imageUrl =
+          item.imageStorageIds.length > 0
+            ? await ctx.storage.getUrl(item.imageStorageIds[0])
+            : null;
+        return { ...item, imageUrl };
+      }),
+    );
+  },
 });
 ```
 
@@ -320,13 +320,13 @@ Catalog browsing must work for unauthenticated guests in Phase 1 (CATL-01 has no
 
 ```typescript
 // src/convex/authed/diddlTypes.ts — NOTE: use plain query, not authedQuery
-import { query } from '../_generated/server';
+import { query } from "../_generated/server";
 
 export const list = query({
-	args: {},
-	handler: async (ctx) => {
-		return await ctx.db.query('diddlTypes').withIndex('by_sort_order').order('asc').collect();
-	}
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db.query("diddlTypes").withIndex("by_sort_order").order("asc").collect();
+  },
 });
 ```
 
@@ -340,28 +340,28 @@ export const list = query({
 
 ```typescript
 // src/convex/private/seed.ts
-import { privateAction } from './helpers';
-import { internal } from '../_generated/api';
+import { privateAction } from "./helpers";
+import { internal } from "../_generated/api";
 
 // Actions can read files bundled with the Convex deployment
 // For seeding from catalog.json, pass the data as an argument (chunked)
 // to avoid the 8MB action argument limit
 
 export const seedCatalogChunk = privateAction({
-	args: {
-		items: v.array(
-			v.object({
-				type: v.string(),
-				number: v.number(),
-				imagePath: v.optional(v.string())
-			})
-		)
-	},
-	handler: async (ctx, args) => {
-		await ctx.runMutation(internal.private.seedMutations.insertCatalogChunk, {
-			items: args.items
-		});
-	}
+  args: {
+    items: v.array(
+      v.object({
+        type: v.string(),
+        number: v.number(),
+        imagePath: v.optional(v.string()),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    await ctx.runMutation(internal.private.seedMutations.insertCatalogChunk, {
+      items: args.items,
+    });
+  },
 });
 ```
 
@@ -380,18 +380,18 @@ export const seedCatalogChunk = privateAction({
 ```typescript
 // In CatalogGrid or parent page component
 const url = $derived(new URL($page.url));
-const selectedType = $derived(url.searchParams.get('type') ?? null);
-const selectedFrom = $derived(Number(url.searchParams.get('from') ?? 0));
-const selectedTo = $derived(Number(url.searchParams.get('to') ?? 99));
+const selectedType = $derived(url.searchParams.get("type") ?? null);
+const selectedFrom = $derived(Number(url.searchParams.get("from") ?? 0));
+const selectedTo = $derived(Number(url.searchParams.get("to") ?? 99));
 
 // In SidebarRangeRow — construct href
 function rangeHref(type: string, from: number, to: number): string {
-	return `/app/catalog?type=${encodeURIComponent(type)}&from=${from}&to=${to}`;
+  return `/app/catalog?type=${encodeURIComponent(type)}&from=${from}&to=${to}`;
 }
 
 // Active state check
 function isActive(type: string, from: number): boolean {
-	return selectedType === type && selectedFrom === from;
+  return selectedType === type && selectedFrom === from;
 }
 ```
 
@@ -403,17 +403,17 @@ function isActive(type: string, from: number): boolean {
 
 ```typescript
 // In CatalogGrid.svelte or parent page
-import { useQuery } from 'convex-svelte';
-import { api } from '../../../convex/_generated/api';
+import { useQuery } from "convex-svelte";
+import { api } from "../../../convex/_generated/api";
 
 // selectedType, selectedFrom, selectedTo are $derived from URL
 const catalogQuery = useQuery(
-	api.authed.catalog.listByRange,
-	// convex-svelte accepts a function for reactive args
-	() =>
-		selectedType !== null
-			? { type: selectedType, fromNumber: selectedFrom, toNumber: selectedTo }
-			: 'skip'
+  api.authed.catalog.listByRange,
+  // convex-svelte accepts a function for reactive args
+  () =>
+    selectedType !== null
+      ? { type: selectedType, fromNumber: selectedFrom, toNumber: selectedTo }
+      : "skip",
 );
 ```
 
@@ -570,9 +570,9 @@ releaseDate: v.optional(v.number())
 // Pass 'skip' to avoid subscribing when no selection exists
 // Source: convex-svelte GitHub README
 const query = useQuery(api.authed.catalog.listByRange, () =>
-	selectedType !== null
-		? { type: selectedType, fromNumber: selectedFrom, toNumber: selectedTo }
-		: 'skip'
+  selectedType !== null
+    ? { type: selectedType, fromNumber: selectedFrom, toNumber: selectedTo }
+    : "skip",
 );
 ```
 
@@ -598,27 +598,27 @@ const query = useQuery(api.authed.catalog.listByRange, () =>
 
 ```typescript
 // src/convex/private/seed.ts — action calls internal mutation
-import { internal } from '../_generated/api';
-import { v } from 'convex/values';
-import { privateAction } from './helpers';
+import { internal } from "../_generated/api";
+import { v } from "convex/values";
+import { privateAction } from "./helpers";
 
 export const seedCatalogChunk = privateAction({
-	args: {
-		items: v.array(
-			v.object({
-				type: v.string(),
-				number: v.number(),
-				imagePath: v.optional(v.string())
-			})
-		)
-	},
-	handler: async (ctx, args) => {
-		// Actions must call runMutation to write to DB
-		await ctx.runMutation(internal.private.seedMutations.insertCatalogChunk, {
-			items: args.items
-		});
-		return { inserted: args.items.length };
-	}
+  args: {
+    items: v.array(
+      v.object({
+        type: v.string(),
+        number: v.number(),
+        imagePath: v.optional(v.string()),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    // Actions must call runMutation to write to DB
+    await ctx.runMutation(internal.private.seedMutations.insertCatalogChunk, {
+      items: args.items,
+    });
+    return { inserted: args.items.length };
+  },
 });
 ```
 

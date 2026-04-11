@@ -80,60 +80,60 @@ If testing is added in the future, follow these patterns based on codebase conve
 For service tests (Effect-based):
 
 ```typescript
-import { describe, it, expect, beforeEach } from 'vitest';
-import { Effect, Exit } from 'effect';
-import { runtime } from '$lib/runtime';
+import { describe, it, expect, beforeEach } from "vitest";
+import { Effect, Exit } from "effect";
+import { runtime } from "$lib/runtime";
 
-describe('ConvexPrivateService', () => {
-	it('should execute query with api key', async () => {
-		const testEffect = Effect.gen(function* () {
-			const convex = yield* ConvexPrivateService;
-			const result = yield* convex.query({
-				func: api.private.demo.privateDemoQuery,
-				args: { username: 'test' }
-			});
-			return result;
-		});
+describe("ConvexPrivateService", () => {
+  it("should execute query with api key", async () => {
+    const testEffect = Effect.gen(function* () {
+      const convex = yield* ConvexPrivateService;
+      const result = yield* convex.query({
+        func: api.private.demo.privateDemoQuery,
+        args: { username: "test" },
+      });
+      return result;
+    });
 
-		const exit = await runtime.runPromiseExit(testEffect);
-		expect(Exit.isSuccess(exit)).toBe(true);
-	});
+    const exit = await runtime.runPromiseExit(testEffect);
+    expect(Exit.isSuccess(exit)).toBe(true);
+  });
 });
 ```
 
 For Svelte component tests:
 
 ```typescript
-import { render, screen } from 'vitest-svelte';
-import PageError from '$lib/components/PageError.svelte';
+import { render, screen } from "vitest-svelte";
+import PageError from "$lib/components/PageError.svelte";
 
-describe('PageError', () => {
-	it('should display error message', () => {
-		const error = {
-			message: 'Test error',
-			kind: 'TestError',
-			timestamp: Date.now(),
-			traceId: 'test-trace'
-		};
+describe("PageError", () => {
+  it("should display error message", () => {
+    const error = {
+      message: "Test error",
+      kind: "TestError",
+      timestamp: Date.now(),
+      traceId: "test-trace",
+    };
 
-		render(PageError, { props: { error } });
-		expect(screen.getByText('Test error')).toBeInTheDocument();
-	});
+    render(PageError, { props: { error } });
+    expect(screen.getByText("Test error")).toBeInTheDocument();
+  });
 });
 ```
 
 For route handlers:
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import { effectRunner } from '$lib/runtime';
+import { describe, it, expect } from "vitest";
+import { effectRunner } from "$lib/runtime";
 
-describe('remoteDemoQuery', () => {
-	it('should return demo data', async () => {
-		// Mock services as needed
-		const result = await effectRunner(demoRemote);
-		expect(result).toBeDefined();
-	});
+describe("remoteDemoQuery", () => {
+  it("should return demo data", async () => {
+    // Mock services as needed
+    const result = await effectRunner(demoRemote);
+    expect(result).toBeDefined();
+  });
 });
 ```
 
@@ -148,18 +148,18 @@ describe('remoteDemoQuery', () => {
 **Approach:**
 
 ```typescript
-import { vi } from 'vitest';
+import { vi } from "vitest";
 
 // Mock effect service
 const mockConvexService = Layer.succeed(ConvexPrivateService, {
-	query: vi.fn().mockResolvedValue({ test: 'data' }),
-	mutation: vi.fn().mockResolvedValue({ id: '123' }),
-	action: vi.fn().mockResolvedValue({ result: true })
+  query: vi.fn().mockResolvedValue({ test: "data" }),
+  mutation: vi.fn().mockResolvedValue({ id: "123" }),
+  action: vi.fn().mockResolvedValue({ result: true }),
 });
 
 // Mock environment variables
-vi.stubEnv('CONVEX_PRIVATE_BRIDGE_KEY', 'test-key');
-vi.stubEnv('CLERK_SECRET_KEY', 'test-secret');
+vi.stubEnv("CONVEX_PRIVATE_BRIDGE_KEY", "test-key");
+vi.stubEnv("CLERK_SECRET_KEY", "test-secret");
 ```
 
 **What to Mock:**
@@ -181,29 +181,29 @@ vi.stubEnv('CLERK_SECRET_KEY', 'test-secret');
 Expected error pattern from codebase:
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import { Effect, Exit, Cause } from 'effect';
+import { describe, it, expect } from "vitest";
+import { Effect, Exit, Cause } from "effect";
 
-describe('Error handling', () => {
-	it('should catch ConvexError', async () => {
-		const failingEffect = Effect.gen(function* () {
-			const convex = yield* ConvexPrivateService;
-			// Trigger error by invalid args
-			yield* convex.query({
-				func: api.private.demo.privateDemoQuery,
-				args: {} // Missing required username
-			});
-		});
+describe("Error handling", () => {
+  it("should catch ConvexError", async () => {
+    const failingEffect = Effect.gen(function* () {
+      const convex = yield* ConvexPrivateService;
+      // Trigger error by invalid args
+      yield* convex.query({
+        func: api.private.demo.privateDemoQuery,
+        args: {}, // Missing required username
+      });
+    });
 
-		const exit = await runtime.runPromiseExit(failingEffect);
-		expect(Exit.isFailure(exit)).toBe(true);
+    const exit = await runtime.runPromiseExit(failingEffect);
+    expect(Exit.isFailure(exit)).toBe(true);
 
-		// Check error structure
-		const cause = exit.cause;
-		const error = Cause.findErrorOption(cause);
-		expect(error._tag).toBe('Some');
-		expect(error.value).toBeInstanceOf(ConvexError);
-	});
+    // Check error structure
+    const cause = exit.cause;
+    const error = Cause.findErrorOption(cause);
+    expect(error._tag).toBe("Some");
+    expect(error.value).toBeInstanceOf(ConvexError);
+  });
 });
 ```
 
@@ -212,32 +212,32 @@ describe('Error handling', () => {
 For Effect-based async:
 
 ```typescript
-it('should handle async queries', async () => {
-	const effect = Effect.gen(function* () {
-		const convex = yield* ConvexPrivateService;
-		const result = yield* convex.query({
-			func: api.private.demo.privateDemoQuery,
-			args: { username: 'async-test' }
-		});
-		return result;
-	});
+it("should handle async queries", async () => {
+  const effect = Effect.gen(function* () {
+    const convex = yield* ConvexPrivateService;
+    const result = yield* convex.query({
+      func: api.private.demo.privateDemoQuery,
+      args: { username: "async-test" },
+    });
+    return result;
+  });
 
-	const result = await runtime.runPromise(effect);
-	expect(result).toBeDefined();
+  const result = await runtime.runPromise(effect);
+  expect(result).toBeDefined();
 });
 ```
 
 For promise-based Svelte stores:
 
 ```typescript
-it('should load clerk on mount', async () => {
-	const clerkStore = new ClerkStore();
-	expect(clerkStore.isClerkLoaded).toBe(false);
+it("should load clerk on mount", async () => {
+  const clerkStore = new ClerkStore();
+  expect(clerkStore.isClerkLoaded).toBe(false);
 
-	// Simulate mount lifecycle
-	await vi.waitFor(() => {
-		expect(clerkStore.isClerkLoaded).toBe(true);
-	});
+  // Simulate mount lifecycle
+  await vi.waitFor(() => {
+    expect(clerkStore.isClerkLoaded).toBe(true);
+  });
 });
 ```
 
@@ -271,23 +271,23 @@ it('should load clerk on mount', async () => {
 **vitest.config.ts (if using Vitest):**
 
 ```typescript
-import { defineConfig } from 'vitest/config';
-import { sveltekit } from '@sveltejs/kit/vite';
-import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from "vitest/config";
+import { sveltekit } from "@sveltejs/kit/vite";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-	plugins: [sveltekit(), tailwindcss()],
-	test: {
-		globals: true,
-		environment: 'jsdom',
-		setupFiles: ['src/test/setup.ts'],
-		coverage: {
-			provider: 'v8',
-			reporter: ['text', 'html'],
-			include: ['src/**/*.ts', 'src/**/*.svelte'],
-			exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts', 'src/**/_generated/**']
-		}
-	}
+  plugins: [sveltekit(), tailwindcss()],
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["src/test/setup.ts"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+      include: ["src/**/*.ts", "src/**/*.svelte"],
+      exclude: ["src/**/*.test.ts", "src/**/*.spec.ts", "src/**/_generated/**"],
+    },
+  },
 });
 ```
 
@@ -295,13 +295,13 @@ export default defineConfig({
 
 ```typescript
 // src/test/setup.ts
-import { vi } from 'vitest';
-import { config } from '@sveltejs/kit';
+import { vi } from "vitest";
+import { config } from "@sveltejs/kit";
 
 // Mock environment variables
-vi.stubEnv('CONVEX_PRIVATE_BRIDGE_KEY', 'test-key');
-vi.stubEnv('CLERK_SECRET_KEY', 'test-secret');
-vi.stubEnv('PUBLIC_CLERK_PUBLISHABLE_KEY', 'pk_test');
+vi.stubEnv("CONVEX_PRIVATE_BRIDGE_KEY", "test-key");
+vi.stubEnv("CLERK_SECRET_KEY", "test-secret");
+vi.stubEnv("PUBLIC_CLERK_PUBLISHABLE_KEY", "pk_test");
 ```
 
 ---

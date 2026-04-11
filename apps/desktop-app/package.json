@@ -1,12 +1,12 @@
 {
   "name": "@diddl/desktop-app",
   "version": "1.17.0",
-  "description": "App to manage your Diddls",
-  "main": "./out/main/index.js",
-  "author": "Brandontam29",
-  "homepage": "https://electron-vite.org",
   "private": true,
+  "description": "App to manage your Diddls",
+  "homepage": "https://electron-vite.org",
+  "author": "Brandontam29",
   "type": "module",
+  "main": "./out/main/index.js",
   "scripts": {
     "format": "oxfmt --config ../../.oxfmtrc.json .",
     "lint:node": "oxlint --config ../../.oxlintrc.json electron.vite.config.ts src/main src/preload src/shared unit-test",

@@ -15,15 +15,15 @@ export const getSummary = query({
         "SolidStart 2 app shell",
         "Clerk browser auth via ClerkJS",
         "Convex live query ready",
-        "Effect-powered server snapshot"
+        "Effect-powered server snapshot",
       ],
       viewer: identity
         ? {
             subject: identity.subject,
             name: identity.name ?? null,
-            email: identity.email ?? null
+            email: identity.email ?? null,
           }
-        : null
+        : null,
     };
-  }
+  },
 });

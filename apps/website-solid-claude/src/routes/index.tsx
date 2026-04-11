@@ -27,8 +27,8 @@ export default function Home() {
           name: config.appName,
           version: config.version,
         })),
-        Effect.provide(AppConfigLive)
-      )
+        Effect.provide(AppConfigLive),
+      ),
     );
     setAppInfo(info);
   });
@@ -41,8 +41,7 @@ export default function Home() {
     },
     {
       name: "Effect",
-      description:
-        "Type-safe functional programming for robust error handling & composability",
+      description: "Type-safe functional programming for robust error handling & composability",
       badge: "v3",
     },
     {
@@ -52,20 +51,17 @@ export default function Home() {
     },
     {
       name: "Solid UI",
-      description:
-        "Beautiful, accessible components built with Kobalte & Tailwind",
+      description: "Beautiful, accessible components built with Kobalte & Tailwind",
       badge: "stable",
     },
     {
       name: "Convex",
-      description:
-        "Real-time backend with reactive queries and automatic sync",
+      description: "Real-time backend with reactive queries and automatic sync",
       badge: "stable",
     },
     {
       name: "Clerk",
-      description:
-        "Complete authentication & user management with SSR support",
+      description: "Complete authentication & user management with SSR support",
       badge: "stable",
     },
   ];
@@ -84,9 +80,9 @@ export default function Home() {
           </span>
         </h1>
         <p class="text-xl text-muted-foreground max-w-2xl">
-          A modern full-stack application built with SolidStart 2.0, Effect,
-          TailwindCSS, Solid UI, Convex, and Clerk. Powered by fine-grained
-          reactivity and type-safe functional programming.
+          A modern full-stack application built with SolidStart 2.0, Effect, TailwindCSS, Solid UI,
+          Convex, and Clerk. Powered by fine-grained reactivity and type-safe functional
+          programming.
         </p>
         <div class="flex gap-4">
           <SignedIn>
@@ -137,8 +133,8 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p class="text-sm text-muted-foreground">
-                Convex provides automatic real-time subscriptions. Data syncs
-                instantly across all connected clients.
+                Convex provides automatic real-time subscriptions. Data syncs instantly across all
+                connected clients.
               </p>
             </CardContent>
           </Card>
@@ -148,8 +144,8 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p class="text-sm text-muted-foreground">
-                Clerk handles sign-up, sign-in, and user management with SSR
-                support and pre-built UI components.
+                Clerk handles sign-up, sign-in, and user management with SSR support and pre-built
+                UI components.
               </p>
             </CardContent>
           </Card>
@@ -159,8 +155,8 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p class="text-sm text-muted-foreground">
-                Effect provides type-safe error handling and composable
-                abstractions throughout the entire application.
+                Effect provides type-safe error handling and composable abstractions throughout the
+                entire application.
               </p>
             </CardContent>
           </Card>
@@ -170,8 +166,8 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p class="text-sm text-muted-foreground">
-                Built-in dark mode with SSR-safe cookie persistence via
-                Kobalte's color mode provider.
+                Built-in dark mode with SSR-safe cookie persistence via Kobalte's color mode
+                provider.
               </p>
             </CardContent>
           </Card>
@@ -180,10 +176,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer class="text-center text-sm text-muted-foreground pt-8 border-t w-full max-w-3xl">
-        <p>
-          Built with SolidStart 2.0 + Effect + TailwindCSS + Solid UI + Convex +
-          Clerk
-        </p>
+        <p>Built with SolidStart 2.0 + Effect + TailwindCSS + Solid UI + Convex + Clerk</p>
       </footer>
     </div>
   );

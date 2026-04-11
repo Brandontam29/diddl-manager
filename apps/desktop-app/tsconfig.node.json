@@ -9,10 +9,7 @@
   ],
   "compilerOptions": {
     "composite": true,
-    "types": [
-      "electron-vite/node",
-      "bun-types"
-    ],
+    "types": ["electron-vite/node", "bun-types"],
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true
   }

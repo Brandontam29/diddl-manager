@@ -13,9 +13,11 @@ Currently, there is no way to manage the catalog items natively within the appli
 ## Capabilities
 
 ### New Capabilities
+
 - `catalog-cms`: The ability for administrators to manage catalog items through a dedicated UI, including draft states and archiving without breaking existing user lists.
 
 ### Modified Capabilities
+
 - (None)
 
 ## Impact

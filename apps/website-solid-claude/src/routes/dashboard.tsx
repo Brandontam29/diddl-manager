@@ -42,13 +42,12 @@ function TaskList() {
             }),
           catch: (error) => new Error(`Failed to create task: ${error}`),
         }),
-        Effect.tap(() => Effect.sync(() => setNewTaskTitle("")))
-      )
+        Effect.tap(() => Effect.sync(() => setNewTaskTitle(""))),
+      ),
     );
   };
 
-  const completedCount = () =>
-    tasks.data()?.filter((t: any) => t.completed).length ?? 0;
+  const completedCount = () => tasks.data()?.filter((t: any) => t.completed).length ?? 0;
   const totalCount = () => tasks.data()?.length ?? 0;
 
   return (
@@ -57,9 +56,7 @@ function TaskList() {
         <div class="flex items-center justify-between">
           <div>
             <CardTitle>Tasks</CardTitle>
-            <CardDescription>
-              Manage your tasks with real-time sync
-            </CardDescription>
+            <CardDescription>Manage your tasks with real-time sync</CardDescription>
           </div>
           <Badge variant="secondary">
             {completedCount()}/{totalCount()}
@@ -133,9 +130,7 @@ function TaskList() {
                       </button>
                       <span
                         class={`text-sm ${
-                          task.completed
-                            ? "line-through text-muted-foreground"
-                            : ""
+                          task.completed ? "line-through text-muted-foreground" : ""
                         }`}
                       >
                         {task.title}
@@ -178,9 +173,7 @@ export default function Dashboard() {
     <div class="flex flex-col items-center space-y-8 max-w-2xl mx-auto">
       <div class="text-center space-y-2">
         <h1 class="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p class="text-muted-foreground">
-          Your personal task manager with real-time Convex sync
-        </p>
+        <p class="text-muted-foreground">Your personal task manager with real-time Convex sync</p>
       </div>
 
       <SignedIn>
@@ -189,9 +182,7 @@ export default function Dashboard() {
             <Card class="w-full">
               <CardContent class="py-12">
                 <div class="flex items-center justify-center">
-                  <div class="animate-pulse text-muted-foreground">
-                    Loading tasks...
-                  </div>
+                  <div class="animate-pulse text-muted-foreground">Loading tasks...</div>
                 </div>
               </CardContent>
             </Card>
@@ -206,8 +197,7 @@ export default function Dashboard() {
           <CardHeader class="text-center">
             <CardTitle>Sign in to access your dashboard</CardTitle>
             <CardDescription>
-              Your tasks are synced in real-time with Convex and secured by Clerk
-              authentication.
+              Your tasks are synced in real-time with Convex and secured by Clerk authentication.
             </CardDescription>
           </CardHeader>
           <CardFooter class="justify-center">

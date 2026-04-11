@@ -24,7 +24,7 @@ tech-stack:
     [
       internalMutation for transactional migration writes,
       makeFunctionReference for action-to-mutation delegation,
-      idempotency via guestSessionId compound index
+      idempotency via guestSessionId compound index,
     ]
 
 key-files:
@@ -35,14 +35,14 @@ key-files:
     - src/convex/schema.ts
 
 key-decisions:
-  - 'Used makeFunctionReference instead of generated internal API for action-to-mutation calls (codegen unavailable in worktree)'
+  - "Used makeFunctionReference instead of generated internal API for action-to-mutation calls (codegen unavailable in worktree)"
   - "Kept existing listItems.addCatalogItems signature (natural key refs) rather than plan's catalogItemId-based add — more useful for client"
-  - 'Added internalQuery checkMigration for idempotency lookup from action context'
+  - "Added internalQuery checkMigration for idempotency lookup from action context"
 
 patterns-established:
-  - 'Migration idempotency: guestSessionId + ownerSubject compound index lookup before any writes'
-  - 'Action delegates to internalMutation for transactional multi-table writes'
-  - 'Graceful skip pattern: increment itemsSkipped counter instead of failing entire migration'
+  - "Migration idempotency: guestSessionId + ownerSubject compound index lookup before any writes"
+  - "Action delegates to internalMutation for transactional multi-table writes"
+  - "Graceful skip pattern: increment itemsSkipped counter instead of failing entire migration"
 
 requirements-completed: [AUTH-03, AUTH-04]
 

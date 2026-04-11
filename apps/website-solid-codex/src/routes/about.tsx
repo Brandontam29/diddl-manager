@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { getStackSnapshotQuery } from "~/lib/server/stack";
 
 export const route = {
-  preload: () => void getStackSnapshotQuery()
+  preload: () => void getStackSnapshotQuery(),
 };
 
 const envVariables = [
@@ -17,15 +17,10 @@ const envVariables = [
   { key: "CLERK_JWT_ISSUER_DOMAIN", note: "Lets Convex validate Clerk-issued JWTs." },
   { key: "CLERK_SECRET_KEY", note: "Reserved for future server-side Clerk work." },
   { key: "VITE_CONVEX_URL", note: "WebSocket endpoint for the Convex browser client." },
-  { key: "CONVEX_DEPLOYMENT", note: "Deployment name used by the Convex CLI and dashboard." }
+  { key: "CONVEX_DEPLOYMENT", note: "Deployment name used by the Convex CLI and dashboard." },
 ];
 
-const commands = [
-  "bun install",
-  "bun run dev",
-  "bun run convex:gen",
-  "bun run build"
-];
+const commands = ["bun install", "bun run dev", "bun run convex:gen", "bun run build"];
 
 export default function About() {
   const stack = createAsync(() => getStackSnapshotQuery());
@@ -46,14 +41,15 @@ export default function About() {
           </CardHeader>
           <CardContent class="space-y-3">
             <For each={envVariables}>
-              {item => (
+              {(item) => (
                 <div class="rounded-2xl border border-border/70 bg-background/70 p-4">
                   <div class="flex items-center justify-between gap-3">
                     <code class="text-sm font-semibold">{item.key}</code>
                     <Show
                       when={
                         stack() &&
-                        ((item.key === "VITE_CLERK_PUBLISHABLE_KEY" && stack()!.env.clerkPublishableKey) ||
+                        ((item.key === "VITE_CLERK_PUBLISHABLE_KEY" &&
+                          stack()!.env.clerkPublishableKey) ||
                           (item.key === "CLERK_JWT_ISSUER_DOMAIN" &&
                             stack()!.env.clerkJwtIssuerDomain) ||
                           (item.key === "CLERK_SECRET_KEY" && stack()!.env.clerkSecretKey) ||
@@ -82,7 +78,7 @@ export default function About() {
           </CardHeader>
           <CardContent class="space-y-3">
             <For each={commands}>
-              {command => (
+              {(command) => (
                 <div class="flex items-center justify-between rounded-2xl border border-border/70 bg-background/75 px-4 py-3">
                   <code class="text-sm">{command}</code>
                   <TerminalSquare class="size-4 text-primary" />
@@ -104,8 +100,7 @@ export default function About() {
         <AlertDescription>
           <p>
             SolidStart v2 alpha, Tailwind v4 styling, solid-ui components, ClerkJS integration,
-            Convex client/provider plumbing, and an Effect-powered server snapshot are all in
-            place.
+            Convex client/provider plumbing, and an Effect-powered server snapshot are all in place.
           </p>
         </AlertDescription>
       </Alert>

@@ -74,8 +74,7 @@ async function scrapeImagesFromFrames(
 function getFilename(imageUrl: string, extname: string) {
   const urlObject = new URL(imageUrl);
   const originalFilename = path.basename(urlObject.pathname);
-  if (path.extname(originalFilename).length === 0)
-    return `${originalFilename}${extname}`;
+  if (path.extname(originalFilename).length === 0) return `${originalFilename}${extname}`;
   return originalFilename;
 }
 

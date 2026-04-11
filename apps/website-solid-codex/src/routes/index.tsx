@@ -14,7 +14,7 @@ import { getStackSnapshotQuery } from "~/lib/server/stack";
 import { cn } from "~/lib/utils";
 
 export const route = {
-  preload: () => void getStackSnapshotQuery()
+  preload: () => void getStackSnapshotQuery(),
 };
 
 type StatusItem = {
@@ -25,12 +25,14 @@ type StatusItem = {
 };
 
 function initials(name: string | null | undefined) {
-  return name
-    ?.split(" ")
-    .map(part => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase() ?? "DM";
+  return (
+    name
+      ?.split(" ")
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() ?? "DM"
+  );
 }
 
 export default function Home() {
@@ -45,7 +47,7 @@ export default function Home() {
         ? `Node ${stack()!.runtime.node}${stack()!.runtime.bun ? ` and Bun ${stack()!.runtime.bun}` : ""}`
         : "Collecting runtime metadata with Effect",
       ready: true,
-      icon: Sparkles
+      icon: Sparkles,
     },
     {
       title: "Clerk auth",
@@ -55,7 +57,7 @@ export default function Home() {
           : "Publishable key detected. Sign-in modal is ready."
         : "Add VITE_CLERK_PUBLISHABLE_KEY to enable authentication.",
       ready: clerk.configured,
-      icon: LockKeyhole
+      icon: LockKeyhole,
     },
     {
       title: "Convex data",
@@ -65,8 +67,8 @@ export default function Home() {
           : "Client is configured. Finish env setup to unlock live data."
         : "Add VITE_CONVEX_URL and CONVEX_DEPLOYMENT to enable subscriptions.",
       ready: convex.configured && convex.status() === "ready",
-      icon: Database
-    }
+      icon: Database,
+    },
   ];
 
   return (
@@ -151,9 +153,7 @@ export default function Home() {
               </Avatar>
               <div class="space-y-1">
                 <p class="text-sm uppercase tracking-[0.28em] text-muted-foreground">Viewer</p>
-                <p class="text-xl font-semibold">
-                  {clerk.user()?.fullName ?? "Anonymous visitor"}
-                </p>
+                <p class="text-xl font-semibold">{clerk.user()?.fullName ?? "Anonymous visitor"}</p>
                 <p class="text-sm text-muted-foreground">
                   {clerk.user()?.primaryEmailAddress?.emailAddress ??
                     "Open Clerk to create a session"}
@@ -181,7 +181,7 @@ export default function Home() {
 
       <section class="grid gap-4 md:grid-cols-3">
         <For each={statusItems()}>
-          {item => {
+          {(item) => {
             const Icon = item.icon;
 
             return (
@@ -245,7 +245,7 @@ export default function Home() {
                 </div>
                 <div class="flex flex-wrap gap-2">
                   <For each={convex.data()!.features}>
-                    {feature => (
+                    {(feature) => (
                       <Badge variant="secondary" round>
                         {feature}
                       </Badge>
@@ -270,10 +270,10 @@ export default function Home() {
                 { name: "SolidStart", version: stack()?.versions.solidStart },
                 { name: "Effect", version: stack()?.versions.effect },
                 { name: "Convex", version: stack()?.versions.convex },
-                { name: "Clerk", version: stack()?.versions.clerk }
+                { name: "Clerk", version: stack()?.versions.clerk },
               ]}
             >
-              {item => (
+              {(item) => (
                 <div class="flex items-center justify-between rounded-2xl border border-border/70 bg-background/70 px-4 py-3">
                   <span class="font-medium">{item.name}</span>
                   <code class="text-sm text-muted-foreground">{item.version ?? "loading"}</code>

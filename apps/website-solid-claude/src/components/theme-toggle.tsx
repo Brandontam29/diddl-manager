@@ -9,12 +9,7 @@ export function ThemeToggle() {
   };
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={toggleColorMode}
-      aria-label="Toggle theme"
-    >
+    <Button variant="ghost" size="icon" onClick={toggleColorMode} aria-label="Toggle theme">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"

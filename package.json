@@ -1,7 +1,6 @@
 {
   "name": "diddl-manager",
   "private": true,
-  "packageManager": "bun@1.3.10",
   "workspaces": [
     "apps/*"
   ],
@@ -24,7 +23,7 @@
     "typecheck:data-migrations": "bun run --filter @diddl/data-migrations typecheck",
     "typecheck:scrape-diddl": "bun run --filter @diddl/scrape-diddl typecheck",
     "typecheck": "bun run typecheck:desktop && bun run typecheck:website-svelte && bun run typecheck:website-solid-claude && bun run typecheck:website-solid-codex && bun run typecheck:data-migrations && bun run typecheck:scrape-diddl",
-    "dev:desktop": "bun run --filter @diddl/desktop-app dev",
+    "dev:desktop": "bun run --filter @diddl/desktop-app dev --elide-lines=0",
     "build:desktop": "bun run --filter @diddl/desktop-app build",
     "test:desktop": "bun run --filter @diddl/desktop-app test:unit",
     "dev:website-svelte": "bun run --filter @diddl/website-svelte dev",
@@ -41,6 +40,7 @@
   "lint-staged": {
     "**/*": "oxfmt --config ./.oxfmtrc.json --no-error-on-unmatched-pattern"
   },
+  "packageManager": "bun@1.3.10",
   "trustedDependencies": [
     "@clerk/shared",
     "@diddl/desktop-app",

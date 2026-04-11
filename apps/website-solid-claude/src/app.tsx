@@ -4,11 +4,7 @@ import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { MetaProvider, Title } from "@solidjs/meta";
 import { ClerkProvider } from "clerk-solidjs";
-import {
-  ColorModeProvider,
-  ColorModeScript,
-  cookieStorageManagerSSR,
-} from "@kobalte/core";
+import { ColorModeProvider, ColorModeScript, cookieStorageManagerSSR } from "@kobalte/core";
 import { setupConvex, ConvexProvider } from "convex-solidjs";
 import { getCookie } from "@solidjs/start/http";
 
@@ -24,9 +20,7 @@ function getServerCookies() {
 }
 
 export default function App() {
-  const storageManager = cookieStorageManagerSSR(
-    isServer ? getServerCookies() : document.cookie
-  );
+  const storageManager = cookieStorageManagerSSR(isServer ? getServerCookies() : document.cookie);
 
   const convex = setupConvex(import.meta.env.VITE_CONVEX_URL);
 
@@ -35,9 +29,7 @@ export default function App() {
       root={(props) => (
         <MetaProvider>
           <Title>Website Solid Claude</Title>
-          <ClerkProvider
-            publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
-          >
+          <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
             <ConvexProvider client={convex}>
               <ColorModeScript storageType={storageManager.type} />
               <ColorModeProvider storageManager={storageManager}>
@@ -46,9 +38,7 @@ export default function App() {
                   <Suspense
                     fallback={
                       <div class="flex items-center justify-center min-h-[50vh]">
-                        <div class="animate-pulse text-muted-foreground">
-                          Loading...
-                        </div>
+                        <div class="animate-pulse text-muted-foreground">Loading...</div>
                       </div>
                     }
                   >

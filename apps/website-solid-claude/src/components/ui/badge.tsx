@@ -7,8 +7,7 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        default: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
         secondary:
           "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive:
@@ -19,21 +18,15 @@ const badgeVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  }
+  },
 );
 
 export interface BadgeProps
-  extends JSX.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+  extends JSX.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
 
 const Badge = (props: BadgeProps) => {
   const [local, others] = splitProps(props, ["variant", "class"]);
-  return (
-    <div
-      class={cn(badgeVariants({ variant: local.variant }), local.class)}
-      {...others}
-    />
-  );
+  return <div class={cn(badgeVariants({ variant: local.variant }), local.class)} {...others} />;
 };
 
 export { Badge, badgeVariants };

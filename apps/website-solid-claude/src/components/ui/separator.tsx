@@ -7,26 +7,18 @@ export interface SeparatorProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 const Separator = (props: SeparatorProps) => {
-  const [local, others] = splitProps(props, [
-    "class",
-    "orientation",
-    "decorative",
-  ]);
+  const [local, others] = splitProps(props, ["class", "orientation", "decorative"]);
   const orientation = () => local.orientation ?? "horizontal";
   return (
     <div
       role={local.decorative ? "none" : "separator"}
       aria-orientation={
-        !local.decorative
-          ? orientation() === "vertical"
-            ? "vertical"
-            : undefined
-          : undefined
+        !local.decorative ? (orientation() === "vertical" ? "vertical" : undefined) : undefined
       }
       class={cn(
         "shrink-0 bg-border",
         orientation() === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
-        local.class
+        local.class,
       )}
       {...others}
     />

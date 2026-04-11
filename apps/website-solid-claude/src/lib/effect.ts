@@ -17,11 +17,9 @@ export const AppConfigLive = Layer.succeed(AppConfig, {
 
 // ── Effect Utilities ──────────────────────────────────────────────────
 
-export const runPromise = <A, E>(effect: Effect.Effect<A, E, never>) =>
-  Effect.runPromise(effect);
+export const runPromise = <A, E>(effect: Effect.Effect<A, E, never>) => Effect.runPromise(effect);
 
-export const runSync = <A, E>(effect: Effect.Effect<A, E, never>) =>
-  Effect.runSync(effect);
+export const runSync = <A, E>(effect: Effect.Effect<A, E, never>) => Effect.runSync(effect);
 
 // ── Common Effects ──────────────────────────────────────────────────
 
@@ -31,7 +29,7 @@ export const getAppInfo = pipe(
     name: config.appName,
     version: config.version,
   })),
-  Effect.provide(AppConfigLive)
+  Effect.provide(AppConfigLive),
 );
 
 export { Effect, Layer, Context, pipe };

@@ -10,7 +10,7 @@ import "./app.css";
 export default function App() {
   return (
     <Router
-      root={props => (
+      root={(props) => (
         <ClerkProvider>
           <ConvexProvider>
             <div class="page-shell">

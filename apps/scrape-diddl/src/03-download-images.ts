@@ -16,8 +16,7 @@ const downloadImage = async (url: string, destination: string) => {
 
     logging.info(`Downloaded ${bytesWritten} bytes to ${destination}`);
   } catch (error) {
-    if (error instanceof Error)
-      logging.error("Download failed:", error.message);
+    if (error instanceof Error) logging.error("Download failed:", error.message);
   }
 };
 
@@ -38,12 +37,7 @@ Object.values(imageUrls).forEach((group, groupIndex) => {
 
     if (path.extname(imageName) === ".gif") return;
 
-    const destination = path.join(
-      projectRoot(),
-      "complete-raw-static-files",
-      folder,
-      imageName,
-    );
+    const destination = path.join(projectRoot(), "complete-raw-static-files", folder, imageName);
 
     if (existsSync(destination)) return;
     await ensureDirExists(folder);

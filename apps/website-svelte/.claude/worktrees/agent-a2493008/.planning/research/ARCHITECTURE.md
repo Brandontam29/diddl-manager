@@ -216,61 +216,61 @@ Admin uploads image for a catalog item
 ```typescript
 // catalog
 defineTable({
-	type: v.string(), // DiddlType enum value
-	number: v.number(), // item number within type
-	name: v.string(),
-	edition: v.string(),
-	releaseDate: v.number(), // Unix ms
-	storageId: v.optional(v.id('_storage')), // primary image
-	imageWidth: v.optional(v.number()),
-	imageHeight: v.optional(v.number())
-	// future: v.array(v.id("_storage")) for multi-image
+  type: v.string(), // DiddlType enum value
+  number: v.number(), // item number within type
+  name: v.string(),
+  edition: v.string(),
+  releaseDate: v.number(), // Unix ms
+  storageId: v.optional(v.id("_storage")), // primary image
+  imageWidth: v.optional(v.number()),
+  imageHeight: v.optional(v.number()),
+  // future: v.array(v.id("_storage")) for multi-image
 })
-	.index('by_type_number', ['type', 'number'])
-	.index('by_type', ['type']);
+  .index("by_type_number", ["type", "number"])
+  .index("by_type", ["type"]);
 
 // lists
 defineTable({
-	userId: v.string(), // Clerk identity subject
-	name: v.string(),
-	description: v.string(),
-	color: v.string(),
-	createdAt: v.number(),
-	updatedAt: v.number(),
-	deletedAt: v.optional(v.number())
+  userId: v.string(), // Clerk identity subject
+  name: v.string(),
+  description: v.string(),
+  color: v.string(),
+  createdAt: v.number(),
+  updatedAt: v.number(),
+  deletedAt: v.optional(v.number()),
 })
-	.index('by_user', ['userId'])
-	.index('by_user_name', ['userId', 'name']);
+  .index("by_user", ["userId"])
+  .index("by_user_name", ["userId", "name"]);
 
 // listItems
 defineTable({
-	listId: v.id('lists'),
-	catalogItemId: v.id('catalog'),
-	condition: v.union(
-		v.literal('mint'),
-		v.literal('lightly used'),
-		v.literal('used'),
-		v.literal('damaged')
-	),
-	tags: v.array(v.string()),
-	isComplete: v.boolean(),
-	quantity: v.number()
+  listId: v.id("lists"),
+  catalogItemId: v.id("catalog"),
+  condition: v.union(
+    v.literal("mint"),
+    v.literal("lightly used"),
+    v.literal("used"),
+    v.literal("damaged"),
+  ),
+  tags: v.array(v.string()),
+  isComplete: v.boolean(),
+  quantity: v.number(),
 })
-	.index('by_list', ['listId'])
-	.index('by_list_item', ['listId', 'catalogItemId']);
+  .index("by_list", ["listId"])
+  .index("by_list_item", ["listId", "catalogItemId"]);
 
 // profiles
 defineTable({
-	userId: v.string(),
-	name: v.string(),
-	birthdate: v.optional(v.number()),
-	description: v.string(),
-	hobbies: v.string(),
-	pictureStorageId: v.optional(v.id('_storage')),
-	createdAt: v.number(),
-	updatedAt: v.number(),
-	deletedAt: v.optional(v.number())
-}).index('by_user', ['userId']);
+  userId: v.string(),
+  name: v.string(),
+  birthdate: v.optional(v.number()),
+  description: v.string(),
+  hobbies: v.string(),
+  pictureStorageId: v.optional(v.id("_storage")),
+  createdAt: v.number(),
+  updatedAt: v.number(),
+  deletedAt: v.optional(v.number()),
+}).index("by_user", ["userId"]);
 ```
 
 ---

@@ -31,8 +31,8 @@ key-decisions:
   - The landing page owns the first sign-in experience while keeping guest entry one click away.
   - Clerk dashboard providers remain a manual external dependency, so Email + password and Google OAuth are documented explicitly in the summary.
 patterns-established:
-  - 'Landing auth actions: wrap `/` in `ClerkWrapper` and trigger Clerk modal flows from child components that consume Clerk context.'
-  - 'Shared auth shell components: keep sign-in/sign-up triggers in reusable header and upgrade prompt components for later route wiring.'
+  - "Landing auth actions: wrap `/` in `ClerkWrapper` and trigger Clerk modal flows from child components that consume Clerk context."
+  - "Shared auth shell components: keep sign-in/sign-up triggers in reusable header and upgrade prompt components for later route wiring."
 requirements-completed: [AUTH-01, AUTH-02, AUTH-05]
 duration: 9 min
 completed: 2026-04-04

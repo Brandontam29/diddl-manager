@@ -14,13 +14,13 @@ const badgeVariants = cva(
         outline: "text-foreground",
         success: "border-success-foreground bg-success text-success-foreground",
         warning: "border-warning-foreground bg-warning text-warning-foreground",
-        error: "border-error-foreground bg-error text-error-foreground"
-      }
+        error: "border-error-foreground bg-error text-error-foreground",
+      },
     },
     defaultVariants: {
-      variant: "default"
-    }
-  }
+      variant: "default",
+    },
+  },
 );
 
 type BadgeProps = ComponentProps<"div"> &
@@ -28,7 +28,7 @@ type BadgeProps = ComponentProps<"div"> &
     round?: boolean;
   };
 
-const Badge: Component<BadgeProps> = props => {
+const Badge: Component<BadgeProps> = (props) => {
   const [local, others] = splitProps(props, ["class", "variant", "round"]);
 
   return (
@@ -36,7 +36,7 @@ const Badge: Component<BadgeProps> = props => {
       class={cn(
         badgeVariants({ variant: local.variant }),
         local.round && "rounded-full",
-        local.class
+        local.class,
       )}
       {...others}
     />

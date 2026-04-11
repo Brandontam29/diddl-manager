@@ -8,7 +8,7 @@ import { cn } from "~/lib/utils";
 
 const links = [
   { href: "/", label: "Overview" },
-  { href: "/about", label: "Setup" }
+  { href: "/about", label: "Setup" },
 ];
 
 export default function Nav() {
@@ -36,14 +36,14 @@ export default function Nav() {
 
         <div class="flex items-center gap-3">
           <nav class="hidden items-center gap-1 rounded-full border border-border/60 bg-white/60 p-1 md:flex">
-            {links.map(link => (
+            {links.map((link) => (
               <A
                 href={link.href}
                 class={cn(
                   "rounded-full px-4 py-2 text-sm text-muted-foreground transition-colors",
                   location.pathname === link.href
                     ? "bg-primary text-primary-foreground shadow-sm"
-                    : "hover:bg-secondary hover:text-foreground"
+                    : "hover:bg-secondary hover:text-foreground",
                 )}
               >
                 {link.label}

@@ -98,39 +98,39 @@ The ConvexListStore must implement the exact `ListStore` interface from `listTyp
 // Pattern: ConvexListStore reads from useQuery(), writes via client.mutation()
 // Source: Existing codebase patterns in catalog/+page.svelte and references/+page.svelte
 
-import { useQuery, useConvexClient } from 'convex-svelte';
-import { api } from '../../convex/_generated/api';
-import type { ListStore, GuestList, GuestListItem } from './listTypes';
+import { useQuery, useConvexClient } from "convex-svelte";
+import { api } from "../../convex/_generated/api";
+import type { ListStore, GuestList, GuestListItem } from "./listTypes";
 
 export function createConvexListStore(ownerSubject: string): ListStore {
-	const client = useConvexClient();
+  const client = useConvexClient();
 
-	// Reactive queries -- auto-update when Convex data changes
-	const listsQuery = useQuery(api.authed.lists.listByOwner, {});
-	const activeItemsQuery = useQuery(api.authed.listItems.byList, () =>
-		activeListId ? { listId: activeListId } : 'skip'
-	);
+  // Reactive queries -- auto-update when Convex data changes
+  const listsQuery = useQuery(api.authed.lists.listByOwner, {});
+  const activeItemsQuery = useQuery(api.authed.listItems.byList, () =>
+    activeListId ? { listId: activeListId } : "skip",
+  );
 
-	let activeListId = $state<string | null>(null);
+  let activeListId = $state<string | null>(null);
 
-	return {
-		get lists() {
-			// Map Convex docs to GuestList shape for interface compat
-			return (listsQuery.data ?? []).map(mapConvexListToGuestList);
-		},
-		get activeListId() {
-			return activeListId;
-		},
-		get activeListItems() {
-			return (activeItemsQuery.data ?? []).map(mapConvexItemToGuestListItem);
-		},
+  return {
+    get lists() {
+      // Map Convex docs to GuestList shape for interface compat
+      return (listsQuery.data ?? []).map(mapConvexListToGuestList);
+    },
+    get activeListId() {
+      return activeListId;
+    },
+    get activeListItems() {
+      return (activeItemsQuery.data ?? []).map(mapConvexItemToGuestListItem);
+    },
 
-		async createList(name, color) {
-			const id = await client.mutation(api.authed.lists.create, { name, color });
-			// ... return mapped list
-		}
-		// ... other methods follow same pattern
-	};
+    async createList(name, color) {
+      const id = await client.mutation(api.authed.lists.create, { name, color });
+      // ... return mapped list
+    },
+    // ... other methods follow same pattern
+  };
 }
 ```
 
@@ -152,36 +152,36 @@ The migration runs as a single Convex `authedAction` that:
 // Source: Convex docs on actions + existing authedAction wrapper
 
 export const migrateGuestData = authedAction({
-	args: {
-		guestSessionId: v.string(),
-		lists: v.array(
-			v.object({
-				id: v.string(), // guest UUID
-				name: v.string(),
-				color: v.string()
-			})
-		),
-		items: v.array(
-			v.object({
-				listId: v.string(), // guest list UUID
-				type: v.string(), // natural key part 1
-				number: v.number(), // natural key part 2
-				condition: v.union(/* ... */),
-				quantity: v.number(),
-				complete: v.boolean(),
-				tags: v.array(v.string())
-			})
-		)
-	},
-	handler: async (ctx, args) => {
-		const ownerSubject = ctx.identity.subject;
+  args: {
+    guestSessionId: v.string(),
+    lists: v.array(
+      v.object({
+        id: v.string(), // guest UUID
+        name: v.string(),
+        color: v.string(),
+      }),
+    ),
+    items: v.array(
+      v.object({
+        listId: v.string(), // guest list UUID
+        type: v.string(), // natural key part 1
+        number: v.number(), // natural key part 2
+        condition: v.union(/* ... */),
+        quantity: v.number(),
+        complete: v.boolean(),
+        tags: v.array(v.string()),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const ownerSubject = ctx.identity.subject;
 
-		// 1. Idempotency check
-		// 2. Resolve type:number -> catalogItemId via db.query + by_type_number index
-		// 3. Create lists, map guest list UUIDs -> Convex list IDs
-		// 4. Create items with dedup
-		// 5. Record migration complete
-	}
+    // 1. Idempotency check
+    // 2. Resolve type:number -> catalogItemId via db.query + by_type_number index
+    // 3. Create lists, map guest list UUIDs -> Convex list IDs
+    // 4. Create items with dedup
+    // 5. Record migration complete
+  },
 });
 ```
 
@@ -307,24 +307,24 @@ src/
 // Applied in ClerkStore constructor via clerk.load()
 
 await this.clerk.load({
-	ui,
-	afterSignOutUrl: '/',
-	signInForceRedirectUrl: '/app',
-	signUpForceRedirectUrl: '/app',
-	appearance: {
-		variables: {
-			// Map to app's stone theme CSS custom properties
-			colorPrimary: '#292524', // stone-800
-			colorBackground: '#ffffff', // white (light mode)
-			colorForeground: '#0c0a09', // stone-950
-			colorInput: '#f5f5f4', // stone-100
-			colorBorder: '#e7e5e4', // stone-200
-			colorMuted: '#f5f5f4', // stone-100
-			colorMutedForeground: '#78716c', // stone-500
-			fontFamily: 'Inter Variable, sans-serif',
-			borderRadius: '0.625rem' // matches --radius
-		}
-	}
+  ui,
+  afterSignOutUrl: "/",
+  signInForceRedirectUrl: "/app",
+  signUpForceRedirectUrl: "/app",
+  appearance: {
+    variables: {
+      // Map to app's stone theme CSS custom properties
+      colorPrimary: "#292524", // stone-800
+      colorBackground: "#ffffff", // white (light mode)
+      colorForeground: "#0c0a09", // stone-950
+      colorInput: "#f5f5f4", // stone-100
+      colorBorder: "#e7e5e4", // stone-200
+      colorMuted: "#f5f5f4", // stone-100
+      colorMutedForeground: "#78716c", // stone-500
+      fontFamily: "Inter Variable, sans-serif",
+      borderRadius: "0.625rem", // matches --radius
+    },
+  },
 });
 ```
 
@@ -351,36 +351,36 @@ await this.clerk.load({
 ```typescript
 // Source: Existing authedQuery pattern from src/convex/authed/helpers.ts
 
-import { v } from 'convex/values';
-import { authedQuery, authedMutation } from './helpers';
+import { v } from "convex/values";
+import { authedQuery, authedMutation } from "./helpers";
 
 export const listByOwner = authedQuery({
-	args: {},
-	handler: async (ctx) => {
-		return await ctx.db
-			.query('lists')
-			.withIndex('by_owner', (q) => q.eq('ownerSubject', ctx.identity.subject))
-			.collect();
-	}
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("lists")
+      .withIndex("by_owner", (q) => q.eq("ownerSubject", ctx.identity.subject))
+      .collect();
+  },
 });
 
 export const create = authedMutation({
-	args: { name: v.string(), color: v.string() },
-	handler: async (ctx, args) => {
-		// Check 3-list cap (D-15)
-		const existing = await ctx.db
-			.query('lists')
-			.withIndex('by_owner', (q) => q.eq('ownerSubject', ctx.identity.subject))
-			.collect();
-		if (existing.length >= 3) {
-			throw new Error('List limit reached');
-		}
-		return await ctx.db.insert('lists', {
-			name: args.name,
-			color: args.color,
-			ownerSubject: ctx.identity.subject
-		});
-	}
+  args: { name: v.string(), color: v.string() },
+  handler: async (ctx, args) => {
+    // Check 3-list cap (D-15)
+    const existing = await ctx.db
+      .query("lists")
+      .withIndex("by_owner", (q) => q.eq("ownerSubject", ctx.identity.subject))
+      .collect();
+    if (existing.length >= 3) {
+      throw new Error("List limit reached");
+    }
+    return await ctx.db.insert("lists", {
+      name: args.name,
+      color: args.color,
+      ownerSubject: ctx.identity.subject,
+    });
+  },
 });
 ```
 
@@ -389,15 +389,15 @@ export const create = authedMutation({
 ```typescript
 // Source: Existing pattern from src/routes/app/references/+page.svelte
 
-import { useConvexClient } from 'convex-svelte';
-import { api } from '../../convex/_generated/api';
+import { useConvexClient } from "convex-svelte";
+import { api } from "../../convex/_generated/api";
 
 const client = useConvexClient();
 
 // Mutations return a promise
 const listId = await client.mutation(api.authed.lists.create, {
-	name: 'My Collection',
-	color: '#e11d48'
+  name: "My Collection",
+  color: "#e11d48",
 });
 ```
 
@@ -406,45 +406,45 @@ const listId = await client.mutation(api.authed.lists.create, {
 ```typescript
 // Pattern: Retry with backoff + toast feedback
 
-import { toast } from 'svelte-sonner';
+import { toast } from "svelte-sonner";
 
 async function migrateGuestData(
-	client: ConvexClient,
-	guestData: StoragePayload,
-	guestSessionId: string
+  client: ConvexClient,
+  guestData: StoragePayload,
+  guestSessionId: string,
 ): Promise<boolean> {
-	const delays = [1000, 2000, 4000];
+  const delays = [1000, 2000, 4000];
 
-	for (let attempt = 0; attempt <= delays.length; attempt++) {
-		try {
-			await client.action(api.authed.migration.migrateGuestData, {
-				guestSessionId,
-				lists: guestData.lists.map((l) => ({ id: l.id, name: l.name, color: l.color })),
-				items: guestData.items.map((i) => ({
-					listId: i.listId,
-					type: i.catalogRef.type,
-					number: i.catalogRef.number,
-					condition: i.condition,
-					quantity: i.quantity,
-					complete: i.complete,
-					tags: i.tags
-				}))
-			});
+  for (let attempt = 0; attempt <= delays.length; attempt++) {
+    try {
+      await client.action(api.authed.migration.migrateGuestData, {
+        guestSessionId,
+        lists: guestData.lists.map((l) => ({ id: l.id, name: l.name, color: l.color })),
+        items: guestData.items.map((i) => ({
+          listId: i.listId,
+          type: i.catalogRef.type,
+          number: i.catalogRef.number,
+          condition: i.condition,
+          quantity: i.quantity,
+          complete: i.complete,
+          tags: i.tags,
+        })),
+      });
 
-			// Success -- clear localStorage
-			localStorage.removeItem('diddl-guest-data');
-			toast.success('Your collection has been saved to your account.');
-			return true;
-		} catch (error) {
-			if (attempt < delays.length) {
-				toast.info('Could not save collection. Retrying...');
-				await new Promise((r) => setTimeout(r, delays[attempt]));
-			}
-		}
-	}
+      // Success -- clear localStorage
+      localStorage.removeItem("diddl-guest-data");
+      toast.success("Your collection has been saved to your account.");
+      return true;
+    } catch (error) {
+      if (attempt < delays.length) {
+        toast.info("Could not save collection. Retrying...");
+        await new Promise((r) => setTimeout(r, delays[attempt]));
+      }
+    }
+  }
 
-	toast.warning("Data safe in browser. We'll try again next time.");
-	return false;
+  toast.warning("Data safe in browser. We'll try again next time.");
+  return false;
 }
 ```
 

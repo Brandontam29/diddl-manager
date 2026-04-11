@@ -8,7 +8,7 @@ import {
   onMount,
   useContext,
   type Accessor,
-  type ParentComponent
+  type ParentComponent,
 } from "solid-js";
 
 import { useClerk } from "~/lib/clerk";
@@ -27,7 +27,7 @@ function getConvexUrl() {
   return import.meta.env.VITE_CONVEX_URL?.trim() ?? "";
 }
 
-export const ConvexProvider: ParentComponent = props => {
+export const ConvexProvider: ParentComponent = (props) => {
   const clerk = useClerk();
   const [client, setClient] = createSignal<ConvexClient>();
   const url = getConvexUrl();
@@ -47,7 +47,7 @@ export const ConvexProvider: ParentComponent = props => {
       }
 
       return currentSession.getToken({
-        template: "convex"
+        template: "convex",
       });
     });
 
@@ -63,7 +63,7 @@ export const ConvexProvider: ParentComponent = props => {
       value={{
         client,
         configured,
-        url
+        url,
       }}
     >
       {props.children}
@@ -83,12 +83,14 @@ export function useConvex() {
 
 export function useConvexQuery<Query extends FunctionReference<"query">>(
   query: Query,
-  args: Accessor<FunctionArgs<Query>>
+  args: Accessor<FunctionArgs<Query>>,
 ) {
   const convex = useConvex();
   const [data, setData] = createSignal<FunctionReturnType<Query>>();
   const [error, setError] = createSignal<string | null>(null);
-  const [status, setStatus] = createSignal<QueryState>(convex.configured ? "loading" : "unavailable");
+  const [status, setStatus] = createSignal<QueryState>(
+    convex.configured ? "loading" : "unavailable",
+  );
 
   createEffect(() => {
     const client = convex.client();
@@ -111,14 +113,14 @@ export function useConvexQuery<Query extends FunctionReference<"query">>(
     const unsubscribe = client.onUpdate(
       query,
       args(),
-      value => {
+      (value) => {
         setData(() => value);
         setStatus("ready");
       },
-      cause => {
+      (cause) => {
         setError(cause.message);
         setStatus("error");
-      }
+      },
     );
 
     onCleanup(() => {
@@ -130,6 +132,6 @@ export function useConvexQuery<Query extends FunctionReference<"query">>(
     configured: convex.configured,
     data,
     error,
-    status
+    status,
   };
 }

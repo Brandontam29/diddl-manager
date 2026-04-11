@@ -163,62 +163,62 @@ src/routes/
 // src/lib/types/list.ts
 
 // Condition enum matching Convex schema values
-export type ItemCondition = 'mint' | 'near_mint' | 'good' | 'poor' | 'damaged';
+export type ItemCondition = "mint" | "near_mint" | "good" | "poor" | "damaged";
 
 // Natural key for catalog reference (D-20: no Convex IDs in localStorage)
 export interface CatalogRef {
-	type: string; // e.g., "A4"
-	number: number; // e.g., 42
+  type: string; // e.g., "A4"
+  number: number; // e.g., 42
 }
 
 // localStorage list shape (simplified per D-20)
 export interface GuestList {
-	id: string; // UUID generated client-side
-	name: string;
-	color: string;
-	createdAt: number; // epoch ms
+  id: string; // UUID generated client-side
+  name: string;
+  color: string;
+  createdAt: number; // epoch ms
 }
 
 export interface GuestListItem {
-	id: string; // UUID generated client-side
-	listId: string;
-	catalogRef: CatalogRef;
-	condition: ItemCondition;
-	quantity: number;
-	complete: boolean;
-	tags: string[];
+  id: string; // UUID generated client-side
+  listId: string;
+  catalogRef: CatalogRef;
+  condition: ItemCondition;
+  quantity: number;
+  complete: boolean;
+  tags: string[];
 }
 ```
 
 ```typescript
 // src/lib/stores/list-store.svelte.ts
 
-import type { GuestList, GuestListItem, CatalogRef, ItemCondition } from '$lib/types/list';
+import type { GuestList, GuestListItem, CatalogRef, ItemCondition } from "$lib/types/list";
 
 export interface ListStore {
-	// Reactive state (components subscribe to these)
-	readonly lists: GuestList[];
-	readonly activeListId: string | null;
-	readonly activeListItems: GuestListItem[];
+  // Reactive state (components subscribe to these)
+  readonly lists: GuestList[];
+  readonly activeListId: string | null;
+  readonly activeListItems: GuestListItem[];
 
-	// List CRUD
-	createList(name: string, color: string): GuestList;
-	updateList(id: string, updates: Partial<Pick<GuestList, 'name' | 'color'>>): void;
-	deleteList(id: string): void;
-	setActiveList(id: string | null): void;
+  // List CRUD
+  createList(name: string, color: string): GuestList;
+  updateList(id: string, updates: Partial<Pick<GuestList, "name" | "color">>): void;
+  deleteList(id: string): void;
+  setActiveList(id: string | null): void;
 
-	// Item CRUD
-	addItems(listId: string, refs: CatalogRef[]): void;
-	removeItems(itemIds: string[]): void;
-	updateItem(
-		itemId: string,
-		updates: Partial<Pick<GuestListItem, 'condition' | 'quantity' | 'complete'>>
-	): void;
-	duplicateItem(itemId: string): GuestListItem;
+  // Item CRUD
+  addItems(listId: string, refs: CatalogRef[]): void;
+  removeItems(itemIds: string[]): void;
+  updateItem(
+    itemId: string,
+    updates: Partial<Pick<GuestListItem, "condition" | "quantity" | "complete">>,
+  ): void;
+  duplicateItem(itemId: string): GuestListItem;
 
-	// Derived / computed
-	completionPercent(listId: string): number;
-	itemsByType(listId: string, type: string): GuestListItem[];
+  // Derived / computed
+  completionPercent(listId: string): number;
+  itemsByType(listId: string, type: string): GuestListItem[];
 }
 ```
 
@@ -233,59 +233,59 @@ export interface ListStore {
 ```typescript
 // src/lib/stores/guest-list-store.svelte.ts (simplified)
 
-import { toast } from 'svelte-sonner';
-import type { GuestList, GuestListItem, CatalogRef, ListStore } from '$lib/types/list';
+import { toast } from "svelte-sonner";
+import type { GuestList, GuestListItem, CatalogRef, ListStore } from "$lib/types/list";
 
-const STORAGE_KEY = 'diddl-lists';
+const STORAGE_KEY = "diddl-lists";
 
 function loadFromStorage(): { lists: GuestList[]; items: GuestListItem[] } {
-	try {
-		const raw = localStorage.getItem(STORAGE_KEY);
-		return raw ? JSON.parse(raw) : { lists: [], items: [] };
-	} catch {
-		return { lists: [], items: [] };
-	}
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : { lists: [], items: [] };
+  } catch {
+    return { lists: [], items: [] };
+  }
 }
 
 function saveToStorage(data: { lists: GuestList[]; items: GuestListItem[] }): void {
-	try {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-	} catch (e) {
-		toast.error('Storage full. Sign up to save your collection reliably.');
-	}
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {
+    toast.error("Storage full. Sign up to save your collection reliably.");
+  }
 }
 
 export class GuestListStore implements ListStore {
-	#lists = $state<GuestList[]>([]);
-	#items = $state<GuestListItem[]>([]);
-	#activeListId = $state<string | null>(null);
-	#initialized = false;
+  #lists = $state<GuestList[]>([]);
+  #items = $state<GuestListItem[]>([]);
+  #activeListId = $state<string | null>(null);
+  #initialized = false;
 
-	constructor() {
-		// Load once from localStorage
-		const stored = loadFromStorage();
-		this.#lists = stored.lists;
-		this.#items = stored.items;
-		this.#initialized = true;
+  constructor() {
+    // Load once from localStorage
+    const stored = loadFromStorage();
+    this.#lists = stored.lists;
+    this.#items = stored.items;
+    this.#initialized = true;
 
-		// Auto-save on every change (D-22)
-		$effect(() => {
-			if (!this.#initialized) return;
-			saveToStorage({ lists: this.#lists, items: this.#items });
-		});
-	}
+    // Auto-save on every change (D-22)
+    $effect(() => {
+      if (!this.#initialized) return;
+      saveToStorage({ lists: this.#lists, items: this.#items });
+    });
+  }
 
-	get lists() {
-		return this.#lists;
-	}
-	get activeListId() {
-		return this.#activeListId;
-	}
-	get activeListItems() {
-		return this.#items.filter((i) => i.listId === this.#activeListId);
-	}
+  get lists() {
+    return this.#lists;
+  }
+  get activeListId() {
+    return this.#activeListId;
+  }
+  get activeListItems() {
+    return this.#items.filter((i) => i.listId === this.#activeListId);
+  }
 
-	// ... CRUD methods mutate #lists / #items which triggers $effect auto-save
+  // ... CRUD methods mutate #lists / #items which triggers $effect auto-save
 }
 ```
 
@@ -300,19 +300,19 @@ export class GuestListStore implements ListStore {
 ```typescript
 // src/lib/stores/list-context.svelte.ts
 
-import { createContext } from 'svelte';
-import type { ListStore } from './list-store.svelte';
+import { createContext } from "svelte";
+import type { ListStore } from "./list-store.svelte";
 
 const [internalGetListStore, setInternalListStore] = createContext<ListStore>();
 
 export function getListStore(): ListStore {
-	const store = internalGetListStore();
-	if (!store) throw new Error('ListStore context not found');
-	return store;
+  const store = internalGetListStore();
+  if (!store) throw new Error("ListStore context not found");
+  return store;
 }
 
 export function setListStore(store: ListStore): void {
-	setInternalListStore(store);
+  setInternalListStore(store);
 }
 ```
 
@@ -465,12 +465,12 @@ export function setListStore(store: ListStore): void {
 ```typescript
 // When saving to localStorage, always snapshot first
 function saveToStorage(data: { lists: GuestList[]; items: GuestListItem[] }): void {
-	try {
-		const plain = $state.snapshot(data);
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(plain));
-	} catch (e) {
-		toast.error('Storage full. Sign up to save your collection reliably.');
-	}
+  try {
+    const plain = $state.snapshot(data);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(plain));
+  } catch (e) {
+    toast.error("Storage full. Sign up to save your collection reliably.");
+  }
 }
 ```
 

@@ -10,7 +10,7 @@ const ensureFileExists = async (filePath: string, defaultContent = "") => {
     await mkdir(dir, { recursive: true });
   } catch (err) {
     if (!(err instanceof Error)) {
-      logging.error(`Error creating directories: ${err}`);
+      logging.error(`Error creating directories: ${String(err)}`);
       return;
     }
 
@@ -21,7 +21,7 @@ const ensureFileExists = async (filePath: string, defaultContent = "") => {
     await writeFile(filePath, defaultContent);
   } catch (err) {
     if (!(err instanceof Error)) {
-      logging.error(`Error creating file: ${err}`);
+      logging.error(`Error creating file: ${String(err)}`);
       return;
     }
 

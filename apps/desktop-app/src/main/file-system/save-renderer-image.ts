@@ -16,7 +16,7 @@ export const saveRendererImage = (
     // Wrap copyFile in ResultAsync to keep the chain consistent
     return ResultAsync.fromPromise(
       copyFile(imagePath, destinationPath),
-      (err) => new Error(`Failed to copy image: ${err}`),
+      (err) => new Error(`Failed to copy image: ${String(err)}`),
     ).map(() => destinationPath); // Return the path on success
   });
 };

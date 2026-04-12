@@ -6,7 +6,7 @@
     "dev": "vite dev",
     "format": "oxfmt --config ../../.oxfmtrc.json .",
     "lint": "oxlint --config ../../.oxlintrc.json .",
-    "typecheck": "oxlint --config ../../.oxlintrc.json --tsconfig tsconfig.json --type-aware --type-check .",
+    "typecheck": "tsc --noEmit --project tsconfig.json",
     "check": "bun run typecheck",
     "build": "vite build",
     "start": "vite start",
@@ -35,7 +35,8 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.7",
     "@types/node": "^25.5.2",
-    "tailwindcss": "^4.0.7"
+    "tailwindcss": "^4.0.7",
+    "typescript": "^6.0.2"
   },
   "engines": {
     "node": ">=22"

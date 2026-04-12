@@ -5,9 +5,10 @@
   "scripts": {
     "format": "oxfmt --config ../../.oxfmtrc.json .",
     "lint": "oxlint --config ../../.oxlintrc.json .",
-    "typecheck": "oxlint --config ../../.oxlintrc.json --tsconfig tsconfig.json --type-aware --type-check ."
+    "typecheck": "tsc --noEmit --project tsconfig.json"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typescript": "^6.0.2"
   }
 }

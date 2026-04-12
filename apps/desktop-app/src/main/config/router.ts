@@ -14,7 +14,7 @@ export const configRouter = router({
     try {
       return settingsStore.store;
     } catch (e) {
-      logging.error(`Failed to read settings: ${e}`);
+      logging.error(`Failed to read settings: ${String(e)}`);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to read settings",
@@ -29,7 +29,7 @@ export const configRouter = router({
         settingsStore.set(input.keyPath.join("."), input.value);
         return { success: true as const };
       } catch (e) {
-        logging.error(`Failed to update setting: ${e}`);
+        logging.error(`Failed to update setting: ${String(e)}`);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to update setting",
@@ -41,7 +41,7 @@ export const configRouter = router({
     try {
       return uiStateStore.store;
     } catch (e) {
-      logging.error(`Failed to read UI state: ${e}`);
+      logging.error(`Failed to read UI state: ${String(e)}`);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to read UI state",
@@ -56,7 +56,7 @@ export const configRouter = router({
         uiStateStore.set(input.keyPath.join("."), input.value);
         return { success: true as const };
       } catch (e) {
-        logging.error(`Failed to update UI state: ${e}`);
+        logging.error(`Failed to update UI state: ${String(e)}`);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to update UI state",

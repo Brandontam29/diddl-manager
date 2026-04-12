@@ -1,5 +1,4 @@
 import confetti from "canvas-confetti";
-import { JSX } from "solid-js";
 
 export const confettiStars = (e: { target: Element }) => {
   if (!e.target) return;

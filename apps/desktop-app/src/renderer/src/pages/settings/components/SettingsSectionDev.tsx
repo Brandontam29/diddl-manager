@@ -1,13 +1,3 @@
-import {
-  Section,
-  SectionContent,
-  SectionDescription,
-  SectionHeader,
-  SectionTitle,
-} from "@renderer/components/section/two-column";
-import { Button } from "@renderer/components/ui/button";
-import { trpc } from "@renderer/libs/trpc";
-
 export default function SettingsSectionDev() {
   return (
     <div />

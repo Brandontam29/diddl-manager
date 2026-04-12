@@ -1,6 +1,6 @@
 import { useParams } from "@solidjs/router";
 import { CheckCircle, Circle } from "lucide-solid";
-import { type Component, For, Show, createEffect, createMemo } from "solid-js";
+import { type Component, For, Show, createMemo } from "solid-js";
 
 import type { Diddl, JoinedListItem } from "@shared";
 
@@ -13,7 +13,7 @@ import {
   addSelectedIndices,
   removeSelectedIndices,
 } from "@renderer/features/diddl/selectedIndicesMethods";
-import { uiStore } from "@renderer/features/settings/legacy-index";
+import { useCardHeight } from "@renderer/features/ui-state";
 import { cn } from "@renderer/libs/cn";
 
 import ListItemBadgesAndQuantity from "./ListItemBadgesAndQuantity";
@@ -29,6 +29,7 @@ const getItemDiddlId = (item: CardItem) => (isJoinedListItem(item) ? item.diddlI
 const DiddlCards: Component<{
   items?: CardItem[] | null;
 }> = (props) => {
+  const cardHeight = useCardHeight();
   const params = useParams();
   const listId = createMemo(() => (params.id === undefined ? null : parseInt(params.id)));
   const selectedIndices = () => diddlStore.selectedIndices;
@@ -57,8 +58,8 @@ const DiddlCards: Component<{
               <div
                 class={cn("relative rounded")}
                 style={{
-                  height: `${uiStore.cardHeight}px`,
-                  width: ratio ? `${uiStore.cardHeight * ratio}px` : undefined,
+                  height: `${cardHeight()}px`,
+                  width: ratio ? `${cardHeight() * ratio}px` : undefined,
                 }}
               >
                 <DiddlCardUi

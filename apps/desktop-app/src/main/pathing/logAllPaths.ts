@@ -44,7 +44,7 @@ const logFunctionResult = <T extends []>(func: (...params: T) => string, ...args
     const result = func(...args);
     console.log(`${func.name} => ${result}`);
   } catch (error) {
-    console.log(`${func.name} => Error: ${error}`);
+    console.log(`${func.name} => Error: ${String(error)}`);
   }
 };
 

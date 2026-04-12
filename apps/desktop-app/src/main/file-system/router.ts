@@ -2,6 +2,7 @@ import { rename } from "node:fs/promises";
 import path from "path";
 
 import { TRPCError } from "@trpc/server";
+import { dialog } from "electron";
 import { z } from "zod";
 
 import { logging } from "../logging";
@@ -10,6 +11,15 @@ import { publicProcedure, router } from "../trpc/trpc";
 import { createBackupZip } from "./zip/createBackupZip";
 
 export const fileSystemRouter = router({
+  pickImage: publicProcedure.mutation(async ({ ctx }) => {
+    const result = await dialog.showOpenDialog(ctx.browserWindow, {
+      properties: ["openFile"],
+      filters: [{ name: "Images", extensions: ["jpg", "jpeg", "png", "gif", "webp"] }],
+    });
+
+    return result.filePaths[0] ?? null;
+  }),
+
   downloadImages: publicProcedure
     .input(z.object({ diddlIds: z.array(z.number()).min(1) }))
     .mutation(async ({ ctx, input }) => {

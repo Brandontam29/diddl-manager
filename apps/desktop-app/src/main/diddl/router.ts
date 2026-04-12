@@ -29,7 +29,7 @@ export const diddlRouter = router({
       await rm(diddlImagesPath(), { recursive: true, force: true });
       logging.info(`Directory ${diddlImagesPath()} deleted successfully.`);
     } catch (err) {
-      logging.error(`Error deleting directory: ${err}`);
+      logging.error(`Error deleting directory: ${String(err)}`);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to delete diddl images directory",

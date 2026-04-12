@@ -1,3 +1,5 @@
+import { useAction } from "@solidjs/router";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@renderer/components/ui/card";
 import {
   Select,
@@ -6,11 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@renderer/components/ui/select";
-import {
-  HEIGHT_ZOOM_MAP,
-  setCardZoomLevel,
-  uiStore,
-} from "@renderer/features/settings/legacy-index";
+import { updateUiStateAction, useUiState } from "@renderer/features/ui-state";
 import type { DeepMutable } from "@renderer/type-utils";
 
 const ZOOM_OPTIONS = [
@@ -21,9 +19,13 @@ const ZOOM_OPTIONS = [
 ] as const;
 
 const SettingsSectionUx = () => {
-  const currentOption = () =>
-    ZOOM_OPTIONS.find((option) => option.value === HEIGHT_ZOOM_MAP[uiStore.cardHeight]) ||
-    ZOOM_OPTIONS[1];
+  const uiState = useUiState();
+  const submit = useAction(updateUiStateAction);
+
+  const currentOption = () => {
+    const size = uiState()?.cardSize ?? "md";
+    return ZOOM_OPTIONS.find((option) => option.value === size) || ZOOM_OPTIONS[1];
+  };
 
   return (
     <Card>
@@ -41,7 +43,7 @@ const SettingsSectionUx = () => {
           )}
           value={currentOption()}
           onChange={(value) => {
-            if (value) setCardZoomLevel(value.value);
+            if (value) submit({ cardSize: value.value });
           }}
         >
           <SelectTrigger>

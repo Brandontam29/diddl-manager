@@ -1,5 +1,6 @@
 import { Button } from "@kobalte/core/button";
 import type { DialogTriggerProps } from "@kobalte/core/dialog";
+import { useAction } from "@solidjs/router";
 import { HiOutlineCog6Tooth } from "solid-icons/hi";
 import { createSignal } from "solid-js";
 
@@ -18,11 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@renderer/components/ui/select";
-import {
-  HEIGHT_ZOOM_MAP,
-  setCardZoomLevel,
-  uiStore,
-} from "@renderer/features/settings/legacy-index";
+import { updateUiStateAction, useUiState } from "@renderer/features/ui-state";
 import type { DeepMutable } from "@renderer/type-utils";
 
 const ZOOM_OPTIONS = [
@@ -33,10 +30,14 @@ const ZOOM_OPTIONS = [
 ] as const;
 
 const SettingsDialog = () => {
-  const [zoomOption, setZoomOption] = createSignal(
-    ZOOM_OPTIONS.find((option) => option.value === HEIGHT_ZOOM_MAP[uiStore.cardHeight]) ||
-      ZOOM_OPTIONS[1],
-  );
+  const uiState = useUiState();
+  const submit = useAction(updateUiStateAction);
+
+  const currentOption = () => {
+    const size = uiState()?.cardSize ?? "md";
+    return ZOOM_OPTIONS.find((option) => option.value === size) || ZOOM_OPTIONS[1];
+  };
+  const [zoomOption, setZoomOption] = createSignal(currentOption());
   return (
     <Dialog>
       <DialogTrigger
@@ -81,7 +82,7 @@ const SettingsDialog = () => {
         <DialogFooter>
           <Dialog.CloseButton
             onClick={() => {
-              setCardZoomLevel(zoomOption().value);
+              submit({ cardSize: zoomOption().value });
             }}
           >
             Save changes

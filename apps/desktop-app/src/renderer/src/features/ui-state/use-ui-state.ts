@@ -1,6 +1,7 @@
 import { action, createAsyncStore, query, revalidate } from "@solidjs/router";
 
 import type { DeepPartial, UiState } from "@shared";
+import { ZOOM_HEIGHT_MAP } from "@shared";
 
 import { trpc } from "@renderer/libs/trpc";
 
@@ -17,6 +18,14 @@ export const useUiState = () =>
   createAsyncStore<UiState | null>(() => fetchUiState(), {
     initialValue: null,
   });
+
+export const useCardHeight = () => {
+  const uiState = useUiState();
+  return () => {
+    const size = uiState()?.cardSize ?? "md";
+    return ZOOM_HEIGHT_MAP[size as keyof typeof ZOOM_HEIGHT_MAP] ?? ZOOM_HEIGHT_MAP.md;
+  };
+};
 
 export const updateUiStateAction = action(async (newUiState: DeepPartial<UiState>) => {
   try {

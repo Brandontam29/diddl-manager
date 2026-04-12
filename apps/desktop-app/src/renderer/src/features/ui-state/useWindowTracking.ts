@@ -1,12 +1,15 @@
 import { debounce } from "@solid-primitives/scheduled";
+import { useAction } from "@solidjs/router";
 import { onCleanup, onMount } from "solid-js";
 
-import { updateUiStateAction } from "./index";
+import { updateUiStateAction } from "./use-ui-state";
 
 export const useWindowTracking = () => {
+  const submit = useAction(updateUiStateAction);
+
   onMount(() => {
     const handleUpdate = debounce(() => {
-      updateUiStateAction({
+      submit({
         windowBounds: {
           width: window.outerWidth,
           height: window.outerHeight,

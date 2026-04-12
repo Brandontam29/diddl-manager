@@ -32,8 +32,11 @@ export const profileRouter = router({
 
       return profile;
     } catch (e) {
-      logging.error(`Error fetching profile: ${e}`);
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to fetch profile" });
+      logging.error(`Error fetching profile: ${String(e)}`);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to fetch profile",
+      });
     }
   }),
 
@@ -63,7 +66,7 @@ export const profileRouter = router({
 
       return profile;
     } catch (e) {
-      logging.error(`Error updating user profile: ${e}`);
+      logging.error(`Error updating user profile: ${String(e)}`);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to update profile",
@@ -73,20 +76,40 @@ export const profileRouter = router({
 
   updatePicture: publicProcedure
     .input(z.object({ filePath: z.string().min(1) }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       try {
         const userImagesDir = userImagesPath();
         await mkdir(userImagesDir, { recursive: true });
-
         const ext = path.extname(input.filePath);
         const newFileName = `profile_${Date.now()}${ext}`;
         const destPath = path.join(userImagesDir, newFileName);
 
         await copyFile(input.filePath, destPath);
 
+        const dbDestPath = `app://user-images/${newFileName}`;
+
+        const existingProfile = await ctx.db
+          .selectFrom("profile")
+          .select("id")
+          .limit(1)
+          .executeTakeFirst();
+
+        if (!existingProfile) {
+          await ctx.db
+            .insertInto("profile")
+            .values({ ...defaultProfile, picturePath: dbDestPath })
+            .executeTakeFirstOrThrow();
+        } else {
+          await ctx.db
+            .updateTable("profile")
+            .set({ picturePath: dbDestPath })
+            .where("id", "=", existingProfile.id)
+            .executeTakeFirstOrThrow();
+        }
+
         return { path: destPath };
       } catch (e) {
-        logging.error(`Error updating user picture: ${e}`);
+        logging.error(`Error updating user picture: ${String(e)}`);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to update profile picture",

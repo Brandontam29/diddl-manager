@@ -1,5 +1,5 @@
 import { createForm } from "@tanstack/solid-form";
-import { For, Show } from "solid-js";
+import { createEffect, For, Show } from "solid-js";
 import { z } from "zod";
 
 import { Button } from "@renderer/components/ui/button";
@@ -18,18 +18,17 @@ import {
   TextFieldTextArea,
 } from "@renderer/components/ui/textfield";
 import { useProfile } from "@renderer/features/profile/profile-state";
+import { trpc } from "@renderer/libs/trpc";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   description: z.string().min(10, "Description must be at least 10 characters").max(200),
   hobbies: z.string(),
   birthdate: z.string(),
-  picture: z.union([z.string(), z.instanceof(File)]).nullable(),
 });
 
 export default function SettingsSectionProfile() {
   const { profile, actions } = useProfile();
-  let fileInputRef: HTMLInputElement | undefined;
 
   const form = createForm(() => ({
     defaultValues: {
@@ -37,19 +36,11 @@ export default function SettingsSectionProfile() {
       description: profile()?.description ?? "",
       hobbies: profile()?.hobbies ?? "",
       birthdate: profile()?.birthdate ?? "",
-      picture: (profile()?.picturePath ?? null) as string | File | null,
     },
     validators: {
       onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
-      if (value.picture instanceof File) {
-        const filePath = (value.picture as any).path;
-        if (filePath) {
-          await actions.updateProfilePicture(filePath);
-        }
-      }
-
       await actions.updateProfile({
         name: value.name,
         description: value.description,
@@ -59,6 +50,15 @@ export default function SettingsSectionProfile() {
     },
   }));
 
+  async function handleAvatarChange() {
+    const filePath = await trpc.fileSystem.pickImage.mutate();
+    if (filePath) {
+      await actions.updateProfilePicture(filePath);
+    }
+  }
+
+  createEffect(() => console.log("profile", profile()));
+
   return (
     <Card>
       <CardHeader>
@@ -66,56 +66,39 @@ export default function SettingsSectionProfile() {
         <CardDescription>Let us know who you are!</CardDescription>
       </CardHeader>
       <CardContent>
-        <form
-          class="flex flex-col gap-8 md:flex-row"
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-          }}
-        >
+        <div class="flex flex-col gap-8 md:flex-row">
           {/* Avatar */}
-          <form.Field name="picture">
-            {(field) => (
-              <div class="flex shrink-0 flex-col items-center gap-3">
-                <Show
-                  when={typeof field().state.value === "string" && field().state.value}
-                  fallback={
-                    <div class="flex h-40 w-40 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground">
-                      No photo
-                    </div>
-                  }
-                >
-                  <img
-                    src={`file://${field().state.value}`}
-                    alt="Profile"
-                    class="h-40 w-40 rounded-full object-cover"
-                  />
-                </Show>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  class="hidden"
-                  onChange={(e) => {
-                    const file = e.currentTarget.files?.[0];
-                    if (file) field().handleChange(file);
-                  }}
+          <div class="flex shrink-0 flex-col items-center gap-3">
+            <Show
+              when={profile()?.picturePath}
+              fallback={
+                <div class="flex h-40 w-40 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground">
+                  No photo
+                </div>
+              }
+            >
+              {(picturePath) => (
+                <img
+                  src={picturePath()}
+                  alt="Profile"
+                  class="h-50 w-50 rounded-full border border-gray-400 object-cover"
                 />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fileInputRef?.click()}
-                >
-                  Change Avatar
-                </Button>
-              </div>
-            )}
-          </form.Field>
+              )}
+            </Show>
+            <Button type="button" variant="outline" size="sm" onClick={handleAvatarChange}>
+              Change Avatar
+            </Button>
+          </div>
 
           {/* Form fields */}
-          <div class="flex-1 space-y-4">
+          <form
+            class="flex-1 space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              form.handleSubmit();
+            }}
+          >
             <form.Field name="name">
               {(field) => (
                 <TextFieldRoot
@@ -216,8 +199,8 @@ export default function SettingsSectionProfile() {
                 </Button>
               )}
             </form.Subscribe>
-          </div>
-        </form>
+          </form>
+        </div>
       </CardContent>
     </Card>
   );

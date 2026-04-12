@@ -41,7 +41,7 @@ export const createBackupZip = async (
       zip.addLocalFile(filePath, "");
       successful.push(filePath);
     } catch (err) {
-      const msg = `Failed to add ${filePath} to zip: ${err}`;
+      const msg = `Failed to add ${filePath} to zip: ${String(err)}`;
       logging.warn(msg);
       errors.push(msg);
       failed.push({ path: filePath, reason: String(err) });

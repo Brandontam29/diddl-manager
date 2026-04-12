@@ -6,7 +6,7 @@
   "scripts": {
     "format": "oxfmt --config ../../.oxfmtrc.json .",
     "lint": "oxlint --config ../../.oxlintrc.json src",
-    "typecheck": "oxlint --config ../../.oxlintrc.json --tsconfig tsconfig.json --type-aware --type-check src"
+    "typecheck": "tsc --noEmit --project tsconfig.json"
   },
   "dependencies": {
     "image-size": "^1.1.1",
@@ -14,7 +14,8 @@
     "puppeteer": "^23.2.1"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typescript": "^6.0.2"
   },
   "trustedDependencies": [
     "puppeteer"

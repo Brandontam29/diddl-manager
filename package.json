@@ -16,7 +16,7 @@
     "lint:data-migrations": "bun run --filter @diddl/data-migrations lint",
     "lint:scrape-diddl": "bun run --filter @diddl/scrape-diddl lint",
     "lint": "bun run lint:desktop && bun run lint:website-svelte && bun run lint:website-solid-claude && bun run lint:website-solid-codex && bun run lint:data-migrations && bun run lint:scrape-diddl",
-    "typecheck:desktop": "bun run --filter @diddl/desktop-app typecheck",
+    "typecheck:desktop": "bun run --filter @diddl/desktop-app --elide-lines=0 typecheck",
     "typecheck:website-svelte": "bun run --filter @diddl/website-svelte typecheck",
     "typecheck:website-solid-claude": "bun run --filter @diddl/website-solid-claude typecheck",
     "typecheck:website-solid-codex": "bun run --filter @diddl/website-solid-codex typecheck",

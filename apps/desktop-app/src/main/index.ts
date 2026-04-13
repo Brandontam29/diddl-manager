@@ -40,7 +40,7 @@ function createWindow(bounds?: { width?: number; height?: number; x?: number; y?
     try {
       const { protocol } = new URL(details.url);
       if (["https:", "http:"].includes(protocol)) {
-        shell.openExternal(details.url);
+        void shell.openExternal(details.url);
         return { action: "allow" };
       }
 
@@ -53,15 +53,15 @@ function createWindow(bounds?: { width?: number; height?: number; x?: number; y?
   });
 
   if (is.dev && process.env.ELECTRON_RENDERER_URL) {
-    mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);
+    void mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
-    mainWindow.loadFile(path.join(__dirname, "..", "renderer", "index.html"));
+    void mainWindow.loadFile(path.join(__dirname, "..", "renderer", "index.html"));
   }
 
   return mainWindow;
 }
 
-app.whenReady().then(async () => {
+void app.whenReady().then(async () => {
   electronApp.setAppUserModelId("com.manager.diddl");
 
   // Default open or close DevTools by F12 in development

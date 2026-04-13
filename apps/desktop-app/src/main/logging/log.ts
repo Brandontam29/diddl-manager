@@ -53,18 +53,18 @@ const writeLog = async (type: LogLevel, ...messages: any[]) => {
 
 export const logging = {
   info: (...args: any[]) => {
-    writeLog("info", ...args);
+    void writeLog("info", ...args);
   },
   warn: (...args: any[]) => {
-    writeLog("warn", ...args);
+    void writeLog("warn", ...args);
   },
   error: (...args: any[]) => {
-    writeLog("error", ...args);
+    void writeLog("error", ...args);
   },
   fatal: (...args: any[]) => {
-    writeLog("fatal", ...args);
+    void writeLog("fatal", ...args);
   },
   debug: (...args: any[]) => {
-    writeLog("debug", ...args);
+    void writeLog("debug", ...args);
   },
 };

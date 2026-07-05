@@ -1,5 +1,4 @@
 // oxlint-disable import/max-dependencies
-import fs from "node:fs";
 import path from "node:path";
 
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
@@ -15,45 +14,6 @@ import { appPath, logAllPaths } from "./pathing";
 import { appRouter } from "./trpc/router";
 import { checkForUpdates, setupAutoUpdater } from "./updater/setup";
 import isDev from "./utils/isDev";
-
-function isInsidePath(parentPath: string, childPath: string) {
-  const relativePath = path.relative(parentPath, childPath);
-
-  return relativePath === "" || (!relativePath.startsWith("..") && !path.isAbsolute(relativePath));
-}
-
-function addImagePathVariants(filePath: string) {
-  const paths = [filePath];
-
-  if (filePath.endsWith(".JPG.jpg")) {
-    paths.push(filePath.replace(/\.JPG\.jpg$/, ".JPG"));
-    paths.push(filePath.replace(/\.JPG\.jpg$/, ".jpg"));
-  } else if (filePath.endsWith(".jpg")) {
-    paths.push(filePath.replace(/\.jpg$/, ".JPG"));
-  }
-
-  return [...new Set(paths)];
-}
-
-function resolveAppProtocolPath(requestUrl: string) {
-  const rootPath = appPath();
-  const rawUrlPath = requestUrl.slice("app://".length);
-  const urlPaths = [rawUrlPath];
-
-  try {
-    urlPaths.push(decodeURIComponent(rawUrlPath));
-  } catch {
-    // Keep the raw URL path as the fallback for malformed escape sequences.
-  }
-
-  const candidates = [...new Set(urlPaths)]
-    .map((urlPath) => urlPath.replaceAll("\\", "/"))
-    .map((urlPath) => path.resolve(rootPath, urlPath))
-    .filter((filePath) => isInsidePath(rootPath, filePath))
-    .flatMap(addImagePathVariants);
-
-  return candidates.find((filePath) => fs.existsSync(filePath)) ?? candidates.at(0);
-}
 
 function createWindow(bounds?: { width?: number; height?: number; x?: number; y?: number }) {
   const mainWindow = new BrowserWindow({
@@ -144,12 +104,20 @@ void app.whenReady().then(async () => {
   });
 
   protocol.registerFileProtocol("app", (request, callback) => {
-    const filePath = resolveAppProtocolPath(request.url);
+    const url = request.url.slice("app://".length);
 
-    if (!filePath) {
+    const filePath = path.join(appPath(), url);
+
+    if (!filePath.startsWith(appPath())) {
       return callback({ path: path.join(appPath(), "404") });
     }
 
+    if (filePath.includes(".JPG.jpg")) {
+      const newPath = filePath.replaceAll("JPG.jpg", "jpg");
+      callback({ path: newPath });
+
+      return;
+    }
     callback({ path: filePath });
   });
 

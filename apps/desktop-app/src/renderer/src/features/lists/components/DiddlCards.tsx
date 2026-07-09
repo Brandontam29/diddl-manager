@@ -8,7 +8,6 @@ import FallbackLoadingDiddl from "@renderer/components/fallback/FallbackLoadingD
 import FallbackNoDiddl from "@renderer/components/fallback/FallbackNoDiddl";
 import { diddlStore } from "@renderer/features/diddl";
 import DiddlCardUi from "@renderer/features/diddl/components/DiddlCardUi";
-import { diddlListColors, diffDiddlIds } from "@renderer/features/diddl/diffMode";
 import {
   addSelectedIndices,
   removeSelectedIndices,
@@ -24,8 +23,6 @@ const isJoinedListItem = (item: CardItem): item is JoinedListItem => "listItemId
 
 const getItemName = (item: CardItem) => (isJoinedListItem(item) ? item.diddlName : item.name);
 
-const getItemDiddlId = (item: CardItem) => (isJoinedListItem(item) ? item.diddlId : item.id);
-
 const DiddlCards: Component<{
   items?: CardItem[] | null;
 }> = (props) => {
@@ -34,7 +31,6 @@ const DiddlCards: Component<{
   const listId = createMemo(() => (params.id === undefined ? null : parseInt(params.id)));
   const selectedIndices = () => diddlStore.selectedIndices;
   const isSelectMode = createMemo(() => selectedIndices().length > 0);
-  const isDiffMode = createMemo(() => diddlStore.diffListIds.length > 0);
 
   return (
     <Show when={Array.isArray(props.items)} fallback={<FallbackLoadingDiddl />}>
@@ -46,13 +42,6 @@ const DiddlCards: Component<{
           {(item, index) => {
             const ratio =
               item.imageWidth && item.imageHeight ? item.imageWidth / item.imageHeight : null;
-            const isGrayedOut = createMemo(() => {
-              const ids = diffDiddlIds();
-              return isDiffMode() && ids !== null && !ids.has(getItemDiddlId(item));
-            });
-            const cardColors = createMemo(() =>
-              isDiffMode() ? (diddlListColors().get(getItemDiddlId(item)) ?? []) : [],
-            );
 
             return (
               <div
@@ -65,26 +54,8 @@ const DiddlCards: Component<{
                 <DiddlCardUi
                   imagePath={item.imagePath}
                   name={getItemName(item)}
-                  class={cn(
-                    "h-full w-full",
-
-                    isGrayedOut() && "rounded ring-4 ring-black",
-                  )}
+                  class="h-full w-full"
                 />
-                <Show when={isDiffMode()}>
-                  <div class="absolute top-1 right-1 z-10 flex gap-0.5">
-                    <Show when={cardColors().length > 0}>
-                      <For each={cardColors()}>
-                        {(color) => (
-                          <div
-                            class="h-2.5 w-2.5 rounded-full"
-                            style={{ "background-color": color }}
-                          />
-                        )}
-                      </For>
-                    </Show>
-                  </div>
-                </Show>
                 <div
                   class={cn(
                     "inset-x absolute top-0 h-[calc(100%-20px)] w-full",

@@ -11,7 +11,7 @@ import {
 
 import FallbackPageLoading from "@renderer/components/fallback/FallbackPageLoading";
 import { ToastList, ToastRegion } from "@renderer/components/ui/toast";
-import { clearDiffCache, setDiddlStore } from "@renderer/features/diddl";
+import { setDiddlStore } from "@renderer/features/diddl";
 import { useWindowTracking } from "@renderer/features/ui-state";
 import UpdateDialog from "@renderer/features/updater/UpdateDialog";
 import { initUpdateState } from "@renderer/features/updater/update-state";
@@ -28,11 +28,6 @@ const BaseLayout: Component<RouteSectionProps> = (props) => {
   createComputed(
     on([() => props.location.pathname, () => props.location.search], () => {
       setDiddlStore("selectedIndices", []);
-
-      if (props.location.pathname !== "/") {
-        setDiddlStore("diffListIds", []);
-        clearDiffCache();
-      }
     }),
   );
 

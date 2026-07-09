@@ -33,3 +33,9 @@ export const deleteListAction = action(async (listId: number) => {
 
   revalidate("lists");
 });
+
+export const updateListColorAction = action(async (listId: number, color: string) => {
+  await trpc.list.updateColor.mutate({ listId, color });
+
+  await revalidate("lists");
+});

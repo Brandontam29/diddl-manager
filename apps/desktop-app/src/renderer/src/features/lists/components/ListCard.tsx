@@ -8,7 +8,6 @@ import { cn } from "@renderer/libs/cn";
 import { transparentOklch } from "@renderer/libs/transparentOklch";
 
 const ListCard: Component<{ list: List }> = (props) => {
-  const cardBackgroundColor = transparentOklch(props.list.color, 0.15);
   return (
     <Card
       color="custom"
@@ -17,7 +16,7 @@ const ListCard: Component<{ list: List }> = (props) => {
         "transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg",
       )}
       style={{
-        "background-color": cardBackgroundColor,
+        "background-color": transparentOklch(props.list.color, 0.15),
       }}
     >
       <CardHeader>

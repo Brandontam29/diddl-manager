@@ -1,11 +1,12 @@
-import { revalidate } from "@solidjs/router";
+import { useAction } from "@solidjs/router";
 import { Palette } from "lucide-solid";
 import { Component, For, createSignal } from "solid-js";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
 import { cn } from "@renderer/libs/cn";
 import { transparentOklch } from "@renderer/libs/transparentOklch";
-import { trpc } from "@renderer/libs/trpc";
+
+import { updateListColorAction } from "../lists";
 
 const LIST_COLORS = [
   "oklch(77.2% 0.142 5.8)",
@@ -22,14 +23,13 @@ const LIST_COLORS = [
 
 const ColorPickerPopover: Component<{ listId: number; currentColor: string }> = (props) => {
   const [open, setOpen] = createSignal(false);
+  const updateListColor = useAction(updateListColorAction);
 
   const handleColorSelect = async (color: string) => {
-    await trpc.list.updateColor.mutate({ listId: props.listId, color });
-    revalidate("lists");
+    await updateListColor(props.listId, color);
     setOpen(false);
   };
 
-  const popoverTriggerColor = transparentOklch(props.currentColor, 0.4);
   return (
     <Popover open={open()} onOpenChange={setOpen}>
       <PopoverTrigger
@@ -38,7 +38,7 @@ const ColorPickerPopover: Component<{ listId: number; currentColor: string }> = 
           "hover:scale-110",
           "transition-all duration-300 ease-in-out",
         )}
-        style={{ "background-color": popoverTriggerColor }}
+        style={{ "background-color": transparentOklch(props.currentColor, 0.4) }}
       >
         <Palette size={14} class="text-muted-foreground" />
       </PopoverTrigger>

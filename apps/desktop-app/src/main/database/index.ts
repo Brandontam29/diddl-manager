@@ -1,6 +1,6 @@
 import { Kysely } from "kysely";
 
-import { ListDb, ListItemDb } from "../../shared";
+import { ListDb, ListItemDb, ListSectionDb } from "../../shared";
 import { DiddlDb } from "../../shared/diddl-models";
 import { ProfileDb } from "../../shared/profile-models";
 import { initDb, migrateToLatest } from "./db";
@@ -8,6 +8,7 @@ import { initDb, migrateToLatest } from "./db";
 export type RawDatabase = {
   diddl: DiddlDb;
   list: ListDb;
+  listSection: ListSectionDb;
   listItem: ListItemDb;
   profile: ProfileDb;
 };

@@ -38,10 +38,44 @@ export const listItemSchema = z.object({
 
 export type ListItem = z.infer<typeof listItemSchema>;
 
+/**
+ * List Section
+ */
+export const listSectionNameSchema = z
+  .string()
+  .trim()
+  .min(2, { message: "Section name must be at least 2 characters long." })
+  .max(40, { message: "Section name must be at most 40 characters long." });
+
+export const listSectionSchema = z.object({
+  id: z.number(),
+  name: listSectionNameSchema,
+  position: z.number().nonnegative(),
+  isDefault: z.boolean(),
+
+  createdAt: isoDateStringSchema,
+  updatedAt: isoDateStringSchema,
+  deletedAt: isoDateStringSchema.nullable(),
+});
+
+export type ListSection = z.infer<typeof listSectionSchema>;
+
+export type ListSectionDb = Omit<ListSection, "id" | "createdAt" | "updatedAt"> & {
+  id: Generated<number>;
+  createdAt: Generated<string>;
+  updatedAt: Generated<string>;
+};
+
+export type SelectListSectionDb = Selectable<ListSectionDb>;
+export type InsertListSectionDb = Insertable<ListSectionDb>;
+export type UpdateListSectionDb = Updateable<ListSectionDb>;
+
 export const listSchema = z.object({
   id: z.number(),
   name: listNameSchema,
   color: z.string(),
+  sectionId: z.number(),
+  position: z.number().nonnegative(),
 
   createdAt: isoDateStringSchema,
   updatedAt: isoDateStringSchema,
@@ -49,6 +83,10 @@ export const listSchema = z.object({
 });
 
 export type List = z.infer<typeof listSchema>;
+
+export type ListSectionWithLists = ListSection & {
+  lists: List[];
+};
 
 export type ListDb = Omit<List, "id"> & {
   id: Generated<number>;

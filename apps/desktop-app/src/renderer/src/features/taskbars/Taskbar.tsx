@@ -1,12 +1,17 @@
 import { toaster } from "@kobalte/core/toast";
 import { useAction, useMatch, useParams } from "@solidjs/router";
 import { CircleX, Copy, Download, Minus, Plus, SplineIcon } from "lucide-solid";
-import { type Component, JSX, Show, createMemo, createSignal } from "solid-js";
-
-import type { Diddl, JoinedListItem, ListItem } from "@shared";
+import { type Component, type JSX, Show, createMemo, createSignal } from "solid-js";
 
 import { Toast, ToastContent, ToastProgress, ToastTitle } from "@renderer/components/ui/toast";
-import { diddlStore, setDiddlStore } from "@renderer/features/diddl";
+import {
+  type DiddlCardItem,
+  diddlStore,
+  getCardItemDiddlId,
+  getCardItemId,
+  getCardItemListItemId,
+  setDiddlStore,
+} from "@renderer/features/diddl";
 import {
   addListItemsAction,
   duplicateListItemAction,
@@ -19,16 +24,9 @@ import { cn } from "@renderer/libs/cn";
 import { confettiStars } from "@renderer/libs/confetti";
 import { trpc } from "@renderer/libs/trpc";
 
-const OPTIONS = {
-  home: ["hihi", "list:add", "download"],
-  list: ["list:add", "list:remove", "list:update", "download"],
-} as const;
-
-type Action = (typeof OPTIONS)[keyof typeof OPTIONS][number];
-
 const Taskbar: Component<{
-  diddls?: (Diddl & { listItem?: ListItem })[];
-  items?: JoinedListItem[];
+  diddls?: DiddlCardItem[];
+  items?: DiddlCardItem[];
 }> = (props) => {
   const screenWidth = useScreenWidth();
   const [open, setOpen] = createSignal(false);
@@ -36,19 +34,24 @@ const Taskbar: Component<{
   const addListItems = useAction(addListItemsAction);
   const duplicateListItems = useAction(duplicateListItemAction);
 
-  const getDiddlId = (index: number) => {
-    if (props.items) return props.items[index]?.diddlId || -1;
-    return props.diddls?.[index]?.id || -1;
-  };
-
-  const getListItemId = (index: number) => {
-    if (props.items) return props.items[index]?.listItemId || -1;
-    return props.diddls?.[index]?.listItem?.id || -1;
-  };
+  const allItems = createMemo(() => props.items ?? props.diddls ?? []);
+  const selectedItems = createMemo(() =>
+    allItems().filter((item) => diddlStore.selectedIds.includes(getCardItemId(item))),
+  );
+  const selectedDiddlIds = createMemo(() => selectedItems().map(getCardItemDiddlId));
+  const selectedListItemIds = createMemo(() =>
+    selectedItems()
+      .map(getCardItemListItemId)
+      .filter((id): id is number => id !== null),
+  );
+  const selectedCatalogDiddlIds = createMemo(() =>
+    selectedItems()
+      .filter((item) => getCardItemListItemId(item) === null)
+      .map(getCardItemDiddlId),
+  );
 
   const onDownloadImages: JSX.EventHandler<HTMLButtonElement, MouseEvent> = async (e) => {
-    const diddlIds = diddlStore.selectedIndices.map((index) => getDiddlId(index));
-    const result = await trpc.fileSystem.downloadImages.mutate({ diddlIds });
+    const result = await trpc.fileSystem.downloadImages.mutate({ diddlIds: selectedDiddlIds() });
 
     if (!result) return;
 
@@ -67,20 +70,23 @@ const Taskbar: Component<{
     createAsyncCallback(onDownloadImages);
 
   const isHome = useMatch(() => "/");
-
-  // const isList = useMatch(() => "/list/*");
-
-  const hasAction = (action: Action) => {
-    if (isHome()) {
-      return (OPTIONS.home as readonly Action[]).includes(action);
-    }
-
-    return (OPTIONS.list as readonly Action[]).includes(action);
-  };
-
   const params = useParams();
   const id = createMemo(() => (params.id === undefined ? null : parseInt(params.id)));
-  const selectedIndices = () => diddlStore.selectedIndices;
+
+  const addOneToCurrentList = async () => {
+    const listId = id();
+
+    if (listId === null) return;
+
+    if (selectedListItemIds().length > 0) {
+      await updateListItems(listId, selectedListItemIds(), { addQuantity: 1 });
+    }
+
+    if (selectedCatalogDiddlIds().length > 0) {
+      await addListItems(listId, selectedCatalogDiddlIds());
+      setDiddlStore("selectedIds", []);
+    }
+  };
 
   return (
     <div
@@ -92,9 +98,9 @@ const Taskbar: Component<{
     >
       <button
         class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
-        onClick={() => setDiddlStore("selectedIndices", [])}
+        onClick={() => setDiddlStore("selectedIds", [])}
       >
-        <CircleX size={15} /> <span>{diddlStore.selectedIndices.length} Selected</span>
+        <CircleX size={15} /> <span>{diddlStore.selectedIds.length} Selected</span>
       </button>
 
       <div class="h-[24px] w-px bg-gray-200" />
@@ -103,29 +109,16 @@ const Taskbar: Component<{
         open={open()}
         onOpenChange={setOpen}
         onListClick={async (listId) => {
-          await addListItems(
-            listId,
-            diddlStore.selectedIndices.map((index) => getDiddlId(index)),
-          );
-          setDiddlStore("selectedIndices", []);
+          await addListItems(listId, selectedDiddlIds());
+          setDiddlStore("selectedIds", []);
           setOpen(false);
         }}
       />
 
-      <Show when={hasAction("list:update")}>
+      <Show when={!isHome()}>
         <button
           class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
-          onClick={() => {
-            const listId = id();
-
-            if (listId === null) return;
-
-            updateListItems(
-              listId,
-              selectedIndices().map((i) => getListItemId(i)),
-              { addQuantity: 1 },
-            );
-          }}
+          onClick={addOneToCurrentList}
         >
           <Plus />
           <span>Add 1</span>
@@ -136,16 +129,13 @@ const Taskbar: Component<{
           onClick={async () => {
             const listId = id();
 
-            if (listId === null) return;
+            if (listId === null || selectedListItemIds().length === 0) return;
 
-            const result = await updateListItems(
-              listId,
-              selectedIndices().map((i) => getListItemId(i)),
-              { addQuantity: -1 },
-            );
+            const result = await updateListItems(listId, selectedListItemIds(), {
+              addQuantity: -1,
+            });
 
-            console.log(result);
-            if (result?.data?.numDeletedRows) setDiddlStore("selectedIndices", []);
+            if (result?.data?.numDeletedRows) setDiddlStore("selectedIds", []);
           }}
         >
           <Minus />
@@ -155,7 +145,8 @@ const Taskbar: Component<{
         <button
           class="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200"
           onClick={() => {
-            duplicateListItems(selectedIndices().map((i) => getListItemId(i)));
+            if (selectedListItemIds().length === 0) return;
+            duplicateListItems(selectedListItemIds());
           }}
         >
           <Copy size={16} />
@@ -167,13 +158,9 @@ const Taskbar: Component<{
           onClick={() => {
             const listId = id();
 
-            if (listId === null) return;
+            if (listId === null || selectedListItemIds().length === 0) return;
 
-            updateListItems(
-              listId,
-              selectedIndices().map((i) => getListItemId(i)),
-              { isIncomplete: false },
-            );
+            updateListItems(listId, selectedListItemIds(), { isIncomplete: false });
           }}
         >
           <span>Set as Complete</span>
@@ -184,13 +171,9 @@ const Taskbar: Component<{
           onClick={() => {
             const listId = id();
 
-            if (listId === null) return;
+            if (listId === null || selectedListItemIds().length === 0) return;
 
-            updateListItems(
-              listId,
-              selectedIndices().map((i) => getListItemId(i)),
-              { isIncomplete: true },
-            );
+            updateListItems(listId, selectedListItemIds(), { isIncomplete: true });
           }}
         >
           <span>Set as Incomplete</span>
@@ -201,13 +184,9 @@ const Taskbar: Component<{
           onClick={() => {
             const listId = id();
 
-            if (listId === null) return;
+            if (listId === null || selectedListItemIds().length === 0) return;
 
-            updateListItems(
-              listId,
-              selectedIndices().map((i) => getListItemId(i)),
-              { isDamaged: false },
-            );
+            updateListItems(listId, selectedListItemIds(), { isDamaged: false });
           }}
         >
           <span>Set as Mint</span>
@@ -218,13 +197,9 @@ const Taskbar: Component<{
           onClick={() => {
             const listId = id();
 
-            if (listId === null) return;
+            if (listId === null || selectedListItemIds().length === 0) return;
 
-            updateListItems(
-              listId,
-              selectedIndices().map((i) => getListItemId(i)),
-              { isDamaged: true },
-            );
+            updateListItems(listId, selectedListItemIds(), { isDamaged: true });
           }}
         >
           <span>Set as Damaged</span>

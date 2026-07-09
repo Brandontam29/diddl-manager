@@ -4,7 +4,12 @@ import { type Component } from "solid-js";
 import { Image, ImageFallback, ImageRoot } from "@renderer/components/ui/image";
 import { cn } from "@renderer/libs/cn";
 
-const DiddlCardUi: Component<{ name?: string; imagePath?: string; class?: string }> = (props) => {
+const DiddlCardUi: Component<{
+  name?: string;
+  imagePath?: string;
+  class?: string;
+  nameClass?: string;
+}> = (props) => {
   return (
     <div class={cn(props.class)}>
       <div class="h-[calc(100%-20px)] w-full rounded-t border-x border-t border-black/20">
@@ -19,7 +24,12 @@ const DiddlCardUi: Component<{ name?: string; imagePath?: string; class?: string
           </ImageFallback>
         </ImageRoot>
       </div>
-      <div class="grid h-5 w-full place-content-center rounded-b bg-purple-200 text-purple-950">
+      <div
+        class={cn(
+          "grid h-5 w-full place-content-center rounded-b bg-purple-200 text-purple-950",
+          props.nameClass,
+        )}
+      >
         {props.name}
       </div>
     </div>

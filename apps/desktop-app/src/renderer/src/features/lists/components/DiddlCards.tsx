@@ -2,35 +2,34 @@ import { useParams } from "@solidjs/router";
 import { CheckCircle, Circle } from "lucide-solid";
 import { type Component, For, Show, createMemo } from "solid-js";
 
-import type { Diddl, JoinedListItem } from "@shared";
-
 import FallbackLoadingDiddl from "@renderer/components/fallback/FallbackLoadingDiddl";
 import FallbackNoDiddl from "@renderer/components/fallback/FallbackNoDiddl";
-import { diddlStore } from "@renderer/features/diddl";
-import DiddlCardUi from "@renderer/features/diddl/components/DiddlCardUi";
 import {
-  addSelectedIndices,
-  removeSelectedIndices,
-} from "@renderer/features/diddl/selectedIndicesMethods";
+  type DiddlCardItem,
+  diddlStore,
+  getCardItemId,
+  getCardItemName,
+  getCardItemQuantity,
+  isJoinedListItem,
+} from "@renderer/features/diddl";
+import DiddlCardUi from "@renderer/features/diddl/components/DiddlCardUi";
+import { addSelectedIds, removeSelectedIds } from "@renderer/features/diddl/selectedIndicesMethods";
 import { useCardHeight } from "@renderer/features/ui-state";
 import { cn } from "@renderer/libs/cn";
 
 import ListItemBadgesAndQuantity from "./ListItemBadgesAndQuantity";
 
-type CardItem = Diddl | JoinedListItem;
-
-const isJoinedListItem = (item: CardItem): item is JoinedListItem => "listItemId" in item;
-
-const getItemName = (item: CardItem) => (isJoinedListItem(item) ? item.diddlName : item.name);
-
 const DiddlCards: Component<{
-  items?: CardItem[] | null;
+  items?: DiddlCardItem[] | null;
+  highlightQuantity?: boolean;
+  showQuantityControls?: boolean;
 }> = (props) => {
   const cardHeight = useCardHeight();
   const params = useParams();
   const listId = createMemo(() => (params.id === undefined ? null : parseInt(params.id)));
-  const selectedIndices = () => diddlStore.selectedIndices;
-  const isSelectMode = createMemo(() => selectedIndices().length > 0);
+  const selectedIds = () => diddlStore.selectedIds;
+  const isSelectMode = createMemo(() => selectedIds().length > 0);
+  const itemIds = createMemo(() => props.items?.map(getCardItemId) ?? []);
 
   return (
     <Show when={Array.isArray(props.items)} fallback={<FallbackLoadingDiddl />}>
@@ -39,7 +38,15 @@ const DiddlCards: Component<{
         fallback={<FallbackNoDiddl />}
       >
         <For each={props.items}>
-          {(item, index) => {
+          {(item) => {
+            const itemId = createMemo(() => getCardItemId(item));
+            const isSelected = createMemo(() => selectedIds().includes(itemId()));
+            const shouldShowQuantity = createMemo(
+              () => props.showQuantityControls || isJoinedListItem(item),
+            );
+            const shouldHighlight = createMemo(
+              () => props.highlightQuantity && getCardItemQuantity(item) > 0,
+            );
             const ratio =
               item.imageWidth && item.imageHeight ? item.imageWidth / item.imageHeight : null;
 
@@ -53,8 +60,9 @@ const DiddlCards: Component<{
               >
                 <DiddlCardUi
                   imagePath={item.imagePath}
-                  name={getItemName(item)}
+                  name={getCardItemName(item)}
                   class="h-full w-full"
+                  nameClass={shouldHighlight() ? "bg-gray-300 text-gray-950" : undefined}
                 />
                 <div
                   class={cn(
@@ -68,28 +76,25 @@ const DiddlCards: Component<{
                       "absolute inset-0 h-12 w-full bg-linear-to-b from-black/35 text-transparent opacity-0 hover:opacity-100",
                       !isSelectMode() && "hover:text-gray-200",
                       isSelectMode() && "opacity-100",
-                      selectedIndices().includes(index()) && "from-transparent",
+                      isSelected() && "from-transparent",
                     )}
                   >
                     <button
                       class={cn("absolute top-1.5 left-1.5 h-7 w-7 rounded-full")}
-                      onClick={(e) => handleClick(index(), e)}
+                      onClick={(e) => handleClick(itemId(), itemIds(), e)}
                     >
                       <Circle
                         class={cn(
                           "absolute inset-0 h-full w-full",
-                          !selectedIndices().includes(index()) && isSelectMode() && "text-gray-200",
+                          !isSelected() && isSelectMode() && "text-gray-200",
                         )}
                       />
                       <CheckCircle
                         class={cn(
                           "absolute inset-0 h-full w-full",
                           !isSelectMode() && "hover:text-white",
-                          !selectedIndices().includes(index()) &&
-                            isSelectMode() &&
-                            "group-hover/card:text-white",
-                          selectedIndices().includes(index()) &&
-                            "rounded-full bg-blue-300 text-white",
+                          !isSelected() && isSelectMode() && "group-hover/card:text-white",
+                          isSelected() && "rounded-full bg-blue-300 text-white",
                         )}
                       />
                     </button>
@@ -98,18 +103,18 @@ const DiddlCards: Component<{
                     <button
                       class={cn(
                         "absolute inset-0 h-full w-full rounded-t",
-                        selectedIndices().includes(index()) && "border-[5px] border-blue-300",
+                        isSelected() && "border-[5px] border-blue-300",
                       )}
-                      onClick={[handleClick, index()]}
+                      onClick={(e) => handleClick(itemId(), itemIds(), e)}
                     />
                   </Show>
                 </div>
-                <Show when={isJoinedListItem(item)}>
+                <Show when={shouldShowQuantity()}>
                   <ListItemBadgesAndQuantity
-                    item={item as JoinedListItem}
+                    item={item}
                     listId={listId()}
-                    index={index()}
-                    selectedIndices={selectedIndices()}
+                    itemId={itemId()}
+                    selectedIds={selectedIds()}
                     isSelectMode={isSelectMode()}
                     allItems={props.items!}
                   />
@@ -123,58 +128,44 @@ const DiddlCards: Component<{
   );
 };
 
-const handleClick = (index: number, event: MouseEvent) => {
-  const selectedIndices = diddlStore.selectedIndices;
+const handleClick = (id: string, itemIds: string[], event: MouseEvent) => {
+  const selectedIds = diddlStore.selectedIds;
+
   if (event.shiftKey) {
-    const lastClicked = selectedIndices.at(-1);
+    const lastClicked = selectedIds.at(-1);
     if (lastClicked === undefined) return;
 
-    const numbersBetween = getNumbersBetween(lastClicked, index);
-    const isAdding = isAdd(selectedIndices, index);
-    if (isAdding) {
-      addSelectedIndices(numbersBetween);
-      return;
-    }
-    if (!isAdding) {
-      removeSelectedIndices(numbersBetween);
-      return;
-    }
-  }
+    const idsBetween = getIdsBetween(itemIds, lastClicked, id);
+    if (idsBetween.length === 0) return;
 
-  const isAdding = !selectedIndices.includes(index);
-  if (isAdding) {
-    addSelectedIndices(index);
+    if (shouldAdd(selectedIds, idsBetween)) {
+      addSelectedIds(idsBetween);
+      return;
+    }
+
+    removeSelectedIds(idsBetween);
     return;
   }
-  if (!isAdding) {
-    removeSelectedIndices(index);
+
+  if (!selectedIds.includes(id)) {
+    addSelectedIds(id);
+    return;
   }
+
+  removeSelectedIds(id);
 };
 
-const isAdd = (arr: number[], shiftClickIndex: number) => {
-  const lastClicked = arr.at(-1);
-  if (lastClicked === undefined) return;
-
-  const numbersBetween = [lastClicked, ...getNumbersBetween(lastClicked, shiftClickIndex)];
-  const numbersBetweenSet = new Set(numbersBetween);
-
-  return !arrayHasAllSetElements(arr, numbersBetweenSet);
+const shouldAdd = (selectedIds: string[], ids: string[]) => {
+  return !ids.every((id) => selectedIds.includes(id));
 };
 
-const arrayHasAllSetElements = <T,>(array: T[], set: Set<T>) => {
-  const arraySet = new Set(array);
-  return set.isSubsetOf(arraySet);
-};
+const getIdsBetween = (itemIds: string[], a: string, b: string) => {
+  const aIndex = itemIds.indexOf(a);
+  const bIndex = itemIds.indexOf(b);
 
-const getNumbersBetween = (a: number, b: number) => {
-  const numbers: number[] = [];
-  if (a < b) {
-    for (let i = a + 1; i <= b; i++) numbers.push(i);
-  }
-  if (a > b) {
-    for (let i = a - 1; i >= b; i--) numbers.push(i);
-  }
-  return numbers;
+  if (aIndex === -1 || bIndex === -1) return [];
+
+  return itemIds.slice(Math.min(aIndex, bIndex), Math.max(aIndex, bIndex) + 1);
 };
 
 export default DiddlCards;

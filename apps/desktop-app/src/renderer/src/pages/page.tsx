@@ -32,7 +32,7 @@ const HomePage = () => {
     return filteredDiddls;
   });
 
-  const isSelectMode = createMemo(() => diddlStore.selectedIndices.length > 0);
+  const isSelectMode = createMemo(() => diddlStore.selectedIds.length > 0);
 
   return (
     <>

@@ -2,7 +2,7 @@ import { createIntersectionObserver } from "@solid-primitives/intersection-obser
 import { useSearchParams } from "@solidjs/router";
 import { Component, JSX, createComputed, createMemo, createSignal, on } from "solid-js";
 
-import { Diddl, JoinedListItem } from "@shared";
+import type { DiddlCardItem } from "@renderer/features/diddl";
 
 import DiddlCards from "@renderer/features/lists/components/DiddlCards";
 
@@ -56,7 +56,9 @@ const DEFAULT_SHOWN = 150;
 const INCREMENT_SHOWN = 150;
 
 const DiddlCardListLimiter: Component<{
-  diddls?: (Diddl | JoinedListItem)[] | null;
+  diddls?: DiddlCardItem[] | null;
+  highlightQuantity?: boolean;
+  showQuantityControls?: boolean;
 }> = (props) => {
   const [maxShown, setMaxShown] = createSignal(DEFAULT_SHOWN);
 
@@ -72,7 +74,11 @@ const DiddlCardListLimiter: Component<{
         setMaxShown(DEFAULT_SHOWN + idNumber * INCREMENT_SHOWN);
       }}
     >
-      <DiddlCards items={limitedDiddls()} />
+      <DiddlCards
+        items={limitedDiddls()}
+        highlightQuantity={props.highlightQuantity}
+        showQuantityControls={props.showQuantityControls}
+      />
     </InfiniteScroll>
   );
 };

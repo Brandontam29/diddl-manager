@@ -1,13 +1,11 @@
 import { createStore } from "solid-js/store";
 
 type Store = {
-  selectedIndices: number[];
-  indicesCount: number[];
+  selectedIds: string[];
 };
 
 const [diddlStore, setDiddlStore] = createStore<Store>({
-  selectedIndices: [],
-  indicesCount: [],
+  selectedIds: [],
 });
 
 export { diddlStore, setDiddlStore };

@@ -57,7 +57,7 @@ const INCREMENT_SHOWN = 150;
 
 const DiddlCardListLimiter: Component<{
   diddls?: DiddlCardItem[] | null;
-  highlightQuantity?: boolean;
+  highlightZeroQuantity?: boolean;
   showQuantityControls?: boolean;
 }> = (props) => {
   const [maxShown, setMaxShown] = createSignal(DEFAULT_SHOWN);
@@ -76,7 +76,7 @@ const DiddlCardListLimiter: Component<{
     >
       <DiddlCards
         items={limitedDiddls()}
-        highlightQuantity={props.highlightQuantity}
+        highlightZeroQuantity={props.highlightZeroQuantity}
         showQuantityControls={props.showQuantityControls}
       />
     </InfiniteScroll>

@@ -21,7 +21,7 @@ import ListItemBadgesAndQuantity from "./ListItemBadgesAndQuantity";
 
 const DiddlCards: Component<{
   items?: DiddlCardItem[] | null;
-  highlightQuantity?: boolean;
+  highlightZeroQuantity?: boolean;
   showQuantityControls?: boolean;
 }> = (props) => {
   const cardHeight = useCardHeight();
@@ -45,7 +45,7 @@ const DiddlCards: Component<{
               () => props.showQuantityControls || isJoinedListItem(item),
             );
             const shouldHighlight = createMemo(
-              () => props.highlightQuantity && getCardItemQuantity(item) > 0,
+              () => props.highlightZeroQuantity && getCardItemQuantity(item) === 0,
             );
             const ratio =
               item.imageWidth && item.imageHeight ? item.imageWidth / item.imageHeight : null;

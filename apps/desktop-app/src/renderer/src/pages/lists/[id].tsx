@@ -135,7 +135,11 @@ const ListIdPage = () => {
         </div>
         <div class={cn("relative flex grow flex-wrap gap-2 px-4 pt-8 pb-4")}>
           <Show when={isShowAllMode()} fallback={<DiddlCards items={listItems()} />}>
-            <DiddlCardListLimiter diddls={allModeItems()} highlightQuantity showQuantityControls />
+            <DiddlCardListLimiter
+              diddls={allModeItems()}
+              highlightZeroQuantity
+              showQuantityControls
+            />
           </Show>
         </div>
       </div>

@@ -1,21 +1,21 @@
 import { diddlStore, setDiddlStore } from "./createDiddlStore";
 
-export const addSelectedIndices = (indices: number | number[]) => {
-  setDiddlStore("selectedIndices", [
-    ...diddlStore.selectedIndices,
-    ...(typeof indices === "number" ? [indices] : indices),
-  ]);
+export const addSelectedIds = (ids: string | string[]) => {
+  const idsToAdd = typeof ids === "string" ? [ids] : ids;
+  const nextIds = [...diddlStore.selectedIds];
+
+  for (const id of idsToAdd) {
+    if (!nextIds.includes(id)) nextIds.push(id);
+  }
+
+  setDiddlStore("selectedIds", nextIds);
 };
 
-export const removeSelectedIndices = (indices: number | number[]) => {
-  if (typeof indices === "number")
-    return setDiddlStore(
-      "selectedIndices",
-      diddlStore.selectedIndices.filter((num) => indices !== num),
-    );
+export const removeSelectedIds = (ids: string | string[]) => {
+  const idsToRemove = typeof ids === "string" ? [ids] : ids;
 
   setDiddlStore(
-    "selectedIndices",
-    diddlStore.selectedIndices.filter((num) => !indices.includes(num)),
+    "selectedIds",
+    diddlStore.selectedIds.filter((id) => !idsToRemove.includes(id)),
   );
 };

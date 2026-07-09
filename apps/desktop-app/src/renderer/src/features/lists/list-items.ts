@@ -28,6 +28,8 @@ export const addListItemsAction = action(
     const items = diddlIds.map((id) => ({ diddlId: id, ...state }));
     const result = await trpc.list.addItems.mutate({ listId, items });
 
+    revalidate("list-items");
+
     return result;
   },
 );
@@ -35,7 +37,7 @@ export const addListItemsAction = action(
 export const removeListItemsAction = action(async (listId: number, listItemIds: number[]) => {
   const result = await trpc.list.removeItems.mutate({ listId, listItemIds });
 
-  revalidate("lists-items");
+  revalidate("list-items");
 
   return result;
 });
@@ -65,7 +67,7 @@ export const updateListItemsAction = action(
 
     const result = await trpc.list.updateItems.mutate({ listId, listItemIds, action });
 
-    revalidate("lists-items");
+    revalidate("list-items");
 
     return result;
   },

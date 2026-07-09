@@ -1,6 +1,6 @@
 {
   "name": "@diddl/desktop-app",
-  "version": "1.18.0",
+  "version": "1.18.1",
   "private": true,
   "description": "App to manage your Diddls",
   "homepage": "https://electron-vite.org",

@@ -2,7 +2,12 @@ import { TRPCError } from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod";
 
-import { addListItemSchema, listItemFilterSchema, listSectionNameSchema } from "../../shared";
+import {
+  addListItemSchema,
+  listItemFilterSchema,
+  listNameSchema,
+  listSectionNameSchema,
+} from "../../shared";
 import { logging } from "../logging";
 import { publicProcedure, router } from "../trpc/trpc";
 
@@ -101,6 +106,35 @@ const validateSectionName = async (db: any, name: string, excludeSectionId?: num
     throw new TRPCError({
       code: "CONFLICT",
       message: "A section with this name already exists.",
+    });
+  }
+
+  return result.data;
+};
+
+const validateListName = async (db: any, name: string, excludeListId?: number) => {
+  const result = listNameSchema.safeParse(name);
+
+  if (!result.success) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: result.error.issues[0]?.message ?? "Invalid list name",
+    });
+  }
+
+  let query = db
+    .selectFrom("list")
+    .select(["id"])
+    .where("deletedAt", "is", null)
+    .where(sql<string>`lower(name)`, "=", result.data.toLowerCase());
+
+  if (excludeListId !== undefined) query = query.where("id", "!=", excludeListId);
+
+  const existing = await query.executeTakeFirst();
+  if (existing) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "A list with this name already exists.",
     });
   }
 
@@ -496,12 +530,24 @@ export const listRouter = router({
     .input(z.object({ listId: z.number(), name: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
+        const list = await ctx.db
+          .selectFrom("list")
+          .select(["id"])
+          .where("id", "=", input.listId)
+          .where("deletedAt", "is", null)
+          .executeTakeFirst();
+
+        if (!list) throw new TRPCError({ code: "NOT_FOUND", message: "List not found" });
+
+        const name = await validateListName(ctx.db, input.name, input.listId);
+
         await ctx.db
           .updateTable("list")
-          .set({ name: input.name, updatedAt: new Date().toISOString() })
+          .set({ name, updatedAt: new Date().toISOString() })
           .where("id", "=", input.listId)
           .execute();
       } catch (e) {
+        if (e instanceof TRPCError) throw e;
         logging.error(e);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

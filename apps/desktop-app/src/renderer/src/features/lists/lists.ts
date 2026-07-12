@@ -52,6 +52,12 @@ export const updateListColorAction = action(async (listId: number, color: string
   await revalidate("listSections");
 });
 
+export const updateListNameAction = action(async (listId: number, name: string) => {
+  await trpc.list.updateName.mutate({ listId, name });
+  await revalidate("lists");
+  await revalidate("listSections");
+});
+
 export const createListSectionAction = action(async (name: string) => {
   const section = await trpc.list.sections.create.mutate({ name });
   await revalidate("listSections");

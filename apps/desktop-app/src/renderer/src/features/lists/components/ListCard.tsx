@@ -20,7 +20,7 @@ const ListCard: Component<{ list: List }> = (props) => {
       }}
     >
       <CardHeader>
-        <CardTitle class="text-2xl font-bold">{props.list.name}</CardTitle>
+        <CardTitle class="min-w-0 truncate text-2xl font-bold">{props.list.name}</CardTitle>
       </CardHeader>
       <CardContent>
         <div class="space-y-4">

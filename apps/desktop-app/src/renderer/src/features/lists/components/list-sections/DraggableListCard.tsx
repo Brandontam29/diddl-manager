@@ -10,6 +10,7 @@ import { cn } from "@renderer/libs/cn";
 import ColorPickerPopover from "../ColorPickerPopover";
 import DeleteListDialog from "../DeleteListDialog";
 import ListCard from "../ListCard";
+import RenameListDialog from "../RenameListDialog";
 import type { DragData } from "./dragData";
 
 const DraggableListCard: Component<{ list: List; sectionId: number }> = (props) => {
@@ -45,7 +46,7 @@ const DraggableListCard: Component<{ list: List; sectionId: number }> = (props) 
         droppable.ref(element);
       }}
       class={cn(
-        "relative h-full",
+        "group/card relative h-full",
         draggable.isDragging() && "opacity-60",
         droppable.isDropTarget() && "rounded-md ring-2 ring-primary",
       )}
@@ -69,6 +70,12 @@ const DraggableListCard: Component<{ list: List; sectionId: number }> = (props) 
         <DeleteListDialog listId={props.list.id} listName={props.list.name}>
           <X size={16} class="text-muted-foreground hover:text-destructive" />
         </DeleteListDialog>
+      </div>
+      <div class="absolute top-2 right-8">
+        <RenameListDialog
+          list={props.list}
+          class="opacity-0 transition-opacity group-focus-within/card:opacity-100 group-hover/card:opacity-100 focus-visible:opacity-100"
+        />
       </div>
       <div class="absolute right-0 bottom-0">
         <ColorPickerPopover listId={props.list.id} currentColor={props.list.color} />

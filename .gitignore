@@ -35,6 +35,9 @@ extra-images/
 .svelte-kit/
 
 #AI
+/AGENTS.md
+/CLAUDE.md
+/GEMINI.md
 .claude/
 .agent/
 .code-review-graph/

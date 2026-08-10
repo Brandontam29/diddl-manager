@@ -6,7 +6,10 @@ export async function up(db: Kysely<any>) {
   await db
     .insertInto("diddl")
     .values(
-      diddls.map((diddl) => ({ ...diddl, imagePath: `app://diddl-images/${diddl.imagePath}` })),
+      diddls.map((diddl) => ({
+        ...diddl,
+        imagePath: `app://diddl-images/${diddl.imagePath.replaceAll("\\", "/")}`,
+      })),
     )
     .execute();
 }

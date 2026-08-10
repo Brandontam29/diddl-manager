@@ -11,9 +11,25 @@ import { initDb, migrateToLatest } from "./database";
 import setupDiddlImages from "./diddl/setupDiddlImages";
 import { logging } from "./logging";
 import { appPath, logAllPaths } from "./pathing";
+import { resolveAppImagePath } from "./pathing/resolve-app-image-path";
 import { appRouter } from "./trpc/router";
 import { checkForUpdates, setupAutoUpdater } from "./updater/setup";
 import isDev from "./utils/isDev";
+
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: "app",
+    privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true },
+  },
+]);
+
+const registerImageProtocol = () => {
+  protocol.registerFileProtocol("app", (request, callback) => {
+    const filePath = resolveAppImagePath(request.url, appPath());
+
+    callback({ path: filePath ?? path.join(appPath(), "404") });
+  });
+};
 
 function createWindow(bounds?: { width?: number; height?: number; x?: number; y?: number }) {
   const mainWindow = new BrowserWindow({
@@ -80,6 +96,7 @@ void app.whenReady().then(async () => {
   if (db) await migrateToLatest(db);
 
   await setupDiddlImages();
+  registerImageProtocol();
 
   const uiStore = createDefaultUiState();
 
@@ -101,24 +118,6 @@ void app.whenReady().then(async () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
-
-  protocol.registerFileProtocol("app", (request, callback) => {
-    const url = request.url.slice("app://".length);
-
-    const filePath = path.join(appPath(), url);
-
-    if (!filePath.startsWith(appPath())) {
-      return callback({ path: path.join(appPath(), "404") });
-    }
-
-    if (filePath.includes(".JPG.jpg")) {
-      const newPath = filePath.replaceAll("JPG.jpg", "jpg");
-      callback({ path: newPath });
-
-      return;
-    }
-    callback({ path: filePath });
   });
 
   setupAutoUpdater();

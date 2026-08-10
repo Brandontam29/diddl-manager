@@ -59,7 +59,7 @@ const DiddlCards: Component<{
                 }}
               >
                 <DiddlCardUi
-                  imagePath={item.imagePath}
+                  imagePath={item.imagePath.replaceAll("\\", "/")}
                   name={getCardItemName(item)}
                   class="h-full w-full"
                   nameClass={shouldHighlight() ? "bg-gray-300 text-gray-950" : undefined}

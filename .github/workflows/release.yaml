@@ -33,4 +33,4 @@ jobs:
       - name: Build and Publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bun run --filter @diddl/desktop-app build:win
+        run: bun run --filter diddl-manager build:win

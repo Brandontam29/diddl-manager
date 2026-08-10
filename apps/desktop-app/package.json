@@ -1,6 +1,6 @@
 {
   "name": "diddl-manager",
-  "version": "1.18.3",
+  "version": "1.18.4",
   "private": true,
   "description": "App to manage your Diddls",
   "homepage": "https://electron-vite.org",

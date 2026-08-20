@@ -134,6 +134,13 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
   only, ignored-build step; migrations run manually pre-merge; thin JSON console
   logger.
 
+- [Route map & UI port plan](issues/11-routes-and-ui-port.md) — `/` = SSR'd
+  marketing landing; the app lives under `/app` (`_authed` layout, `ssr: false`):
+  `/app` = Library, `/app/lists`, `/app/lists/$listId`, `/app/settings`; Clerk
+  pages at `/sign-in/$`, `/sign-up/$`; search params kept verbatim; layout loader
+  = catalog + sections + profile; renderer code copied (not shared); tablet floor;
+  updater/dev/download-images dropped; no prototype.
+
 ## Not yet specified
 
 (Empty — all former fog has graduated: dev workflow/CI/logging into
@@ -153,3 +160,8 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
   [Catalog seeding pipeline](issues/10-catalog-seeding.md). The append-only id
   contract lets it land later as a plain catalog update.
 - Retiring or changing the desktop app itself.
+- Taskbar "Download images" (desktop `fileSystem.downloadImages`, saves files to
+  disk) — local file export, dropped during
+  [Route map & UI port plan](issues/11-routes-and-ui-port.md).
+- A full marketing landing page (features, screenshots, FAQ) and phone-sized layouts
+  — v1 ships a static hero and a tablet floor; both are later efforts.

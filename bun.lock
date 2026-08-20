@@ -21,7 +21,7 @@
     },
     "apps/desktop-app": {
       "name": "diddl-manager",
-      "version": "1.18.2",
+      "version": "1.19.0",
       "dependencies": {
         "@dnd-kit/solid": "^0.5.0",
         "@electron-toolkit/preload": "^3.0.2",

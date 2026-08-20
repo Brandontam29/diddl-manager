@@ -49,3 +49,13 @@ _Avoid_: account, member
 The collector-facing display data of a User (name, birthdate, description, hobbies,
 picture). Not the auth identity.
 _Avoid_: user info, account details
+
+**Taskbar**:
+The action bar that appears while one or more Diddls are selected on the Library or a
+List page (add to list, quantity, duplicate, remove). Not window chrome.
+_Avoid_: toolbar, selection bar
+
+**Landing**:
+The public marketing page at the web app's root, shown to signed-out visitors. Not
+part of the app shell.
+_Avoid_: home (that's the Library on desktop)

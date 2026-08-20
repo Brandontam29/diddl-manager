@@ -125,10 +125,19 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
   only (soft-deleted skipped, profile re-entered); catalog + zod guards, single
   transaction, empty-account precondition; source DB hand-copied from the user's PC.
 
+- [Dev workflow, CI, and deployment config](issues/14-dev-workflow-ci-deploy.md) —
+  one Neon project (`main` = prod, `dev` = local + Vercel previews); env
+  `DATABASE_URL` / `DATABASE_URL_UNPOOLED` (drizzle-kit only) / `CLERK_SECRET_KEY` /
+  `VITE_CLERK_PUBLISHABLE_KEY` / `VITE_IMAGE_BASE_URL`; root `*:website` scripts
+  (stale `website-svelte` ones removed); new website-only `ci.yaml`
+  (format/lint/typecheck/build); Vercel Root Directory `apps/website`, Git deploys
+  only, ignored-build step; migrations run manually pre-merge; thin JSON console
+  logger.
+
 ## Not yet specified
 
 (Empty — all former fog has graduated: dev workflow/CI/logging into
-"Dev workflow, CI, and deployment config" (issue 14), testing into
+"Dev workflow, CI, and deployment config" (issue 14, now closed), testing into
 "Testing strategy" (issue 15), and desktop↔web code sharing lives inside
 "Postgres data model" (issue 08)'s question.)
 

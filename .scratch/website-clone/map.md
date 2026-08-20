@@ -16,7 +16,7 @@ planning.
 
 - Domain: **diddl** = a specific card/paper collectible. Global read-only **catalog**
   (~2,800 diddls: name, one of 28 types, image) ships today as
-  `apps/desktop-app/src/main/diddl/diddls.json` + `resources/diddl-images.zip` (~89MB).
+  `apps/desktop-app/src/main/database/diddls.json` + `resources/diddl-images.zip` (~89MB).
   Users organize **lists** (colored, ordered, soft-deleted) into **sections**;
   a **list item** = a diddl in a list with quantity / isDamaged / isIncomplete.
   Plus a per-user **profile** page. Reference models: `apps/desktop-app/src/shared/`.
@@ -119,10 +119,25 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
   `IMAGE_BASE_URL=/diddls`; deploys must go through Git integration (CLI upload cap);
   Blob/paid storage remains a config-only escape hatch.
 
+- [Personal data migration plan](issues/12-personal-data-migration.md) — one-off
+  dev-run `apps/website/scripts/import-desktop.ts --db --user` after the user signs
+  up; desktop diddl ids verified `= index + 1` (no remap); live sections/lists/items
+  only (soft-deleted skipped, profile re-entered); catalog + zod guards, single
+  transaction, empty-account precondition; source DB hand-copied from the user's PC.
+
+- [Dev workflow, CI, and deployment config](issues/14-dev-workflow-ci-deploy.md) —
+  one Neon project (`main` = prod, `dev` = local + Vercel previews); env
+  `DATABASE_URL` / `DATABASE_URL_UNPOOLED` (drizzle-kit only) / `CLERK_SECRET_KEY` /
+  `VITE_CLERK_PUBLISHABLE_KEY` / `VITE_IMAGE_BASE_URL`; root `*:website` scripts
+  (stale `website-svelte` ones removed); new website-only `ci.yaml`
+  (format/lint/typecheck/build); Vercel Root Directory `apps/website`, Git deploys
+  only, ignored-build step; migrations run manually pre-merge; thin JSON console
+  logger.
+
 ## Not yet specified
 
 (Empty — all former fog has graduated: dev workflow/CI/logging into
-"Dev workflow, CI, and deployment config" (issue 14), testing into
+"Dev workflow, CI, and deployment config" (issue 14, now closed), testing into
 "Testing strategy" (issue 15), and desktop↔web code sharing lives inside
 "Postgres data model" (issue 08)'s question.)
 

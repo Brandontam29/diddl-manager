@@ -19,6 +19,7 @@ export const resolveAppImagePath = (requestUrl: string, basePath: string) => {
 
   const imageRoot = path.resolve(basePath, url.hostname);
   const requestedPath = url.pathname
+    .replaceAll("!", "%21")
     .replaceAll("\\", path.sep)
     .replaceAll("/", path.sep)
     .replace(/^[\\/]+/, "");

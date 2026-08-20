@@ -21,6 +21,12 @@ describe("resolveAppImagePath", () => {
     );
   });
 
+  test("matches punctuation encoded in archive filenames", () => {
+    expect(resolveAppImagePath("app://diddl-images/category/image!.jpg", basePath)).toBe(
+      path.join(basePath, "diddl-images", "category", "image%21.jpg"),
+    );
+  });
+
   test("removes the duplicate extension from legacy seed data", () => {
     expect(resolveAppImagePath("app://diddl-images/category/image.JPG.jpg", basePath)).toBe(
       path.join(basePath, "diddl-images", "category", "image.JPG"),

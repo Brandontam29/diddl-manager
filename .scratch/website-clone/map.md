@@ -141,11 +141,18 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
   = catalog + sections + profile; renderer code copied (not shared); tablet floor;
   updater/dev/download-images dropped; no prototype.
 
+- [Testing strategy](issues/15-testing-strategy.md) — Vitest, colocated
+  `*.test.ts`; nothing ported from desktop; authorization scoping proven by
+  DB-backed integration tests calling plain `(db, userId, input)` handlers against a
+  dedicated Neon `test` branch (random `test_<uuid>` users, self-cleaning); no e2e
+  and no component tests in v1; unit + integration gate CI via
+  `TEST_DATABASE_URL(_UNPOOLED)` secrets with `db:migrate` run first.
+
 ## Not yet specified
 
 (Empty — all former fog has graduated: dev workflow/CI/logging into
-"Dev workflow, CI, and deployment config" (issue 14, now closed), testing into
-"Testing strategy" (issue 15), and desktop↔web code sharing lives inside
+"Dev workflow, CI, and deployment config" (issue 14, closed), testing into
+"Testing strategy" (issue 15, closed), and desktop↔web code sharing lives inside
 "Postgres data model" (issue 08)'s question.)
 
 ## Out of scope
@@ -163,5 +170,8 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
 - Taskbar "Download images" (desktop `fileSystem.downloadImages`, saves files to
   disk) — local file export, dropped during
   [Route map & UI port plan](issues/11-routes-and-ui-port.md).
+- Playwright e2e (needs Clerk testing tokens) and Solid component tests — ruled out
+  during [Testing strategy](issues/15-testing-strategy.md); previews are the smoke
+  test for v1.
 - A full marketing landing page (features, screenshots, FAQ) and phone-sized layouts
   — v1 ships a static hero and a tablet floor; both are later efforts.

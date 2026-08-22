@@ -42,7 +42,7 @@ Drizzle, snake_case columns, `timestamptz`. `updated_at` via `$onUpdate`.
 
 - **`diddls`** (Catalog, global, read-only to users): `id int PK` (no identity —
   ids come from `data/catalog.json`, `id = index + 1`), `name text`, `type`
-  (pg enum, the 28 Diddl Types from the shared schema), `image_path text`
+  (pg enum, the 27 Diddl Types from the shared schema), `image_path text`
   (relative, forward slashes), `image_width int`, `image_height int`.
 - **`list_sections`**: `id identity PK`, `user_id text NOT NULL`, `name`,
   `position int`, `is_default bool`, `created_at`, `updated_at`, `deleted_at null`.

@@ -23,7 +23,7 @@ planning.
 ## Notes
 
 - Domain: **diddl** = a specific card/paper collectible. Global read-only **catalog**
-  (~2,800 diddls: name, one of 28 types, image) ships today as
+  (~2,800 diddls: name, one of 27 types, image) ships today as
   `apps/desktop-app/src/main/database/diddls.json` + `resources/diddl-images.zip` (~89MB).
   Users organize **lists** (colored, ordered, soft-deleted) into **sections**;
   a **list item** = a diddl in a list with quantity / isDamaged / isIncomplete.
@@ -173,6 +173,14 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
   scripts, `.env.example`, JSON-line logger, placeholder `/`; root `*:website`
   scripts (svelte ones removed); website-only `ci.yaml` (migrate/integration
   steps deferred to the scoping-suite ticket). All checks green.
+
+- [Drizzle schema and first migration](issues/21-drizzle-schema-migration.md) —
+  migration `0000` generated and applied to the Neon `dev` and `test` branches (project
+  `diddl-manager-web` / `restless-cloud-44961745`; the default branch was renamed
+  `production` → `main` per spec §9); five tables + the partial unique index, `neon-http`
+  `createDb()` seam, `drizzle.config.ts`, `db:generate`/`db:migrate`, desktop zod schemas
+  ported into `src/shared/`. The type enum is **27** values, not the 28 the spec said
+  (corrected). `main` left unmigrated for ticket 28. All checks green.
 
 ## Not yet specified
 

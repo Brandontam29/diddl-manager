@@ -1,7 +1,7 @@
 # Scaffold the apps/website workspace
 
 Type: task
-Status: open
+Status: resolved
 Blocked by: — (none; frontier)
 
 ## Question

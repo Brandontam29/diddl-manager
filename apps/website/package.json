@@ -1,0 +1,33 @@
+{
+  "name": "@diddl/website",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node .output/server/index.mjs",
+    "format": "oxfmt --config ../../.oxfmtrc.json .",
+    "lint": "oxlint --config ../../.oxlintrc.json src scripts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun run test:unit && bun run test:integration",
+    "test:unit": "vitest run --exclude '**/*.integration.test.ts'",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
+  },
+  "dependencies": {
+    "@tanstack/solid-router": "^1.170.29",
+    "@tanstack/solid-start": "^1.168.46",
+    "solid-js": "^1.9.15"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/node": "^22.5.4",
+    "nitro": "^3.0.260610-beta",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.14",
+    "vite-plugin-solid": "^2.11.11",
+    "vitest": "^4.1.11"
+  }
+}

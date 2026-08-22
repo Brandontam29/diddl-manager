@@ -10,17 +10,19 @@
     "format:check": "oxfmt --config ./.oxfmtrc.json --check .",
     "lint-staged": "lint-staged",
     "lint:desktop": "bun run --filter diddl-manager lint",
-    "lint:website-svelte": "bun run --filter @diddl/website-svelte lint",
     "lint:data-migrations": "bun run --filter @diddl/data-migrations lint",
     "lint:scrape-diddl": "bun run --filter @diddl/scrape-diddl lint",
     "typecheck:desktop": "bun run --filter diddl-manager --elide-lines=0 typecheck",
-    "typecheck:website-svelte": "bun run --filter @diddl/website-svelte typecheck",
     "typecheck:data-migrations": "bun run --filter @diddl/data-migrations typecheck",
     "typecheck:scrape-diddl": "bun run --filter @diddl/scrape-diddl typecheck",
     "dev:desktop": "bun run --filter diddl-manager --elide-lines=0 dev",
     "build:desktop": "bun run --filter diddl-manager build",
     "test:desktop": "bun run --filter diddl-manager test:unit",
-    "dev:website-svelte": "bun run --filter @diddl/website-svelte dev"
+    "lint:website": "bun run --filter @diddl/website lint",
+    "typecheck:website": "bun run --filter @diddl/website typecheck",
+    "dev:website": "bun run --filter @diddl/website --elide-lines=0 dev",
+    "build:website": "bun run --filter @diddl/website build",
+    "test:website": "bun run --filter @diddl/website test"
   },
   "devDependencies": {
     "husky": "^9.1.7",
@@ -36,7 +38,6 @@
   "trustedDependencies": [
     "@clerk/shared",
     "@diddl/desktop-app",
-    "@diddl/website-svelte",
     "@parcel/watcher",
     "browser-tabs-lock",
     "bufferutil",

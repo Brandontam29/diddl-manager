@@ -168,6 +168,12 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
   no openspec change created (`openspec/` no longer exists) — implementation
   starts from the spec.
 
+- [Scaffold the apps/website workspace](issues/20-scaffold-website-workspace.md) —
+  `apps/website` on TanStack Start (Solid) + Tailwind 4 + Vitest with the spec's
+  scripts, `.env.example`, JSON-line logger, placeholder `/`; root `*:website`
+  scripts (svelte ones removed); website-only `ci.yaml` (migrate/integration
+  steps deferred to the scoping-suite ticket). All checks green.
+
 ## Not yet specified
 
 (Empty — all former fog has graduated: dev workflow/CI/logging into

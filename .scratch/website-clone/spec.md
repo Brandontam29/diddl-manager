@@ -148,7 +148,7 @@ Port rules:
   (~98MB). Served as originals off Vercel's CDN; `VITE_IMAGE_BASE_URL=/diddls`;
   the DB stores relative paths so a move to Vercel Blob is config-only.
 - `apps/website/scripts/clean-catalog.ts` (repeatable): reads
-  `apps/desktop-app/src/main/diddl/diddls.json` (untouched) + the unzipped images,
+  `apps/desktop-app/src/main/database/diddls.json` (untouched) + the unzipped images,
   writes `apps/website/data/catalog.json`. Rules: strip `.jpg`; `_`/`-` runs →
   spaces; collapse whitespace; capitalize first letter; forward-slash paths and
   verify each file exists; backfill missing dimensions from the image; keep

@@ -182,6 +182,15 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
   ported into `src/shared/`. The type enum is **27** values, not the 28 the spec said
   (corrected). `main` left unmigrated for ticket 28. All checks green.
 
+- [Catalog images, clean script, and load script](issues/22-catalog-images-and-seed.md) —
+  3,955 images (100MB) committed to `public/diddls/`; `clean-catalog.ts` →
+  `data/catalog.json` (3,913 entries, `id = index + 1`) and a re-runnable
+  `load-catalog.ts`; `dev` and `test` both hold 3,913 `diddls` rows. Found that
+  **561 entries (14%) have no usable image** — pre-existing desktop parity, since the
+  zip is the desktop's only image source; entries kept (the id contract forbids
+  dropping), dimensions null where unmeasurable, and the UI question split out as
+  [Catalog entries with no image](issues/30-missing-catalog-images.md).
+
 ## Not yet specified
 
 (Empty — all former fog has graduated: dev workflow/CI/logging into

@@ -55,8 +55,13 @@ test/setup.ts`, serial). `test/setup.ts` throws when `DATABASE_URL` is unset.
 Checks run: `build:website` ✔ (Nitro output in `.output/`), `typecheck:website` ✔,
 `lint:website` ✔, `test:website` ✔ (2 unit tests, integration "no test files"
 exits 0), `format:check` ✔ (253 files), `dev:website` serves the SSR'd placeholder
-on :3000 and returns 404 for unknown paths. CI on `main` is verified in the
-follow-up commit status (see below).
+on :3000 and returns 404 for unknown paths. CI on `main`: first run failed at
+`bun install --frozen-lockfile` (the initial install left `bun.lock` in a
+non-canonical postcss hoisting layout); fixed by re-running `bun install` and
+committing the normalized lockfile — second run green:
+https://github.com/Brandontam29/diddl-manager/actions/runs/32548906820.
+Lesson for later tickets: run `bun install --frozen-lockfile` locally before
+pushing dependency changes.
 
 Facts later tickets depend on: import alias is `@/*`; unit tests live next to code
 as `*.test.ts`, integration as `*.integration.test.ts`; env typing lives in

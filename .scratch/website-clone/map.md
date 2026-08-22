@@ -1,5 +1,8 @@
 # Wayfinder map: Diddl Manager web app clone
 
+**Status: complete (2026-08-21)** — destination reached; the locked spec is
+[`spec.md`](spec.md). No open tickets, no fog.
+
 Label: wayfinder:map
 Tickets: `.scratch/website-clone/issues/NN-<slug>.md`
 
@@ -147,6 +150,12 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
   dedicated Neon `test` branch (random `test_<uuid>` users, self-cleaning); no e2e
   and no component tests in v1; unit + integration gate CI via
   `TEST_DATABASE_URL(_UNPOOLED)` secrets with `db:migrate` run first.
+
+- [Assemble the locked spec](issues/13-assemble-locked-spec.md) — folded every
+  decision into [`spec.md`](spec.md) (scope, stack, schema, auth, API, routes/UI
+  port, images/seeding, migration runbook, env/CI/Vercel, testing, build order);
+  no openspec change created (`openspec/` no longer exists) — implementation
+  starts from the spec.
 
 ## Not yet specified
 

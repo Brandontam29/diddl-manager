@@ -1,14 +1,19 @@
 # Wayfinder map: Diddl Manager web app clone
 
-**Status: complete (2026-08-21)** — destination reached; the locked spec is
-[`spec.md`](spec.md). No open tickets, no fog.
+**Status: implementation phase (2026-08-21)** — the spec is locked at
+[`spec.md`](spec.md); the destination was redrawn the same day to carry execution
+into the map (user's choice). Frontier = the open `task` tickets below.
 
 Label: wayfinder:map
 Tickets: `.scratch/website-clone/issues/NN-<slug>.md`
 
 ## Destination
 
-A locked spec for `apps/website` (`@diddl/website`): a multi-user web clone of the
+**Redrawn 2026-08-21:** a deployed `apps/website` on Vercel matching
+[`spec.md`](spec.md), with the user's desktop data imported. The spec itself (the
+original destination, below) was reached the same day.
+
+_Original:_ A locked spec for `apps/website` (`@diddl/website`): a multi-user web clone of the
 desktop app on TanStack Start (Solid) over solid-js 1.9 (Solid 2 migration deferred
 to stable), Neon Postgres (Drizzle) + Clerk auth, deployed on Vercel free tier.
 The map is done when every implementation-blocking decision is made — implementation
@@ -27,6 +32,12 @@ planning.
   TanStack solid-form/solid-table, dnd-kit/solid, Kysely over SQLite, tRPC 10 over IPC.
 - Skills every session should consult: /grilling and /domain-modeling for grilling
   tickets; /research for research tickets.
+- **Execution carried into the map (2026-08-21):** build steps from `spec.md` §11
+  are `task` tickets (20–29), one per session, worked directly on `main` unless
+  the user says otherwise. A task session implements exactly what its ticket
+  says, runs the listed checks, and records facts (URLs, counts, key locations)
+  in its answer. `spec.md` is authoritative; if a task exposes a real decision,
+  open a `grilling` ticket rather than deciding silently.
 - Settled during charting (constraints, not tickets):
   - Multi-user: anyone signs up; each account owns its lists/sections/items/profile
     against the shared read-only catalog.

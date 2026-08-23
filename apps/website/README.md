@@ -10,3 +10,5 @@ bun run dev:website          # from the repo root
 
 Deploys go through Vercel's Git integration only — never `vercel deploy` from a
 machine (the `public/diddls/` image set exceeds the CLI upload cap).
+First-time production setup (Clerk prod instance, Vercel project, first deploy):
+`scripts/deploy-wizard.sh`.

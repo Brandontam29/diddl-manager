@@ -39,6 +39,7 @@ describe("handler signatures", () => {
         "updateListItems",
         "getProfile",
         "updateProfile",
+        "deleteAccount",
       ]),
     );
   });

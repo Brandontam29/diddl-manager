@@ -6,7 +6,7 @@ import { getDb } from "./db/client";
 import * as h from "./handlers";
 
 /**
- * The 16 server functions of spec §5: each one is auth middleware + zod validator
+ * The 16 server functions of spec §5 plus `deleteAccount` (spec §4): each one is auth middleware + zod validator
  * around a plain handler from `./handlers`. Reads are GET, mutations POST.
  */
 const authed = createServerFn({ method: "GET" }).middleware([authedMiddleware]);
@@ -74,3 +74,7 @@ export const getProfile = authed.handler(({ context }) => h.getProfile(getDb(), 
 export const updateProfile = authedPost
   .validator(h.updateProfileInput)
   .handler(({ context, data }) => h.updateProfile(getDb(), context.userId, data));
+// Soft-deletes the caller's rows; the client then deletes the Clerk user (spec §4).
+export const deleteAccount = authedPost.handler(({ context }) =>
+  h.deleteAccount(getDb(), context.userId),
+);

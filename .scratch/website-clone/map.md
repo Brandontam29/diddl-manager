@@ -200,6 +200,15 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
   clerk-js 6.29 needs `load({ ui })` from the new `@clerk/ui` package (both on
   `/no-rhc`). Verified in a browser against dev **and** the production build.
 
+- [Server functions and the authorization-scoping suite](issues/24-server-functions-and-scoping-suite.md)
+  — 16 plain `(db, userId, input)` handlers in `src/server/handlers/` wrapped by
+  `createServerFn` + `authedMiddleware` + zod in `src/server/api.ts`; `NotFoundError` for
+  missing _and_ foreign rows; `db.batch()` where atomicity matters (neon-http has no
+  interactive transactions); 37 integration tests (A-vs-B for every handler, lazy-upsert,
+  self-cleaning `test_<uuid>` users) + the structural signature test, all green locally;
+  CI migrate/integration steps wired but skipped until the user adds the
+  `TEST_DATABASE_URL(_UNPOOLED)` secrets (HITL leftover).
+
 ## Not yet specified
 
 (Empty — all former fog has graduated: dev workflow/CI/logging into

@@ -8,6 +8,9 @@ on:
 jobs:
   website:
     runs-on: ubuntu-latest
+    env:
+      TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+      TEST_DATABASE_URL_UNPOOLED: ${{ secrets.TEST_DATABASE_URL_UNPOOLED }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
@@ -29,10 +32,23 @@ jobs:
       - name: Typecheck
         run: bun run typecheck:website
 
-      # db:migrate against the Neon `test` branch + integration tests are added by
-      # "Server functions and the authorization-scoping suite" once the secrets exist.
       - name: Unit tests
         run: bun run --filter @diddl/website test:unit
+
+      # The authorization-scoping suite runs against the Neon `test` branch (spec §10).
+      # Both steps are skipped until the TEST_DATABASE_URL / TEST_DATABASE_URL_UNPOOLED
+      # repository secrets exist, so a missing secret shows as "skipped", never as green.
+      - name: Migrate the Neon test branch
+        if: env.TEST_DATABASE_URL_UNPOOLED != ''
+        run: bun run --filter @diddl/website db:migrate
+        env:
+          DATABASE_URL_UNPOOLED: ${{ env.TEST_DATABASE_URL_UNPOOLED }}
+
+      - name: Integration tests
+        if: env.TEST_DATABASE_URL != ''
+        run: bun run --filter @diddl/website test:integration
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
 
       - name: Build
         run: bun run build:website

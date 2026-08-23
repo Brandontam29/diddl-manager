@@ -2,7 +2,7 @@
 
 Type: task
 Status: open
-Blocked by: 22, 24, 28
+Blocked by: 22 (closed 2026-08-22), 24 (closed 2026-08-22), 28
 
 ## Question
 

@@ -44,6 +44,27 @@ describe("getSectionsWithLists", () => {
   });
 });
 
+describe("ensureDefaultSection", () => {
+  test("concurrent first calls agree on a single Default Section", async () => {
+    const userC = testUserId();
+    try {
+      const [a, b] = await Promise.all([
+        ensureDefaultSection(db, userC),
+        ensureDefaultSection(db, userC),
+      ]);
+      expect(a.id).toBe(b.id);
+
+      const rows = await db
+        .select({ id: listSections.id })
+        .from(listSections)
+        .where(and(eq(listSections.userId, userC), isNull(listSections.deletedAt)));
+      expect(rows).toHaveLength(1);
+    } finally {
+      await cleanupUsers(db, [userC]);
+    }
+  });
+});
+
 describe("createSection", () => {
   test("appends after the user's existing sections", async () => {
     const created = await createSection(db, userA, { name: "Favourites" });

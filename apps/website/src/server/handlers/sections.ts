@@ -41,7 +41,27 @@ async function maxListPosition(db: Db, userId: string, sectionId: number) {
  * (the lazy upsert, spec §5) and by anything that needs a home for lists.
  */
 export async function ensureDefaultSection(db: Db, userId: string): Promise<ListSectionRow> {
-  const [existing] = await db
+  const existing = await findDefaultSection(db, userId);
+  if (existing) return existing;
+
+  // Race-safe: `getSectionsWithLists` and `getProfile` run in parallel on the first
+  // `/app` load, so two inserts can collide on the (user_id, lower(name)) active
+  // index. The loser's insert is a no-op and it re-selects the winner's row.
+  const position = (await maxSectionPosition(db, userId)) + 1;
+  const [created] = await db
+    .insert(listSections)
+    .values({ userId, name: DEFAULT_SECTION_NAME, position, isDefault: true })
+    .onConflictDoNothing()
+    .returning();
+  if (created) return created;
+
+  const winner = await findDefaultSection(db, userId);
+  if (!winner) throw new Error("Failed to create the default section");
+  return winner;
+}
+
+async function findDefaultSection(db: Db, userId: string) {
+  const [row] = await db
     .select()
     .from(listSections)
     .where(
@@ -52,15 +72,7 @@ export async function ensureDefaultSection(db: Db, userId: string): Promise<List
       ),
     )
     .limit(1);
-  if (existing) return existing;
-
-  const position = (await maxSectionPosition(db, userId)) + 1;
-  const [created] = await db
-    .insert(listSections)
-    .values({ userId, name: DEFAULT_SECTION_NAME, position, isDefault: true })
-    .returning();
-  if (!created) throw new Error("Failed to create the default section");
-  return created;
+  return row;
 }
 
 async function assertSectionNameFree(db: Db, userId: string, name: string, excludeId?: number) {

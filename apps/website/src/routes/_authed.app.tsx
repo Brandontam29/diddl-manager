@@ -2,8 +2,10 @@ import {
   type ErrorComponentProps,
   Outlet,
   createFileRoute,
+  useNavigate,
   useRouter,
 } from "@tanstack/solid-router";
+import { createComputed } from "solid-js";
 
 import Sidebar from "@/components/app/Sidebar";
 import FallbackPageLoading from "@/components/fallback/FallbackPageLoading";
@@ -13,6 +15,7 @@ import { ToastList, ToastRegion } from "@/components/ui/toast";
 import { clearSelectedIds, loadCatalog } from "@/features/diddl";
 import { onLocationChange } from "@/hooks/onLocationChange";
 import { getProfile, getSectionsWithLists } from "@/server/api";
+import { UNAUTHORIZED_MESSAGE } from "@/shared/errors";
 
 /**
  * The app shell under the `_authed` gate (spec §6): one loader for the Catalog
@@ -29,6 +32,8 @@ export const Route = createFileRoute("/_authed/app")({
     ]);
     return { catalog, sections, profile };
   },
+  // Mutations call `router.invalidate()`; navigation alone must not refetch.
+  staleTime: Infinity,
   pendingComponent: FallbackPageLoading,
   errorComponent: AppError,
   component: AppLayout,
@@ -51,8 +56,27 @@ function AppLayout() {
   );
 }
 
+/**
+ * Only `message` survives the wire (see `server/errors.ts`), so an expired session is
+ * recognised by the UnauthorizedError's default text. Retrying that would just fail
+ * again; the user is sent back to sign in and returned here afterwards.
+ */
+const isUnauthorized = (error: unknown) =>
+  error instanceof Error && error.message === UNAUTHORIZED_MESSAGE;
+
 function AppError(props: ErrorComponentProps) {
   const router = useRouter();
+  const navigate = useNavigate();
+
+  createComputed(() => {
+    if (!isUnauthorized(props.error)) return;
+    void navigate({
+      to: "/sign-in/$",
+      params: { _splat: "" },
+      search: { redirect: router.state.location.href },
+      replace: true,
+    });
+  });
 
   return (
     <div class="flex min-h-screen items-center justify-center p-8">

@@ -9,6 +9,8 @@
  * `instanceof` or `.code` — they must match on the message (or a response status
  * set before throwing) until the UI tickets settle a client-side convention.
  */
+import { UNAUTHORIZED_MESSAGE } from "../shared/errors";
+
 export type ErrorCode = "UNAUTHORIZED" | "NOT_FOUND" | "BAD_REQUEST" | "CONFLICT";
 
 export class AppError extends Error {
@@ -22,7 +24,7 @@ export class AppError extends Error {
 }
 
 export class UnauthorizedError extends AppError {
-  constructor(message = "Not signed in") {
+  constructor(message = UNAUTHORIZED_MESSAGE) {
     super("UNAUTHORIZED", message);
     this.name = "UnauthorizedError";
   }

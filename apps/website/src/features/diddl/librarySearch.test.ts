@@ -29,9 +29,12 @@ describe("librarySearchSchema", () => {
     expect(librarySearchSchema.parse({})).toEqual({});
   });
 
-  it("rejects unknown types and negative indices", () => {
-    expect(librarySearchSchema.safeParse({ type: "nope" }).success).toBe(false);
-    expect(librarySearchSchema.safeParse({ from: -1 }).success).toBe(false);
+  it("drops unknown types and bad indices instead of failing the route", () => {
+    expect(librarySearchSchema.parse({ type: "nope", from: -1, to: "x" })).toEqual({
+      type: undefined,
+      from: undefined,
+      to: undefined,
+    });
   });
 });
 

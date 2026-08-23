@@ -1,4 +1,4 @@
-import type { DiddlType } from "@/shared";
+import { DIDDL_TYPES, type DiddlType } from "@/shared";
 
 export type SidebarSliceLink = {
   label: string;
@@ -8,42 +8,94 @@ export type SidebarSliceLink = {
 export type SidebarGroup = { title: string; links: SidebarSliceLink[] };
 
 /**
- * Builds the per-type slice links. Desktop quirk kept verbatim (spec §6): the first
- * slice is `from=0&to=99` (labelled "1-100" for A7, "1-99" elsewhere) and every later
- * slice starts at the previous `to` — so "100-199" is `from=99&to=199`.
+ * Desktop quirk kept verbatim (spec §6): each slice of 100 starts one before its
+ * label suggests, so "100-199" is `from=99&to=199`; only the first slice starts at 0.
  */
-const slices = (type: DiddlType, count: number, firstLabel = "1-99"): SidebarSliceLink[] =>
-  Array.from({ length: count }, (_, i) => ({
-    label: i === 0 ? firstLabel : `${i * 100}-${i * 100 + 99}`,
-    search: { type, from: i === 0 ? 0 : i * 100 - 1, to: i * 100 + 99 },
-  }));
+export const SLICE_SIZE = 100;
+export const sliceRange = (index: number) => ({
+  from: index === 0 ? 0 : index * SLICE_SIZE - 1,
+  to: index * SLICE_SIZE + SLICE_SIZE - 1,
+});
+
+type GroupSpec = { title: string; slices: number; firstLabel?: string };
+
+/** One entry per Diddl Type — a type added to the schema fails to compile here. */
+const GROUPS = {
+  A7: { title: "A7", slices: 1, firstLabel: "1-100" },
+  A6: { title: "A6", slices: 3 },
+  A5: { title: "A5", slices: 5 },
+  A4: { title: "A4", slices: 2 },
+  series: { title: "Series", slices: 2 },
+  "gift-paper": { title: "Gift Paper", slices: 3 },
+  birthday: { title: "Birthday", slices: 1 },
+  special: { title: "Special", slices: 1 },
+  game: { title: "Game", slices: 1 },
+  A2: { title: "A2", slices: 1 },
+  "paper-relief": { title: "Paper Relief", slices: 1 },
+  "post-it": { title: "Post-It", slices: 1 },
+  "rectangular-memo": { title: "Rectangular Memo", slices: 1 },
+  "square-memo": { title: "Square Memo", slices: 1 },
+  "quardiddl-card": { title: "Quardiddl Card", slices: 1 },
+  "letter-paper": { title: "Letter Paper", slices: 3 },
+  stamp: { title: "Stamp", slices: 1 },
+  "paper-bag-A5": { title: "Paper Bag A5", slices: 1 },
+  "paper-bag-A4": { title: "Paper Bag A4", slices: 1 },
+  "paper-bag-expo": { title: "Paper Bag Expo", slices: 1 },
+  "bag-small": { title: "Small Bag", slices: 1 },
+  "bag-large": { title: "Large Bag", slices: 1 },
+  "bag-mega": { title: "Mega Bag", slices: 1 },
+  "bag-plastic": { title: "Plastic Bag", slices: 1 },
+  sticker: { title: "Sticker", slices: 3 },
+  "postal-card": { title: "Postal cards", slices: 3 },
+  towel: { title: "Towel", slices: 1 },
+} satisfies Record<DiddlType, GroupSpec>;
+
+/** Sidebar order is the desktop's (A7 first), not the schema's. */
+const ORDER: DiddlType[] = [
+  "A7",
+  "A6",
+  "A5",
+  "A4",
+  "series",
+  "gift-paper",
+  "birthday",
+  "special",
+  "game",
+  "A2",
+  "paper-relief",
+  "post-it",
+  "rectangular-memo",
+  "square-memo",
+  "quardiddl-card",
+  "letter-paper",
+  "stamp",
+  "paper-bag-A5",
+  "paper-bag-A4",
+  "paper-bag-expo",
+  "bag-small",
+  "bag-large",
+  "bag-mega",
+  "bag-plastic",
+  "sticker",
+  "postal-card",
+  "towel",
+];
+
+const toGroup = (type: DiddlType): SidebarGroup => {
+  const spec: GroupSpec = GROUPS[type];
+  return {
+    title: spec.title,
+    links: Array.from({ length: spec.slices }, (_, i) => {
+      const { from, to } = sliceRange(i);
+      return {
+        label: i === 0 ? (spec.firstLabel ?? "1-99") : `${i * SLICE_SIZE}-${to}`,
+        search: { type, from, to },
+      };
+    }),
+  };
+};
 
 export const SIDEBAR_GROUPS: SidebarGroup[] = [
-  { title: "A7", links: slices("A7", 1, "1-100") },
-  { title: "A6", links: slices("A6", 3) },
-  { title: "A5", links: slices("A5", 5) },
-  { title: "A4", links: slices("A4", 2) },
-  { title: "Series", links: slices("series", 2) },
-  { title: "Gift Paper", links: slices("gift-paper", 3) },
-  { title: "Birthday", links: slices("birthday", 1) },
-  { title: "Special", links: slices("special", 1) },
-  { title: "Game", links: slices("game", 1) },
-  { title: "A2", links: slices("A2", 1) },
-  { title: "Paper Relief", links: slices("paper-relief", 1) },
-  { title: "Post-It", links: slices("post-it", 1) },
-  { title: "Rectangular Memo", links: slices("rectangular-memo", 1) },
-  { title: "Square Memo", links: slices("square-memo", 1) },
-  { title: "Quardiddl Card", links: slices("quardiddl-card", 1) },
-  { title: "Letter Paper", links: slices("letter-paper", 3) },
-  { title: "Stamp", links: slices("stamp", 1) },
-  { title: "Paper Bag A5", links: slices("paper-bag-A5", 1) },
-  { title: "Paper Bag A4", links: slices("paper-bag-A4", 1) },
-  { title: "Paper Bag Expo", links: slices("paper-bag-expo", 1) },
-  { title: "Small Bag", links: slices("bag-small", 1) },
-  { title: "Large Bag", links: slices("bag-large", 1) },
-  { title: "Mega Bag", links: slices("bag-mega", 1) },
-  { title: "Plastic Bag", links: slices("bag-plastic", 1) },
-  { title: "Sticker", links: slices("sticker", 3) },
-  { title: "Postal cards", links: slices("postal-card", 3) },
-  { title: "Towel", links: slices("towel", 1) },
-];
+  ...ORDER,
+  ...DIDDL_TYPES.filter((type) => !ORDER.includes(type)),
+].map(toGroup);

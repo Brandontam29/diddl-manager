@@ -7,12 +7,15 @@ import {
   type DiddlCardItem,
   addSelectedIds,
   cardAspectRatio,
-  diddlStore,
   getCardItemId,
   getCardItemName,
   getCardItemQuantity,
   isJoinedListItem,
+  isSelectMode,
+  isSelected as isItemSelected,
+  isSelectedId,
   removeSelectedIds,
+  selectedIds,
 } from "@/features/diddl";
 import DiddlCardUi from "@/features/diddl/components/DiddlCardUi";
 import { useListId } from "@/features/lists/useListId";
@@ -28,8 +31,6 @@ const DiddlCards: Component<{
 }> = (props) => {
   const cardHeight = useCardHeight();
   const listId = useListId();
-  const selectedIds = () => diddlStore.selectedIds;
-  const isSelectMode = createMemo(() => selectedIds().length > 0);
   const itemIds = createMemo(() => props.items?.map(getCardItemId) ?? []);
 
   return (
@@ -41,7 +42,7 @@ const DiddlCards: Component<{
         <For each={props.items}>
           {(item) => {
             const itemId = createMemo(() => getCardItemId(item));
-            const isSelected = createMemo(() => selectedIds().includes(itemId()));
+            const isSelected = createMemo(() => isItemSelected(item));
             const shouldShowQuantity = createMemo(
               () => props.showQuantityControls || isJoinedListItem(item),
             );
@@ -115,9 +116,6 @@ const DiddlCards: Component<{
                   <ListItemBadgesAndQuantity
                     item={item}
                     listId={listId()}
-                    itemId={itemId()}
-                    selectedIds={selectedIds()}
-                    isSelectMode={isSelectMode()}
                     allItems={props.items!}
                   />
                 </Show>
@@ -131,16 +129,14 @@ const DiddlCards: Component<{
 };
 
 const handleClick = (id: string, itemIds: string[], event: MouseEvent) => {
-  const selectedIds = diddlStore.selectedIds;
-
   if (event.shiftKey) {
-    const lastClicked = selectedIds.at(-1);
+    const lastClicked = selectedIds().at(-1);
     if (lastClicked === undefined) return;
 
     const idsBetween = getIdsBetween(itemIds, lastClicked, id);
     if (idsBetween.length === 0) return;
 
-    if (shouldAdd(selectedIds, idsBetween)) {
+    if (shouldAdd(idsBetween)) {
       addSelectedIds(idsBetween);
       return;
     }
@@ -149,7 +145,7 @@ const handleClick = (id: string, itemIds: string[], event: MouseEvent) => {
     return;
   }
 
-  if (!selectedIds.includes(id)) {
+  if (!isSelectedId(id)) {
     addSelectedIds(id);
     return;
   }
@@ -157,9 +153,7 @@ const handleClick = (id: string, itemIds: string[], event: MouseEvent) => {
   removeSelectedIds(id);
 };
 
-const shouldAdd = (selectedIds: string[], ids: string[]) => {
-  return !ids.every((id) => selectedIds.includes(id));
-};
+const shouldAdd = (ids: string[]) => !ids.every(isSelectedId);
 
 const getIdsBetween = (itemIds: string[], a: string, b: string) => {
   const aIndex = itemIds.indexOf(a);

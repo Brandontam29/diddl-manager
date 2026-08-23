@@ -6,6 +6,6 @@
 export const imageUrl = (imagePath: string | null | undefined): string | undefined => {
   if (!imagePath) return undefined;
 
-  const base = import.meta.env.VITE_IMAGE_BASE_URL.replace(/\/$/, "");
+  const base = (import.meta.env.VITE_IMAGE_BASE_URL ?? "/diddls").replace(/\/$/, "");
   return `${base}/${imagePath.replaceAll("\\", "/").replace(/^\//, "")}`;
 };

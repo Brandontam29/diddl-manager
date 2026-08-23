@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/solid-router";
 import { Show, createMemo } from "solid-js";
 
 import { useAppData } from "@/features/app-data";
-import { diddlStore, filterCatalog, librarySearchSchema } from "@/features/diddl";
+import { filterCatalog, isSelectMode, librarySearchSchema } from "@/features/diddl";
 import DiddlCardListLimiter from "@/features/diddl/components/DiddlCardListLimiter";
 import Taskbar from "@/features/taskbars/Taskbar";
 
@@ -17,7 +17,6 @@ function Library() {
   const search = Route.useSearch();
 
   const filteredDiddls = createMemo(() => filterCatalog(appData().catalog, search()));
-  const isSelectMode = createMemo(() => diddlStore.selectedIds.length > 0);
 
   return (
     <>
@@ -27,7 +26,7 @@ function Library() {
         </div>
       </div>
       <Show when={isSelectMode()}>
-        <Taskbar diddls={filteredDiddls()} />
+        <Taskbar items={filteredDiddls()} />
       </Show>
     </>
   );

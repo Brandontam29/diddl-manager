@@ -1,104 +1,83 @@
-import { DragDropProvider } from "@dnd-kit/solid";
-import { For, Show, createEffect, createSignal } from "solid-js";
+import { DragDropProvider, type DragDropProviderProps } from "@dnd-kit/solid";
+import { For, Show, createSignal } from "solid-js";
 
 import FallbackNoLists from "@/components/fallback/FallbackNoLists";
 import { type AppSection, useAppData } from "@/features/app-data";
 
 import { errorMessage, showToast, useListMutations, useSectionMutations } from "../../mutations";
 import ListSection from "./ListSection";
-import { cloneSections, moveList, moveSection, readDragData } from "./dragData";
+import { type DragData, moveList, moveSection } from "./dragData";
 
-const showOrderError = (error: unknown) => {
-  console.error("reorder failed", error);
-  showToast(errorMessage(error, "Could not save list order"), "destructive");
-};
+export type ListActions = ReturnType<typeof useListMutations>;
 
 /**
- * The Sections board (spec §6). The loader's sections are mirrored into component
- * state so a drop reorders instantly; the server call follows and, on failure, the
- * previous order is restored. `router.invalidate()` then re-syncs from the loader.
+ * The Sections board (spec §6). The loader's sections render as-is; a drop sets a
+ * temporary override so the new order shows instantly, the server call follows,
+ * and the override is cleared once the loader has been re-run (success or not),
+ * so a stale board cannot keep failing.
  */
 const ListSectionsBoard = () => {
   const appData = useAppData();
+  const listActions = useListMutations();
   const { reorderSections } = useSectionMutations();
-  const { reorderLists } = useListMutations();
 
-  const [sections, setSections] = createSignal<AppSection[]>([]);
+  const [override, setOverride] = createSignal<AppSection[] | null>(null);
+  const sections = () => override() ?? appData().sections;
+  const isEmpty = () => sections().every((section) => section.lists.length === 0);
 
-  createEffect(() => {
-    setSections(cloneSections(appData().sections));
-  });
-
-  const persistSectionOrder = async (nextSections: AppSection[]) => {
-    await reorderSections(nextSections.map((section) => section.id));
+  const persist = async (nextSections: AppSection[], save: () => Promise<unknown>) => {
+    setOverride(nextSections);
+    try {
+      await save();
+    } catch (error) {
+      console.error("reorder failed", error);
+      showToast(errorMessage(error, "Could not save list order"), "destructive");
+      await listActions.invalidate();
+    } finally {
+      setOverride(null);
+    }
   };
 
-  const persistListOrder = async (nextSections: AppSection[], sectionIds: number[]) => {
-    await reorderLists(
-      nextSections
-        .filter((section) => sectionIds.includes(section.id))
-        .map((section) => ({
-          sectionId: section.id,
-          listIds: section.lists.map((list) => list.id),
-        })),
+  const handleDragEnd: DragDropProviderProps["onDragEnd"] = (event) => {
+    const { source, target } = event.operation;
+    if (event.canceled || !source || !target) return;
+
+    const sourceData = source.data as DragData;
+    const targetData = target.data as DragData;
+
+    if (sourceData.type === "section") {
+      const next = moveSection(sections(), sourceData.sectionId, targetData.sectionId);
+      if (!next) return;
+      void persist(next, () => reorderSections(next.map((section) => section.id)));
+      return;
+    }
+
+    const next = moveList(sections(), sourceData, targetData);
+    if (!next) return;
+    const touched = new Set([sourceData.sectionId, targetData.sectionId]);
+    void persist(next, () =>
+      listActions.reorderLists(
+        next
+          .filter((section) => touched.has(section.id))
+          .map((section) => ({
+            sectionId: section.id,
+            listIds: section.lists.map((list) => list.id),
+          })),
+      ),
     );
   };
 
-  const handleDragEnd = async (event: unknown) => {
-    const operation = (event as { canceled?: boolean; operation?: unknown }).operation as
-      | { source?: unknown; target?: unknown }
-      | undefined;
-
-    if ((event as { canceled?: boolean }).canceled || !operation?.source || !operation?.target) {
-      return;
-    }
-
-    const source = readDragData(operation.source);
-    const target = readDragData(operation.target);
-
-    if (!source || !target) return;
-
-    const previousSections = cloneSections(sections());
-
-    if (source.type === "section") {
-      const nextSections = moveSection(sections(), source.sectionId, target.sectionId);
-      if (!nextSections) return;
-
-      setSections(nextSections);
-
-      try {
-        await persistSectionOrder(nextSections);
-      } catch (error) {
-        setSections(previousSections);
-        showOrderError(error);
-      }
-
-      return;
-    }
-
-    const nextSections = moveList(sections(), source, target);
-    if (!nextSections) return;
-
-    setSections(nextSections);
-
-    try {
-      await persistListOrder(nextSections, [...new Set([source.sectionId, target.sectionId])]);
-    } catch (error) {
-      setSections(previousSections);
-      showOrderError(error);
-    }
-  };
-
-  const hasLists = () => sections().some((section) => section.lists.length > 0);
-
   return (
-    <Show when={hasLists() || sections().length > 0} fallback={<FallbackNoLists />}>
-      <DragDropProvider onDragEnd={handleDragEnd}>
-        <div class="space-y-8">
-          <For each={sections()}>{(section) => <ListSection section={section} />}</For>
-        </div>
-      </DragDropProvider>
-    </Show>
+    <DragDropProvider onDragEnd={handleDragEnd}>
+      <div class="space-y-8">
+        <Show when={isEmpty()}>
+          <FallbackNoLists />
+        </Show>
+        <For each={sections()}>
+          {(section) => <ListSection section={section} actions={listActions} />}
+        </For>
+      </div>
+    </DragDropProvider>
   );
 };
 

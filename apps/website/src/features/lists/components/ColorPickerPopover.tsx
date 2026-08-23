@@ -3,30 +3,16 @@ import { Component, For, createSignal } from "solid-js";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/libs/cn";
-import { transparentOklch } from "@/libs/transparentOklch";
+import { LIST_COLORS, type ListColor } from "@/shared";
 
-import { runMutation, useListMutations } from "../mutations";
-
-/** The desktop palette; the server picks a new list's colour from the same ten. */
-const LIST_COLORS = [
-  "oklch(77.2% 0.142 5.8)",
-  "oklch(82.7% 0.125 65.4)",
-  "oklch(91.2% 0.187 101.3)",
-  "oklch(86.3% 0.190 123.6)",
-  "oklch(82.9% 0.123 160.8)",
-  "oklch(80.3% 0.106 203.4)",
-  "oklch(76.4% 0.131 260.4)",
-  "oklch(74.3% 0.193 287.2)",
-  "oklch(77.7% 0.204 305.7)",
-  "oklch(78.2% 0.201 333.8)",
-];
-
-const ColorPickerPopover: Component<{ listId: number; currentColor: string }> = (props) => {
+const ColorPickerPopover: Component<{
+  currentColor: string;
+  onSelect: (color: ListColor) => Promise<unknown>;
+}> = (props) => {
   const [open, setOpen] = createSignal(false);
-  const { updateListColor } = useListMutations();
 
-  const handleColorSelect = async (color: string) => {
-    await runMutation("Change color", () => updateListColor(props.listId, color));
+  const handleColorSelect = async (color: ListColor) => {
+    await props.onSelect(color);
     setOpen(false);
   };
 
@@ -38,7 +24,9 @@ const ColorPickerPopover: Component<{ listId: number; currentColor: string }> = 
           "hover:scale-110",
           "transition-all duration-300 ease-in-out",
         )}
-        style={{ "background-color": transparentOklch(props.currentColor, 0.4) }}
+        style={{
+          "background-color": `color-mix(in oklch, ${props.currentColor} 40%, transparent)`,
+        }}
         aria-label="Change list color"
       >
         <Palette size={14} class="text-muted-foreground" />

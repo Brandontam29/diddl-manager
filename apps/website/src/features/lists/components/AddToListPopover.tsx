@@ -4,7 +4,7 @@ import { Component, For, Show, createMemo } from "solid-js";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import CreateListDialog from "@/features/lists/components/CreateListDialog";
-import { useAppData } from "@/features/app-data";
+import { allLists, useAppData } from "@/features/app-data";
 
 /**
  * `onListClick` receives the element that was clicked so the caller can burst
@@ -16,7 +16,7 @@ const AddToListPopover: Component<{
   onListClick: (listId: number, origin?: Element) => void;
 }> = (props) => {
   const appData = useAppData();
-  const lists = createMemo(() => appData().sections.flatMap((section) => section.lists));
+  const lists = createMemo(() => allLists(appData()));
 
   return (
     <Popover open={props.open} onOpenChange={props.onOpenChange}>

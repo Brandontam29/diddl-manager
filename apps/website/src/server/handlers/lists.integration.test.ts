@@ -3,15 +3,9 @@ import { afterAll, beforeAll, describe, expect, test } from "vitest";
 
 import { cleanupUsers, createTestDb, testUserId } from "../../../test/db";
 import { diddls, listItems, lists } from "../db/schema";
+import { LIST_COLORS } from "../../shared/list-models";
 import { NotFoundError } from "../errors";
-import {
-  LIST_COLORS,
-  createList,
-  deleteList,
-  renameList,
-  reorderLists,
-  updateListColor,
-} from "./lists";
+import { createList, deleteList, renameList, reorderLists, updateListColor } from "./lists";
 import { createSection, ensureDefaultSection, getSectionsWithLists } from "./sections";
 
 const db = createTestDb();
@@ -58,7 +52,9 @@ describe("renameList / updateListColor", () => {
   test("update the user's own list", async () => {
     const own = await createList(db, userA, { name: "Old", diddlIds: [] });
     expect((await renameList(db, userA, { listId: own.id, name: "New" })).name).toBe("New");
-    expect((await updateListColor(db, userA, { listId: own.id, color: "red" })).color).toBe("red");
+    expect(
+      (await updateListColor(db, userA, { listId: own.id, color: LIST_COLORS[3] })).color,
+    ).toBe(LIST_COLORS[3]);
   });
 
   test("user A cannot touch user B's list", async () => {
@@ -66,7 +62,7 @@ describe("renameList / updateListColor", () => {
       renameList(db, userA, { listId: listB.id, name: "Hijacked" }),
     ).rejects.toBeInstanceOf(NotFoundError);
     await expect(
-      updateListColor(db, userA, { listId: listB.id, color: "red" }),
+      updateListColor(db, userA, { listId: listB.id, color: LIST_COLORS[3] }),
     ).rejects.toBeInstanceOf(NotFoundError);
     const [row] = await db.select().from(lists).where(eq(lists.id, listB.id));
     expect(row).toMatchObject({ name: "B's list", color: LIST_COLORS[0] });

@@ -1,13 +1,13 @@
 import { Plus } from "lucide-solid";
-import { Show, createSignal } from "solid-js";
+import { type Component, createSignal } from "solid-js";
 
 import { Button } from "@/components/ui/button";
+import { TextField, TextFieldErrorMessage, TextFieldRoot } from "@/components/ui/textfield";
 import { listSectionNameSchema } from "@/shared";
 
-import { errorMessage, useSectionMutations } from "../../mutations";
+import { errorMessage } from "../../mutations";
 
-const CreateSectionForm = () => {
-  const { createSection } = useSectionMutations();
+const CreateSectionForm: Component<{ onCreate: (name: string) => Promise<unknown> }> = (props) => {
   const [name, setName] = createSignal("");
   const [error, setError] = createSignal("");
 
@@ -22,7 +22,7 @@ const CreateSectionForm = () => {
     }
 
     try {
-      await createSection(parsed.data);
+      await props.onCreate(parsed.data);
       setName("");
     } catch (e) {
       setError(errorMessage(e, "Could not create the section."));
@@ -30,25 +30,24 @@ const CreateSectionForm = () => {
   };
 
   return (
-    <form class="flex flex-col gap-1" onSubmit={handleSubmit}>
-      <div class="flex items-center gap-2">
-        <input
-          value={name()}
-          onInput={(event) => setName(event.currentTarget.value)}
-          class="h-9 rounded-md border border-input bg-transparent px-3 text-sm"
-          placeholder="New section"
-          aria-label="New section name"
-        />
-        <Button type="submit" variant="outline" class="flex items-center gap-2 rounded-md">
-          <Plus size={16} />
-          <span>Section</span>
-        </Button>
-      </div>
-      <div class="h-5">
-        <Show when={error()}>
-          <span class="text-xs text-destructive">{error()}</span>
-        </Show>
-      </div>
+    <form onSubmit={handleSubmit}>
+      <TextFieldRoot
+        value={name()}
+        onChange={setName}
+        validationState={error() ? "invalid" : "valid"}
+        class="space-y-0"
+      >
+        <div class="flex items-center gap-2">
+          <TextField class="w-auto" placeholder="New section" aria-label="New section name" />
+          <Button type="submit" variant="outline" class="flex items-center gap-2 rounded-md">
+            <Plus size={16} />
+            <span>Section</span>
+          </Button>
+        </div>
+        <div class="h-5">
+          <TextFieldErrorMessage>{error()}</TextFieldErrorMessage>
+        </div>
+      </TextFieldRoot>
     </form>
   );
 };

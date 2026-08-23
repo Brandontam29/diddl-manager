@@ -1,25 +1,11 @@
 import { and, eq, inArray, isNull } from "drizzle-orm";
 import { z } from "zod";
 
-import { listNameSchema } from "../../shared/list-models";
+import { LIST_COLORS, listColorSchema, listNameSchema } from "../../shared/list-models";
 import type { Db } from "../db/client";
 import { type ListRow, listItems, lists } from "../db/schema";
 import { BadRequestError, NotFoundError } from "../errors";
 import { activeSectionIdsOf, ensureDefaultSection, maxListPosition } from "./sections";
-
-/** Desktop palette; a new list takes the first colour no active list uses yet. */
-export const LIST_COLORS = [
-  "oklch(77.2% 0.142 5.8)",
-  "oklch(82.7% 0.125 65.4)",
-  "oklch(91.2% 0.187 101.3)",
-  "oklch(86.3% 0.190 123.6)",
-  "oklch(82.9% 0.123 160.8)",
-  "oklch(80.3% 0.106 203.4)",
-  "oklch(76.4% 0.131 260.4)",
-  "oklch(74.3% 0.193 287.2)",
-  "oklch(77.7% 0.204 305.7)",
-  "oklch(78.2% 0.201 333.8)",
-] as const;
 
 export const createListInput = z.object({
   name: listNameSchema,
@@ -29,7 +15,7 @@ export const deleteListInput = z.object({ listId: z.number().int() });
 export const renameListInput = z.object({ listId: z.number().int(), name: listNameSchema });
 export const updateListColorInput = z.object({
   listId: z.number().int(),
-  color: z.string().min(1),
+  color: listColorSchema,
 });
 export const reorderListsInput = z.object({
   sections: z
@@ -48,7 +34,10 @@ export async function findActiveList(db: Db, userId: string, listId: number): Pr
   return list;
 }
 
-/** New lists land at the end of the Default Section, optionally pre-filled with diddls (quantity 1). */
+/**
+ * New lists land at the end of the Default Section, optionally pre-filled with diddls
+ * (quantity 1), and take the first palette colour no active list uses yet.
+ */
 export async function createList(
   db: Db,
   userId: string,

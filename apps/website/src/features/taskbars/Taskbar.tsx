@@ -84,9 +84,8 @@ const Taskbar: Component<{ items: DiddlCardItem[] }> = (props) => {
     if (listId === null || listItemIds.length === 0) return;
 
     void runMutation("Remove", async () => {
-      await removeListItems(listId, listItemIds);
-      clearSelectedIds();
-      showToast(`Removed ${listItemIds.length} from the list`);
+      const { removedCount } = await removeListItems(listId, listItemIds);
+      showToast(`Removed ${removedCount} from the list`);
     });
   };
 

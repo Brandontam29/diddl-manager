@@ -5,6 +5,7 @@ import { useAppData } from "@/features/app-data";
 import { filterCatalog, isSelectMode, librarySearchSchema } from "@/features/diddl";
 import DiddlCardListLimiter from "@/features/diddl/components/DiddlCardListLimiter";
 import Taskbar from "@/features/taskbars/Taskbar";
+import { cn } from "@/libs/cn";
 
 /** The Library (CONTEXT.md): the whole Catalog, narrowed by the sidebar's URL params. */
 export const Route = createFileRoute("/_authed/app/")({
@@ -21,7 +22,8 @@ function Library() {
   return (
     <>
       <div class="relative flex grow flex-col px-4 pt-2 pb-4 max-md:pt-14">
-        <div class="flex grow flex-wrap content-start gap-3">
+        {/* The fixed Taskbar would otherwise cover the first row's select circles. */}
+        <div class={cn("flex grow flex-wrap content-start gap-3", isSelectMode() && "pt-12")}>
           <DiddlCardListLimiter diddls={filteredDiddls()} />
         </div>
       </div>

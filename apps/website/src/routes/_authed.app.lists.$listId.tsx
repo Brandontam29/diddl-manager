@@ -1,8 +1,9 @@
 import { Link, createFileRoute, notFound } from "@tanstack/solid-router";
 import { Show, createMemo } from "solid-js";
+import { z } from "zod";
 
 import FallbackLoadingDiddl from "@/components/fallback/FallbackLoadingDiddl";
-import { useAppData } from "@/features/app-data";
+import { findList, useAppData } from "@/features/app-data";
 import { type DiddlCardItem, isSelectMode } from "@/features/diddl";
 import DiddlCardListLimiter from "@/features/diddl/components/DiddlCardListLimiter";
 import DiddlCards from "@/features/lists/components/DiddlCards";
@@ -17,22 +18,29 @@ import Taskbar from "@/features/taskbars/Taskbar";
 import { cn } from "@/libs/cn";
 import { getListItems } from "@/server/api";
 
+const listIdParam = z.coerce.number().int().positive();
+
 /**
- * One List's items (desktop `/lists/:id`). The loader is keyed on the list id and on
- * the search params, so every filter change re-fetches; `getListItems` turns a
- * NOT_FOUND (missing or someone else's list) into `notFound()` on the server and
- * the router renders `notFoundComponent` here, inside the app shell.
+ * One List's items (desktop `/lists/:id`). `params.parse` types `$listId` as a
+ * positive integer for the loader, `useListId` and every `Link`; anything else is
+ * `notFound()`. The loader is keyed on the id and the search params, so every
+ * filter change re-fetches; `getListItems` turns a NOT_FOUND (missing or someone
+ * else's list) into `notFound()` on the server and the route's `notFoundComponent`
+ * renders inside the app shell.
  */
 export const Route = createFileRoute("/_authed/app/lists/$listId")({
+  params: {
+    parse: ({ listId }) => {
+      const parsed = listIdParam.safeParse(listId);
+      if (!parsed.success) throw notFound();
+      return { listId: parsed.data };
+    },
+    stringify: ({ listId }) => ({ listId: String(listId) }),
+  },
   validateSearch: listSearchSchema,
   loaderDeps: ({ search }) => ({ filters: toListItemFilter(search) }),
-  loader: async ({ params, deps }) => {
-    const listId = Number.parseInt(params.listId);
-    if (Number.isNaN(listId)) throw notFound();
-
-    const items = await getListItems({ data: { listId, filters: deps.filters } });
-    return { listId, items };
-  },
+  loader: ({ params, deps }) =>
+    getListItems({ data: { listId: params.listId, filters: deps.filters } }),
   pendingComponent: () => (
     <div class="relative flex grow flex-wrap gap-2 px-4 pt-8 pb-4 max-md:pt-14">
       <FallbackLoadingDiddl />
@@ -44,29 +52,19 @@ export const Route = createFileRoute("/_authed/app/lists/$listId")({
 
 function ListPage() {
   const appData = useAppData();
-  const data = Route.useLoaderData();
+  const params = Route.useParams();
+  const items = Route.useLoaderData();
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
 
   const showAll = createMemo(() => isShowAllMode(search()));
   const hasStateFilters = createMemo(() => hasListStateFilters(search()));
+  const list = createMemo(() => findList(appData(), params().listId));
+  const distinctDiddlCount = createMemo(() => new Set(items().map((item) => item.diddlId)).size);
 
-  const list = createMemo(() =>
-    appData()
-      .sections.flatMap((section) => section.lists)
-      .find((candidate) => candidate.id === data().listId),
-  );
-
-  const distinctDiddlCount = createMemo(
-    () => new Set(data().items.map((item) => item.diddlId)).size,
-  );
-
-  const allModeItems = createMemo<DiddlCardItem[]>(() =>
-    mergeCatalogWithItems(appData().catalog, data().items, search()),
-  );
-
+  // The 3,900-row Catalog walk only happens in Show-all mode.
   const displayedItems = createMemo<DiddlCardItem[]>(() =>
-    showAll() ? allModeItems() : data().items,
+    showAll() ? mergeCatalogWithItems(appData().catalog, items(), search()) : items(),
   );
 
   const toggleShowAll = () => {
@@ -99,10 +97,16 @@ function ListPage() {
             Show all
           </button>
         </div>
-        <div class="relative flex grow flex-wrap content-start gap-2 px-4 pt-8 pb-4">
-          <Show when={showAll()} fallback={<DiddlCards items={data().items} />}>
+        {/* The fixed Taskbar would otherwise cover the first row's select circles. */}
+        <div
+          class={cn(
+            "relative flex grow flex-wrap content-start gap-2 px-4 pt-8 pb-4",
+            isSelectMode() && "pt-12",
+          )}
+        >
+          <Show when={showAll()} fallback={<DiddlCards items={displayedItems()} />}>
             <DiddlCardListLimiter
-              diddls={allModeItems()}
+              diddls={displayedItems()}
               highlightZeroQuantity
               showQuantityControls
             />

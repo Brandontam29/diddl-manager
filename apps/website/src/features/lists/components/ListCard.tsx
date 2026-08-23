@@ -2,9 +2,14 @@ import { CalendarDays, FileText } from "lucide-solid";
 import { Component } from "solid-js";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/libs/cn";
-import { transparentOklch } from "@/libs/transparentOklch";
 import type { AppList } from "@/features/app-data";
+import { cn } from "@/libs/cn";
+
+const dateFormat = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
 
 const ListCard: Component<{ list: AppList }> = (props) => {
   return (
@@ -15,7 +20,7 @@ const ListCard: Component<{ list: AppList }> = (props) => {
         "transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg",
       )}
       style={{
-        "background-color": transparentOklch(props.list.color, 0.15),
+        "background-color": `color-mix(in oklch, ${props.list.color} 15%, transparent)`,
       }}
     >
       <CardHeader>
@@ -26,28 +31,19 @@ const ListCard: Component<{ list: AppList }> = (props) => {
           <div class="flex items-center space-x-2">
             <CalendarDays class="h-5 w-5 text-muted-foreground" />
             <span class="text-sm text-muted-foreground">
-              Last modified: {displayDate(props.list.updatedAt)}
+              Last modified: {dateFormat.format(props.list.updatedAt)}
             </span>
           </div>
           <div class="flex items-center space-x-2">
             <FileText class="h-5 w-5 text-muted-foreground" />
             <span class="text-sm text-muted-foreground">
-              Created: {displayDate(props.list.createdAt)}
+              Created: {dateFormat.format(props.list.createdAt)}
             </span>
           </div>
         </div>
       </CardContent>
     </Card>
   );
-};
-
-const displayDate = (value: string | Date) => {
-  const date = new Date(value);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
 };
 
 export default ListCard;

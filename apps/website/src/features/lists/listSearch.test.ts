@@ -30,22 +30,23 @@ const item = (listItemId: number, diddlId: number): JoinedListItem => ({
 });
 
 describe("listSearchSchema", () => {
-  it("accepts the desktop's string params and the router's parsed values alike", () => {
+  it("accepts the router's parsed values", () => {
     expect(
-      listSearchSchema.parse({ showAll: "true", isDamaged: "false", minCount: "2", maxCount: 5 }),
+      listSearchSchema.parse({ showAll: true, isDamaged: false, minCount: 2, maxCount: 5 }),
     ).toEqual({ showAll: true, isDamaged: false, minCount: 2, maxCount: 5 });
-    expect(listSearchSchema.parse({ showAll: true, isIncomplete: true })).toEqual({
-      showAll: true,
-      isIncomplete: true,
+    expect(listSearchSchema.parse({ type: "A6", from: 99, to: 199 })).toEqual({
+      type: "A6",
+      from: 99,
+      to: 199,
     });
     expect(listSearchSchema.parse({})).toEqual({});
   });
 
-  it("drops an unknown type, a non-boolean flag or a non-numeric count instead of failing", () => {
-    expect(listSearchSchema.parse({ type: "A3", showAll: "yes", minCount: "lots" })).toEqual({});
-    expect(listSearchSchema.parse({ isDamaged: "true", maxCount: "x" })).toEqual({
-      isDamaged: true,
-    });
+  it("drops invalid values instead of failing or coercing", () => {
+    expect(
+      listSearchSchema.parse({ type: "A3", showAll: "yes", minCount: "", maxCount: "lots" }),
+    ).toEqual({});
+    expect(listSearchSchema.parse({ isDamaged: "true", minCount: -1, maxCount: 1.5 })).toEqual({});
   });
 });
 
@@ -72,6 +73,7 @@ describe("show-all mode", () => {
     expect(isShowAllMode({ showAll: true, isDamaged: false })).toBe(false);
     expect(isShowAllMode({})).toBe(false);
     expect(hasListStateFilters({ maxCount: 2 })).toBe(true);
+    expect(hasListStateFilters({ type: "A7", from: 1 })).toBe(false);
   });
 
   it("replaces owned Diddls by their List Items and keeps the rest at zero", () => {

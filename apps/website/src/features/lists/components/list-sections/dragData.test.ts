@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { AppList, AppSection } from "@/features/app-data";
 
-import { moveList, moveSection, readDragData } from "./dragData";
+import { moveList, moveSection } from "./dragData";
 
 const list = (id: number, sectionId: number): AppList => ({
   id,
@@ -29,30 +29,26 @@ const section = (id: number, lists: AppList[], isDefault = false): AppSection =>
 });
 
 const board = () => [
-  section(1, [list(10, 1), list(11, 1)], true),
+  section(1, [list(10, 1), list(11, 1), list(12, 1)], true),
   section(2, [list(20, 2)]),
   section(3, []),
 ];
 
 const ids = (sections: AppSection[]) => sections.map((s) => [s.id, s.lists.map((l) => l.id)]);
 
-describe("readDragData", () => {
-  it("reads a getter, a plain value, and rejects anything else", () => {
-    const data = { type: "section", sectionId: 1 };
-    expect(readDragData({ data: () => data })).toEqual(data);
-    expect(readDragData({ data })).toEqual(data);
-    expect(readDragData({ data: { current: data } })).toEqual(data);
-    expect(readDragData({ data: "nope" })).toBeNull();
-    expect(readDragData(undefined)).toBeNull();
-  });
+const onList = (listId: number, sectionId: number) => ({
+  type: "list" as const,
+  listId,
+  sectionId,
 });
+const onSection = (sectionId: number) => ({ type: "section" as const, sectionId });
 
 describe("moveSection", () => {
   it("moves the source into the target's slot without touching the input", () => {
     const input = board();
     expect(ids(moveSection(input, 3, 1)!)).toEqual([
       [3, []],
-      [1, [10, 11]],
+      [1, [10, 11, 12]],
       [2, [20]],
     ]);
     expect(ids(input)).toEqual(ids(board()));
@@ -65,53 +61,40 @@ describe("moveSection", () => {
 });
 
 describe("moveList", () => {
-  it("reorders within a section by taking the target list's slot", () => {
-    const next = moveList(
-      board(),
-      { type: "list", listId: 11, sectionId: 1 },
-      {
-        type: "list",
-        listId: 10,
-        sectionId: 1,
-      },
-    );
-    expect(ids(next!)).toEqual([
-      [1, [11, 10]],
-      [2, [20]],
-      [3, []],
-    ]);
+  it("forward within a section: the source takes the target's slot", () => {
+    expect(ids(moveList(board(), onList(10, 1), onList(12, 1))!)[0]).toEqual([1, [11, 12, 10]]);
+    expect(ids(moveList(board(), onList(10, 1), onList(11, 1))!)[0]).toEqual([1, [11, 10, 12]]);
   });
 
-  it("moves across sections, appending when dropped on the section itself", () => {
-    const next = moveList(
-      board(),
-      { type: "list", listId: 10, sectionId: 1 },
-      {
-        type: "section",
-        sectionId: 3,
-      },
-    );
-    expect(ids(next!)).toEqual([
-      [1, [11]],
+  it("backward within a section", () => {
+    expect(ids(moveList(board(), onList(12, 1), onList(10, 1))!)[0]).toEqual([1, [12, 10, 11]]);
+    expect(ids(moveList(board(), onList(12, 1), onList(11, 1))!)[0]).toEqual([1, [10, 12, 11]]);
+  });
+
+  it("onto its own section appends at the end", () => {
+    expect(ids(moveList(board(), onList(10, 1), onSection(1))!)[0]).toEqual([1, [11, 12, 10]]);
+    expect(moveList(board(), onList(12, 1), onSection(1))).toBeNull();
+  });
+
+  it("across sections: onto a list takes its slot, onto a section appends", () => {
+    expect(ids(moveList(board(), onList(20, 2), onList(11, 1))!)).toEqual([
+      [1, [10, 20, 11, 12]],
+      [2, []],
+      [3, []],
+    ]);
+    expect(ids(moveList(board(), onList(10, 1), onSection(3))!)).toEqual([
+      [1, [11, 12]],
       [2, [20]],
       [3, [10]],
     ]);
   });
 
-  it("returns null for an unknown list or section", () => {
-    expect(
-      moveList(
-        board(),
-        { type: "list", listId: 99, sectionId: 1 },
-        { type: "section", sectionId: 2 },
-      ),
-    ).toBeNull();
-    expect(
-      moveList(
-        board(),
-        { type: "list", listId: 10, sectionId: 1 },
-        { type: "section", sectionId: 9 },
-      ),
-    ).toBeNull();
+  it("returns null for a self-drop, an unknown list or section, and leaves the input alone", () => {
+    const input = board();
+    expect(moveList(input, onList(10, 1), onList(10, 1))).toBeNull();
+    expect(moveList(input, onList(99, 1), onSection(2))).toBeNull();
+    expect(moveList(input, onList(10, 1), onSection(9))).toBeNull();
+    expect(moveList(input, onList(10, 1), onList(99, 1))).toBeNull();
+    expect(ids(input)).toEqual(ids(board()));
   });
 });

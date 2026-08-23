@@ -18,3 +18,10 @@ export type AppData = ReturnType<ReturnType<typeof useAppData>>;
  */
 export type AppSection = AppData["sections"][number];
 export type AppList = AppSection["lists"][number];
+
+/** Every List across the sections, in board order. */
+export const allLists = (data: AppData): AppList[] =>
+  data.sections.flatMap((section) => section.lists);
+
+export const findList = (data: AppData, listId: number): AppList | undefined =>
+  allLists(data).find((list) => list.id === listId);

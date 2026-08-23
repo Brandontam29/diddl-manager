@@ -1,22 +1,28 @@
 import { useDraggable, useDroppable } from "@dnd-kit/solid";
-import { Grip } from "lucide-solid";
+import { Grip, Trash2 } from "lucide-solid";
 import { type Component, For, Show } from "solid-js";
 
-import { cn } from "@/libs/cn";
 import type { AppSection } from "@/features/app-data";
+import { cn } from "@/libs/cn";
+import { listSectionNameSchema } from "@/shared";
 
-import DeleteSectionDialog from "./DeleteSectionDialog";
+import { useSectionMutations } from "../../mutations";
+import ConfirmDeleteDialog from "../ConfirmDeleteDialog";
+import RenameDialog from "../RenameDialog";
 import DraggableListCard from "./DraggableListCard";
-import RenameSectionDialog from "./RenameSectionDialog";
+import type { ListActions } from "./ListSectionsBoard";
 import type { DragData } from "./dragData";
 
-const ListSection: Component<{ section: AppSection }> = (props) => {
+const ListSection: Component<{ section: AppSection; actions: ListActions }> = (props) => {
+  const { renameSection, deleteSection } = useSectionMutations();
+  const data = (): DragData => ({ type: "section", sectionId: props.section.id });
+
   const draggable = useDraggable<DragData>({
     get id() {
       return `section-${props.section.id}`;
     },
     get data() {
-      return { type: "section" as const, sectionId: props.section.id };
+      return data();
     },
   });
   const droppable = useDroppable<DragData>({
@@ -24,7 +30,7 @@ const ListSection: Component<{ section: AppSection }> = (props) => {
       return `section-drop-${props.section.id}`;
     },
     get data() {
-      return { type: "section" as const, sectionId: props.section.id };
+      return data();
     },
   });
 
@@ -57,8 +63,29 @@ const ListSection: Component<{ section: AppSection }> = (props) => {
 
         <Show when={!props.section.isDefault}>
           <div class="ml-auto flex items-center gap-2">
-            <RenameSectionDialog section={props.section} />
-            <DeleteSectionDialog section={props.section} />
+            <RenameDialog
+              title="Rename Section"
+              description="Section names must be unique."
+              label={`Rename section ${props.section.name}`}
+              fieldLabel="Section name"
+              initialName={props.section.name}
+              schema={listSectionNameSchema}
+              onSubmit={(name) => renameSection(props.section.id, name)}
+            />
+            <ConfirmDeleteDialog
+              title="Delete Section"
+              description={
+                <>
+                  Delete <strong>"{props.section.name}"</strong>? The lists in this section will be
+                  moved to <strong>Unsectioned</strong>. The lists will not be deleted.
+                </>
+              }
+              label={`Delete section ${props.section.name}`}
+              confirmLabel="Delete Section"
+              onConfirm={() => deleteSection(props.section.id)}
+            >
+              <Trash2 size={16} />
+            </ConfirmDeleteDialog>
           </div>
         </Show>
       </div>
@@ -73,7 +100,9 @@ const ListSection: Component<{ section: AppSection }> = (props) => {
       >
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <For each={props.section.lists}>
-            {(item) => <DraggableListCard list={item} sectionId={props.section.id} />}
+            {(item) => (
+              <DraggableListCard list={item} sectionId={props.section.id} actions={props.actions} />
+            )}
           </For>
         </div>
       </Show>

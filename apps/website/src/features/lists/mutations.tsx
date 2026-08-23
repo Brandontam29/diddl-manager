@@ -3,7 +3,7 @@ import { useRouter } from "@tanstack/solid-router";
 
 import { Toast, ToastContent, ToastProgress, ToastTitle } from "@/components/ui/toast";
 import { type DiddlCardItem, clearSelectedIds, partitionCardItems } from "@/features/diddl";
-import type { AddListItem } from "@/shared";
+import type { AddListItem, ListColor } from "@/shared";
 import {
   addListItems,
   createList,
@@ -58,7 +58,7 @@ export const useListMutations = () => {
       await router.invalidate();
     },
 
-    updateListColor: async (listId: number, color: string) => {
+    updateListColor: async (listId: number, color: ListColor) => {
       await updateListColor({ data: { listId, color } });
       await router.invalidate();
     },
@@ -71,6 +71,9 @@ export const useListMutations = () => {
       await reorderLists({ data: { sections } });
       await router.invalidate();
     },
+
+    /** Re-runs the `/app` loaders without a mutation — e.g. to drop a stale board. */
+    invalidate: () => router.invalidate(),
   };
 };
 
@@ -125,10 +128,12 @@ export const useListItemMutations = () => {
       return result;
     },
 
+    /** The removed cards are deselected before the refetch, so no stale count renders. */
     removeListItems: async (listId: number, listItemIds: number[]) => {
       if (listItemIds.length === 0) return { removedCount: 0 };
 
       const result = await removeListItems({ data: { listId, listItemIds } });
+      clearSelectedIds();
       await router.invalidate();
       return result;
     },

@@ -191,6 +191,15 @@ text` + lazy-upsert profiles; dev Google OAuth needs no provisioning; free to 50
   dropping), dimensions null where unmeasurable, and the UI question split out as
   [Catalog entries with no image](issues/30-missing-catalog-images.md).
 
+- [Clerk auth: provider, sign-in/up routes, server middleware](issues/23-clerk-auth-integration.md)
+  — hand-rolled Solid provider over `@clerk/clerk-js`, `ClerkMount` for the prebuilt
+  components, `/sign-in/$` + `/sign-up/$`, the `ssr: false` `_authed` gate, and
+  `authedMiddleware` (`@clerk/backend` → `context.userId`) — the composition point for
+  every server function. Two failures static checks missed, both fixed and documented:
+  a module-scope `process.env` read shipped the secret guard to the browser, and
+  clerk-js 6.29 needs `load({ ui })` from the new `@clerk/ui` package (both on
+  `/no-rhc`). Verified in a browser against dev **and** the production build.
+
 ## Not yet specified
 
 (Empty — all former fog has graduated: dev workflow/CI/logging into

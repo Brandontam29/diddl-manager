@@ -1,6 +1,7 @@
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/solid-router";
 import type { JSX } from "solid-js";
 import { HydrationScript } from "solid-js/web";
+import { ClerkProvider } from "@/lib/clerk-provider";
 import { NotFound } from "@/components/NotFound";
 import appCss from "@/styles/app.css?url";
 
@@ -25,7 +26,7 @@ function RootDocument(props: { children: JSX.Element }) {
       </head>
       <body>
         <HeadContent />
-        {props.children}
+        <ClerkProvider>{props.children}</ClerkProvider>
         <Scripts />
       </body>
     </html>

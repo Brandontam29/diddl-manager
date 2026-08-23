@@ -20,6 +20,9 @@
     "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
+    "@clerk/backend": "^3.16.10",
+    "@clerk/clerk-js": "^6.29.3",
+    "@clerk/ui": "^1.30.6",
     "@neondatabase/serverless": "^1.1.0",
     "@tanstack/solid-router": "^1.170.29",
     "@tanstack/solid-start": "^1.168.46",

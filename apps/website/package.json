@@ -15,6 +15,7 @@
     "db:migrate": "drizzle-kit migrate",
     "catalog:clean": "bun run scripts/clean-catalog.ts",
     "catalog:load": "bun run scripts/load-catalog.ts",
+    "import:desktop": "bun run scripts/import-desktop.ts",
     "test": "bun run test:unit && bun run test:integration",
     "test:unit": "vitest run --exclude '**/*.integration.test.ts'",
     "test:integration": "vitest run --config vitest.integration.config.ts"

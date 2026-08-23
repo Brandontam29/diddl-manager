@@ -10,17 +10,25 @@
 import { z } from "zod";
 
 import { listItemSchema, listSchema, listSectionSchema } from "../src/shared/list-models";
+import { toPosixPath } from "./catalog-rules";
 
 export const DESKTOP_IMAGE_PREFIX = "app://diddl-images/";
 
 /** Marker for "this list goes into the user's existing web Default Section". */
 export const DEFAULT_SECTION = "default" as const;
 
+/**
+ * SQLite has no boolean type. The desktop's Kysely serialize plugin writes booleans
+ * as the TEXT strings 'true'/'false' (and the column defaults are 'false'), while a
+ * hand-edited or older row could hold 0/1. Both are accepted.
+ */
+export type SqliteBoolean = number | boolean | string | null;
+
 export type DesktopSectionRow = {
   id: number;
   name: string;
   position: number;
-  is_default: number | boolean;
+  is_default: SqliteBoolean;
   created_at: string | null;
   updated_at: string | null;
   deleted_at: string | null;
@@ -42,8 +50,8 @@ export type DesktopListItemRow = {
   list_id: number;
   diddl_id: number;
   quantity: number | null;
-  is_damaged: number | boolean | null;
-  is_incomplete: number | boolean | null;
+  is_damaged: SqliteBoolean;
+  is_incomplete: SqliteBoolean;
 };
 
 export type DesktopDiddlRow = {
@@ -111,7 +119,7 @@ export function normalizeDesktopImagePath(imagePath: string): string {
   const withoutPrefix = imagePath.startsWith(DESKTOP_IMAGE_PREFIX)
     ? imagePath.slice(DESKTOP_IMAGE_PREFIX.length)
     : imagePath;
-  return withoutPrefix.replaceAll("\\", "/");
+  return toPosixPath(withoutPrefix);
 }
 
 const SQLITE_TIMESTAMP = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
@@ -128,21 +136,31 @@ export function parseDesktopTimestamp(value: string | null | undefined): Date | 
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
-/** SQLite has no boolean type: the desktop stores 0/1, and a null column means false. */
-function fromSqliteBoolean(value: unknown): unknown {
-  if (value === null || value === undefined) return false;
-  if (value === 0 || value === 1) return value === 1;
+const SQLITE_TRUE = new Set<unknown>([true, 1, "1", "true"]);
+const SQLITE_FALSE = new Set<unknown>([false, 0, "0", "false", null, undefined]);
+
+/**
+ * Decodes a desktop boolean column (see `SqliteBoolean`). A null column means
+ * false — that is the desktop's column default. Anything else is returned as-is so
+ * zod reports it as a violation.
+ */
+export function parseSqliteBoolean(value: unknown): unknown {
+  if (SQLITE_TRUE.has(value)) return true;
+  if (SQLITE_FALSE.has(value)) return false;
   return value;
 }
 
-/** `deletedAt` is dropped: only live rows reach validation. Ids are remapped on insert. */
-const sectionRowSchema = listSectionSchema.omit({ id: true, deletedAt: true, isDefault: true });
-const listRowSchema = listSchema.omit({ id: true, deletedAt: true, sectionId: true });
+/**
+ * Timestamps are checked by `parseDesktopTimestamp` and `deletedAt` is dropped
+ * (only live rows reach validation); ids are remapped on insert.
+ */
+const sectionRowSchema = listSectionSchema.pick({ name: true, position: true });
+const listRowSchema = listSchema.pick({ name: true, color: true, position: true });
 const itemRowSchema = z.object({
   diddlId: listItemSchema.shape.diddlId,
   quantity: z.preprocess((value) => value ?? 1, listItemSchema.shape.quantity),
-  isDamaged: z.preprocess(fromSqliteBoolean, listItemSchema.shape.isDamaged),
-  isIncomplete: z.preprocess(fromSqliteBoolean, listItemSchema.shape.isIncomplete),
+  isDamaged: z.preprocess(parseSqliteBoolean, listItemSchema.shape.isDamaged),
+  isIncomplete: z.preprocess(parseSqliteBoolean, listItemSchema.shape.isIncomplete),
 });
 
 export type PlannedSection = {
@@ -159,6 +177,10 @@ export type PlannedList = {
   section: number | typeof DEFAULT_SECTION;
   name: string;
   color: string;
+  /**
+   * Within the Default Section this is relative: the script adds the position after
+   * the section's existing lists, so imported lists never collide with them.
+   */
   position: number;
   createdAt: Date;
   updatedAt: Date;
@@ -173,10 +195,13 @@ export type PlannedItem = {
 };
 
 export type ImportPlan = {
+  /** Non-default sections, positions renumbered in desktop order around the Default Section. */
   sections: PlannedSection[];
+  /** The slot the web Default Section takes in that order, or null when the desktop had none. */
+  defaultSectionPosition: number | null;
   lists: PlannedList[];
   items: PlannedItem[];
-  /** Lists remapped to the Default Section because their desktop section was null, deleted, or missing. */
+  /** Lists moved to the Default Section because their desktop section was null, deleted, or missing. */
   remappedListIds: number[];
   skipped: { sections: number; lists: number; items: number };
   /** Anything here means the import must not run. */
@@ -191,17 +216,25 @@ function formatIssues(error: z.ZodError): string {
     .join("; ");
 }
 
-/** Timestamps are parsed before zod sees them, so name the raw column when they fail. */
-function describeFailure(
-  parsed: z.ZodSafeParseResult<unknown>,
-  row: { created_at: string | null; updated_at: string | null },
-): string {
-  const badTimestamps = (["created_at", "updated_at"] as const)
+type Timestamped = { created_at: string | null; updated_at: string | null };
+
+/** Both timestamps parsed, or the violation text naming the bad raw column(s). */
+function parseTimestamps(
+  row: Timestamped,
+): { createdAt: Date; updatedAt: Date } | { violation: string } {
+  const createdAt = parseDesktopTimestamp(row.created_at);
+  const updatedAt = parseDesktopTimestamp(row.updated_at);
+  if (createdAt && updatedAt) return { createdAt, updatedAt };
+  const violation = (["created_at", "updated_at"] as const)
     .filter((column) => parseDesktopTimestamp(row[column]) === null)
-    .map((column) => `${column}: unparseable timestamp ${JSON.stringify(row[column])}`);
-  if (badTimestamps.length > 0) return badTimestamps.join("; ");
-  return parsed.success ? "invalid" : formatIssues(parsed.error);
+    .map((column) => `${column}: unparseable timestamp ${JSON.stringify(row[column])}`)
+    .join("; ");
+  return { violation };
 }
+
+/** Desktop display order: position, then id as the tie-break (matches the sidebar). */
+const byDesktopOrder = <T extends { position: number; id: number }>(a: T, b: T) =>
+  a.position - b.position || a.id - b.id;
 
 /**
  * Turns the raw desktop snapshot into validated insert-ready rows, applying the §8
@@ -213,81 +246,94 @@ export function buildImportPlan(snapshot: DesktopSnapshot, catalog: CatalogImage
   const violations: string[] = [];
   const skipped = { sections: 0, lists: 0, items: 0 };
 
-  // Sections: the desktop's default section is not inserted — its lists go to the
-  // web Default Section. Any extra default sections are treated the same way.
+  // Sections, renumbered 0..n in desktop order. The desktop's default section is
+  // not inserted — the web Default Section takes its slot and its lists. Any extra
+  // default sections are treated the same way.
   const sections: PlannedSection[] = [];
+  let defaultSectionPosition: number | null = null;
+  const desktopDefaultIds = new Set<number>();
   const liveSectionIds = new Set<number>();
-  for (const row of snapshot.sections) {
-    if (row.deleted_at !== null) {
-      skipped.sections += 1;
-      continue;
+  const liveSections = snapshot.sections.filter((row) => row.deleted_at === null);
+  skipped.sections = snapshot.sections.length - liveSections.length;
+
+  liveSections.sort(byDesktopOrder).forEach((row, position) => {
+    if (parseSqliteBoolean(row.is_default) === true) {
+      desktopDefaultIds.add(row.id);
+      defaultSectionPosition ??= position;
+      return;
     }
-    if (row.is_default === true || row.is_default === 1) {
-      continue;
+    const timestamps = parseTimestamps(row);
+    if ("violation" in timestamps) {
+      violations.push(`section ${row.id} (${JSON.stringify(row.name)}): ${timestamps.violation}`);
+      return;
     }
-    const createdAt = parseDesktopTimestamp(row.created_at);
-    const updatedAt = parseDesktopTimestamp(row.updated_at);
-    const parsed = sectionRowSchema.safeParse({
-      name: row.name,
-      position: row.position,
-      createdAt: createdAt?.toISOString(),
-      updatedAt: updatedAt?.toISOString(),
-    });
-    if (!parsed.success || !createdAt || !updatedAt) {
+    const parsed = sectionRowSchema.safeParse({ name: row.name, position });
+    if (!parsed.success) {
       violations.push(
-        `section ${row.id} (${JSON.stringify(row.name)}): ${describeFailure(parsed, row)}`,
+        `section ${row.id} (${JSON.stringify(row.name)}): ${formatIssues(parsed.error)}`,
       );
-      continue;
+      return;
     }
     liveSectionIds.add(row.id);
     sections.push({
       desktopId: row.id,
       name: parsed.data.name,
       position: parsed.data.position,
-      createdAt,
-      updatedAt,
+      createdAt: timestamps.createdAt,
+      updatedAt: timestamps.updatedAt,
     });
-  }
+  });
 
+  // Lists. Those from the desktop default section keep their positions; those
+  // whose section was null/deleted/missing are appended after them, in desktop order.
   const lists: PlannedList[] = [];
   const remappedListIds: number[] = [];
   const liveListIds = new Set<number>();
-  for (const row of snapshot.lists) {
-    if (row.deleted_at !== null) {
-      skipped.lists += 1;
+  const liveLists = snapshot.lists.filter((row) => row.deleted_at === null);
+  skipped.lists = snapshot.lists.length - liveLists.length;
+
+  const orphaned: PlannedList[] = [];
+  let defaultListMax = -1;
+  for (const row of liveLists.sort(byDesktopOrder)) {
+    const timestamps = parseTimestamps(row);
+    if ("violation" in timestamps) {
+      violations.push(`list ${row.id} (${JSON.stringify(row.name)}): ${timestamps.violation}`);
       continue;
     }
-    const createdAt = parseDesktopTimestamp(row.created_at);
-    const updatedAt = parseDesktopTimestamp(row.updated_at);
     const parsed = listRowSchema.safeParse({
       name: row.name,
       color: row.color,
       position: row.position,
-      createdAt: createdAt?.toISOString(),
-      updatedAt: updatedAt?.toISOString(),
     });
-    if (!parsed.success || !createdAt || !updatedAt) {
+    if (!parsed.success) {
       violations.push(
-        `list ${row.id} (${JSON.stringify(row.name)}): ${describeFailure(parsed, row)}`,
+        `list ${row.id} (${JSON.stringify(row.name)}): ${formatIssues(parsed.error)}`,
       );
       continue;
     }
-    const section =
-      row.section_id !== null && liveSectionIds.has(row.section_id)
-        ? row.section_id
-        : DEFAULT_SECTION;
-    if (section === DEFAULT_SECTION) remappedListIds.push(row.id);
     liveListIds.add(row.id);
-    lists.push({
+    const base = {
       desktopId: row.id,
-      section,
       name: parsed.data.name,
       color: parsed.data.color,
-      position: parsed.data.position,
-      createdAt,
-      updatedAt,
-    });
+      createdAt: timestamps.createdAt,
+      updatedAt: timestamps.updatedAt,
+    };
+    if (row.section_id !== null && liveSectionIds.has(row.section_id)) {
+      lists.push({ ...base, section: row.section_id, position: parsed.data.position });
+    } else if (row.section_id !== null && desktopDefaultIds.has(row.section_id)) {
+      defaultListMax = Math.max(defaultListMax, parsed.data.position);
+      lists.push({ ...base, section: DEFAULT_SECTION, position: parsed.data.position });
+    } else {
+      remappedListIds.push(row.id);
+      const planned = { ...base, section: DEFAULT_SECTION, position: -1 };
+      orphaned.push(planned);
+      lists.push(planned);
+    }
   }
+  orphaned.forEach((planned, offset) => {
+    planned.position = defaultListMax + 1 + offset;
+  });
 
   const items: PlannedItem[] = [];
   for (const row of snapshot.items) {
@@ -332,5 +378,13 @@ export function buildImportPlan(snapshot: DesktopSnapshot, catalog: CatalogImage
     }
   }
 
-  return { sections, lists, items, remappedListIds, skipped, violations };
+  return {
+    sections,
+    defaultSectionPosition,
+    lists,
+    items,
+    remappedListIds,
+    skipped,
+    violations,
+  };
 }

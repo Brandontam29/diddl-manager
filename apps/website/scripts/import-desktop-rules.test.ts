@@ -7,22 +7,25 @@ import {
   type DesktopSqlite,
   normalizeDesktopImagePath,
   parseDesktopTimestamp,
+  parseSqliteBoolean,
   readDesktopSnapshot,
 } from "./import-desktop-rules";
 
 const ISO = "2025-03-04T05:06:07.000Z";
 
+// Fixtures use the real on-disk encoding: the desktop's Kysely serialize plugin
+// writes booleans as the TEXT strings 'true' / 'false'.
 const section = (over: Partial<DesktopSnapshot["sections"][number]> = {}) => ({
   id: 2,
   name: "Favourites",
   position: 1,
-  is_default: 0,
+  is_default: "false",
   created_at: ISO,
   updated_at: ISO,
   deleted_at: null,
   ...over,
 });
-const defaultSection = section({ id: 1, name: "Unsectioned", position: 0, is_default: 1 });
+const defaultSection = section({ id: 1, name: "Unsectioned", position: 0, is_default: "true" });
 const list = (over: Partial<DesktopSnapshot["lists"][number]> = {}) => ({
   id: 10,
   name: "Stickers",
@@ -39,11 +42,11 @@ const item = (over: Partial<DesktopSnapshot["items"][number]> = {}) => ({
   list_id: 10,
   diddl_id: 1,
   quantity: 2,
-  is_damaged: 1,
-  is_incomplete: 0,
+  is_damaged: "true",
+  is_incomplete: "false",
   ...over,
 });
-const diddl = (id: number, image_path: string | null = `app://diddl-images/dir/${id}.jpg`) => ({
+const diddl = (id: number, image_path: string | null = `app://diddl-images/dir\\${id}.jpg`) => ({
   id,
   image_path,
 });
@@ -85,6 +88,20 @@ describe("parseDesktopTimestamp", () => {
   });
 });
 
+describe("parseSqliteBoolean", () => {
+  it("decodes the desktop's text encoding, integers, booleans, and null", () => {
+    for (const truthy of ["true", "1", 1, true]) expect(parseSqliteBoolean(truthy)).toBe(true);
+    for (const falsy of ["false", "0", 0, false, null, undefined]) {
+      expect(parseSqliteBoolean(falsy)).toBe(false);
+    }
+  });
+
+  it("passes anything else through for zod to reject", () => {
+    expect(parseSqliteBoolean("yes")).toBe("yes");
+    expect(parseSqliteBoolean(2)).toBe(2);
+  });
+});
+
 describe("buildImportPlan", () => {
   it("maps a clean snapshot with no violations", () => {
     const plan = buildImportPlan(snapshot(), catalog);
@@ -98,29 +115,72 @@ describe("buildImportPlan", () => {
         updatedAt: new Date(ISO),
       },
     ]);
-    expect(plan.lists.map((l) => [l.desktopId, l.section])).toEqual([[10, 2]]);
+    expect(plan.defaultSectionPosition).toBe(0);
+    expect(plan.lists.map((l) => [l.desktopId, l.section, l.position])).toEqual([[10, 2, 0]]);
     expect(plan.items).toEqual([
       { desktopListId: 10, diddlId: 1, quantity: 2, isDamaged: true, isIncomplete: false },
     ]);
     expect(plan.remappedListIds).toEqual([]);
   });
 
-  it("folds the desktop default section into the web one", () => {
+  it("recognizes the default section by its 'true' text flag and folds it into the web one", () => {
     const plan = buildImportPlan(snapshot({ lists: [list({ section_id: 1 })] }), catalog);
     expect(plan.sections.map((s) => s.desktopId)).toEqual([2]);
     expect(plan.lists[0]?.section).toBe(DEFAULT_SECTION);
-    expect(plan.remappedListIds).toEqual([10]);
+    // Its lists were already in the default section: not a remap, position kept.
+    expect(plan.remappedListIds).toEqual([]);
+    expect(plan.lists[0]?.position).toBe(0);
   });
 
-  it("sends lists with a null, deleted, or unknown section to the Default Section", () => {
+  it("accepts 0/1 for is_default too", () => {
+    const plan = buildImportPlan(
+      snapshot({ sections: [section({ id: 1, is_default: 1 }), section({ is_default: 0 })] }),
+      catalog,
+    );
+    expect(plan.sections.map((s) => s.desktopId)).toEqual([2]);
+  });
+
+  it("renumbers sections in desktop order around the Default Section", () => {
+    const plan = buildImportPlan(
+      snapshot({
+        sections: [
+          section({ id: 5, name: "Last", position: 7 }),
+          section({ id: 1, name: "Unsectioned", position: 3, is_default: "true" }),
+          section({ id: 4, name: "First", position: 2 }),
+          section({ id: 9, name: "Gone", position: 1, deleted_at: ISO }),
+        ],
+        lists: [],
+        items: [],
+      }),
+      catalog,
+    );
+    expect(plan.violations).toEqual([]);
+    expect(plan.sections.map((s) => [s.desktopId, s.position])).toEqual([
+      [4, 0],
+      [5, 2],
+    ]);
+    expect(plan.defaultSectionPosition).toBe(1);
+  });
+
+  it("reports no Default Section slot when the desktop has no default section", () => {
+    const plan = buildImportPlan(
+      snapshot({ sections: [section()], lists: [], items: [] }),
+      catalog,
+    );
+    expect(plan.defaultSectionPosition).toBeNull();
+  });
+
+  it("sends lists with a null, deleted, or unknown section to the Default Section, appended after its own lists", () => {
     const plan = buildImportPlan(
       snapshot({
         sections: [defaultSection, section(), section({ id: 3, name: "Gone", deleted_at: ISO })],
         lists: [
-          list({ id: 10, section_id: null }),
-          list({ id: 11, section_id: 3 }),
-          list({ id: 12, section_id: 99 }),
-          list({ id: 13, section_id: 2 }),
+          list({ id: 10, section_id: null, position: 0 }),
+          list({ id: 11, section_id: 3, position: 0 }),
+          list({ id: 12, section_id: 99, position: 5 }),
+          list({ id: 13, section_id: 2, position: 0 }),
+          list({ id: 14, section_id: 1, position: 4 }),
+          list({ id: 15, section_id: 1, position: 2 }),
         ],
         items: [],
       }),
@@ -128,13 +188,15 @@ describe("buildImportPlan", () => {
     );
     expect(plan.violations).toEqual([]);
     expect(plan.skipped.sections).toBe(1);
-    expect(plan.lists.map((l) => l.section)).toEqual([
-      DEFAULT_SECTION,
-      DEFAULT_SECTION,
-      DEFAULT_SECTION,
-      2,
-    ]);
     expect(plan.remappedListIds).toEqual([10, 11, 12]);
+    const byId = new Map(plan.lists.map((l) => [l.desktopId, [l.section, l.position]]));
+    expect(byId.get(13)).toEqual([2, 0]);
+    // Desktop-default lists keep their positions (max 4); orphans follow in desktop order.
+    expect(byId.get(15)).toEqual([DEFAULT_SECTION, 2]);
+    expect(byId.get(14)).toEqual([DEFAULT_SECTION, 4]);
+    expect(byId.get(10)).toEqual([DEFAULT_SECTION, 5]);
+    expect(byId.get(11)).toEqual([DEFAULT_SECTION, 6]);
+    expect(byId.get(12)).toEqual([DEFAULT_SECTION, 7]);
   });
 
   it("skips soft-deleted lists and the items of deleted or missing lists", () => {
@@ -150,13 +212,23 @@ describe("buildImportPlan", () => {
     expect(plan.items).toHaveLength(1);
   });
 
-  it("applies SQLite defaults for null quantity and flags", () => {
+  it("decodes item flags in every encoding and applies SQLite defaults for nulls", () => {
     const plan = buildImportPlan(
-      snapshot({ items: [item({ quantity: null, is_damaged: null, is_incomplete: null })] }),
+      snapshot({
+        items: [
+          item({ id: 100, is_damaged: "true", is_incomplete: "false" }),
+          item({ id: 101, is_damaged: 0, is_incomplete: 1 }),
+          item({ id: 102, quantity: null, is_damaged: null, is_incomplete: null }),
+        ],
+      }),
       catalog,
     );
     expect(plan.violations).toEqual([]);
-    expect(plan.items[0]).toMatchObject({ quantity: 1, isDamaged: false, isIncomplete: false });
+    expect(plan.items.map((i) => [i.quantity, i.isDamaged, i.isIncomplete])).toEqual([
+      [2, true, false],
+      [2, false, true],
+      [1, false, false],
+    ]);
   });
 
   it("reports zod failures instead of throwing", () => {
@@ -168,7 +240,11 @@ describe("buildImportPlan", () => {
           list({ id: 11, section_id: null, created_at: "nope" }),
           list({ id: 12 }),
         ],
-        items: [item({ list_id: 12, quantity: 0 }), item({ id: 101, list_id: 11 })],
+        items: [
+          item({ list_id: 12, quantity: 0 }),
+          item({ id: 101, list_id: 12, is_damaged: "maybe" }),
+          item({ id: 102, list_id: 11 }),
+        ],
       }),
       catalog,
     );
@@ -177,6 +253,7 @@ describe("buildImportPlan", () => {
       expect.stringContaining("list 10"),
       'list 11 ("Stickers"): created_at: unparseable timestamp "nope"',
       expect.stringContaining("list_item 100"),
+      expect.stringContaining("list_item 101: isDamaged"),
     ]);
     expect(plan.sections).toEqual([]);
     // The invalid section is gone, so list 12 falls back to the Default Section.
@@ -204,11 +281,11 @@ describe("buildImportPlan", () => {
     ]);
   });
 
-  it("checks each referenced diddl once, with backslash paths accepted", () => {
+  it("checks each referenced diddl once, with forward-slash paths accepted too", () => {
     const plan = buildImportPlan(
       snapshot({
         items: [item(), item({ id: 101 })],
-        diddls: [diddl(1, "app://diddl-images/dir\\1.jpg")],
+        diddls: [diddl(1, "app://diddl-images/dir/1.jpg")],
       }),
       catalog,
     );

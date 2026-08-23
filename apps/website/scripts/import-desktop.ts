@@ -18,12 +18,12 @@ import { parseArgs } from "node:util";
 import { fileURLToPath } from "node:url";
 
 import { Pool } from "@neondatabase/serverless";
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, max, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-serverless";
 
 import type { Db } from "../src/server/db/client";
 import * as schema from "../src/server/db/schema";
-import { listItems, lists, listSections } from "../src/server/db/schema";
+import { diddls, listItems, lists, listSections, profiles } from "../src/server/db/schema";
 import { ensureDefaultSection } from "../src/server/handlers/sections";
 import { diddlSchema } from "../src/shared/diddl-models";
 import {
@@ -74,7 +74,9 @@ console.log(
 const plan = buildImportPlan(snapshot, catalogImages);
 printPlan(plan);
 
-// 2. Web side: the account must be empty (spec §8 preflight).
+// 2. Web side: the account must exist and be empty, and the Catalog must be
+//    loaded (spec §8 preflight) — so a typo'd user id or a fresh branch is a
+//    violation here rather than orphan rows or a mid-transaction FK error.
 const pool = new Pool({ connectionString });
 const db = drizzle(pool, { schema, casing: "snake_case" });
 
@@ -97,6 +99,18 @@ try {
     // Same query builder as neon-http for the plain select/insert the helper uses;
     // the two drivers differ only in batch/transaction support.
     const defaultSection = await ensureDefaultSection(tx as unknown as Db, userId);
+    if (plan.defaultSectionPosition !== null) {
+      await tx
+        .update(listSections)
+        .set({ position: plan.defaultSectionPosition })
+        .where(and(eq(listSections.id, defaultSection.id), eq(listSections.userId, userId)));
+    }
+    // Lists folded into the Default Section go after whatever it already holds.
+    const [existing] = await tx
+      .select({ max: max(lists.position) })
+      .from(lists)
+      .where(and(eq(lists.userId, userId), eq(lists.sectionId, defaultSection.id)));
+    const defaultListOffset = (existing?.max ?? -1) + 1;
 
     const sectionIds = new Map<number | typeof DEFAULT_SECTION, number>([
       [DEFAULT_SECTION, defaultSection.id],
@@ -132,7 +146,8 @@ try {
           sectionId,
           name: list.name,
           color: list.color,
-          position: list.position,
+          position:
+            list.section === DEFAULT_SECTION ? defaultListOffset + list.position : list.position,
           createdAt: list.createdAt,
           updatedAt: list.updatedAt,
         })
@@ -168,17 +183,37 @@ try {
 }
 
 async function preflight(): Promise<string[]> {
-  const [[existingLists], [existingSections]] = await Promise.all([
-    db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(lists)
-      .where(eq(lists.userId, userId)),
-    db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(listSections)
-      .where(and(eq(listSections.userId, userId), eq(listSections.isDefault, false))),
-  ]);
+  const referencedIds = [...new Set(plan.items.map((item) => item.diddlId))];
+  const count = sql<number>`count(*)::int`;
+  const [[profile], [existingLists], [existingSections], [catalogRows], [referencedRows]] =
+    await Promise.all([
+      db.select({ userId: profiles.userId }).from(profiles).where(eq(profiles.userId, userId)),
+      db.select({ count }).from(lists).where(eq(lists.userId, userId)),
+      db
+        .select({ count })
+        .from(listSections)
+        .where(and(eq(listSections.userId, userId), eq(listSections.isDefault, false))),
+      db.select({ count }).from(diddls),
+      referencedIds.length === 0
+        ? Promise.resolve([{ count: 0 }])
+        : db.select({ count }).from(diddls).where(inArray(diddls.id, referencedIds)),
+    ]);
   const problems: string[] = [];
+  if (!profile) {
+    problems.push(
+      `preflight: no profile for ${userId} — the user must sign in to the web app once first (check the Clerk id)`,
+    );
+  }
+  if ((catalogRows?.count ?? 0) !== catalog.length) {
+    problems.push(
+      `preflight: diddls holds ${catalogRows?.count ?? 0} rows but catalog.json has ${catalog.length} — run catalog:load first`,
+    );
+  }
+  if ((referencedRows?.count ?? 0) !== referencedIds.length) {
+    problems.push(
+      `preflight: ${referencedIds.length - (referencedRows?.count ?? 0)} referenced diddl id(s) are missing from the diddls table`,
+    );
+  }
   if ((existingLists?.count ?? 0) > 0) {
     problems.push(`preflight: account ${userId} already has ${existingLists?.count} list(s)`);
   }

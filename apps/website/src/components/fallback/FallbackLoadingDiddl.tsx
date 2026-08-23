@@ -1,0 +1,27 @@
+import { For } from "solid-js";
+
+import { useCardHeight } from "@/features/ui-state";
+
+import { Skeleton } from "../ui/skeleton";
+
+const LIST = Array.from({ length: 30 });
+const FallbackLoadingDiddl = () => {
+  const cardHeight = useCardHeight();
+
+  return (
+    <div class="flex flex-wrap content-start gap-2">
+      <For each={LIST}>
+        {() => (
+          <Skeleton
+            class="aspect-[6/5]"
+            style={{
+              height: `${cardHeight()}px`,
+            }}
+          />
+        )}
+      </For>
+    </div>
+  );
+};
+
+export default FallbackLoadingDiddl;

@@ -35,12 +35,18 @@ function getClerkClient() {
  * `authorizedParties` is deliberately unset: the app is single-origin and the
  * production origin is not known until the Vercel project exists (ticket 28).
  *
+ * Clerk gets a body-less copy of the request: `authenticateRequest` clones it with
+ * `new Request(request)`, and for POST server functions Start has already consumed
+ * the body stream by the time middleware runs, which makes that clone throw
+ * ("Response body object should not be disturbed or locked"). Only the URL and the
+ * headers (cookies) matter for authentication.
+ *
  * A `handshake` status means Clerk wants a redirect roundtrip to refresh an expired
  * token. Server functions cannot perform that roundtrip, so it is treated as
  * unauthenticated — the client's own Clerk instance refreshes and the call retries.
  */
 export const authedMiddleware = createMiddleware({ type: "function" }).server(async ({ next }) => {
-  const requestState = await getClerkClient().authenticateRequest(getRequest());
+  const requestState = await getClerkClient().authenticateRequest(withoutBody(getRequest()));
   const { userId } = requestState.toAuth() ?? {};
 
   if (!userId) {
@@ -49,3 +55,7 @@ export const authedMiddleware = createMiddleware({ type: "function" }).server(as
 
   return next({ context: { userId } });
 });
+
+function withoutBody(request: Request): Request {
+  return new Request(request.url, { method: request.method, headers: request.headers });
+}

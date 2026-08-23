@@ -20,7 +20,7 @@ export const Route = createRootRoute({
 
 function RootDocument(props: { children: JSX.Element }) {
   return (
-    <html lang="en">
+    <html lang="en" class="scrollbar-thin scrollbar-thumb-purple-200 scrollbar-track-transparent">
       <head>
         <HydrationScript />
       </head>

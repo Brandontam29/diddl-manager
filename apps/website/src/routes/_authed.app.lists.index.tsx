@@ -1,12 +1,41 @@
 import { createFileRoute } from "@tanstack/solid-router";
+import { ListPlus } from "lucide-solid";
 
-// Placeholder so the sidebar link has a target; the Sections board ships with
-// "Port the Lists board and List detail" (issue #33).
+import { buttonVariants } from "@/components/ui/button";
+import CreateListDialog from "@/features/lists/components/CreateListDialog";
+import CreateSectionForm from "@/features/lists/components/list-sections/CreateSectionForm";
+import ListSectionsBoard from "@/features/lists/components/list-sections/ListSectionsBoard";
+import { cn } from "@/libs/cn";
+
+/** The Sections board (desktop `/lists`): every List Section with its Lists, dnd-kit ordered. */
 export const Route = createFileRoute("/_authed/app/lists/")({
-  component: () => (
-    <div class="p-8 max-md:pt-14">
-      <h1 class="text-2xl font-semibold">Lists</h1>
-      <p class="text-muted-foreground">Coming soon.</p>
-    </div>
-  ),
+  component: ListsPage,
 });
+
+function ListsPage() {
+  return (
+    <div class="mx-auto w-full max-w-7xl px-4 py-8 max-md:pt-14">
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-4">
+        <h1 class="text-3xl font-bold">Lists</h1>
+
+        <div class="flex flex-wrap items-start gap-2">
+          <CreateSectionForm />
+          {/* The dialog trigger is already a button; the span only carries the look. */}
+          <CreateListDialog>
+            <span
+              class={cn(
+                buttonVariants({ variant: "outline" }),
+                "flex items-center gap-2 rounded-md px-6",
+              )}
+            >
+              <ListPlus size={20} />
+              <span>Create New List</span>
+            </span>
+          </CreateListDialog>
+        </div>
+      </div>
+
+      <ListSectionsBoard />
+    </div>
+  );
+}

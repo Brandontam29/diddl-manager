@@ -1,4 +1,4 @@
-import { CircleX, Copy, Minus, Plus } from "lucide-solid";
+import { CircleX, Copy, Minus, Plus, Trash2 } from "lucide-solid";
 import { type Component, Show, createMemo, createSignal } from "solid-js";
 
 import {
@@ -27,7 +27,7 @@ import { confettiStars } from "@/libs/confetti";
  */
 const Taskbar: Component<{ items: DiddlCardItem[] }> = (props) => {
   const [open, setOpen] = createSignal(false);
-  const { addListItems, updateListItems, duplicateListItems, bumpQuantity } =
+  const { addListItems, updateListItems, duplicateListItems, bumpQuantity, removeListItems } =
     useListItemMutations();
 
   const selected = createMemo(() => selectedItems(props.items));
@@ -75,6 +75,19 @@ const Taskbar: Component<{ items: DiddlCardItem[] }> = (props) => {
   const duplicateSelected = () => {
     if (selectedListItemIds().length === 0) return;
     void runMutation("Duplicate", () => duplicateListItems(selectedListItemIds()));
+  };
+
+  /** Drops the selected List Items outright, whatever their quantity. */
+  const removeSelected = () => {
+    const listId = id();
+    const listItemIds = selectedListItemIds();
+    if (listId === null || listItemIds.length === 0) return;
+
+    void runMutation("Remove", async () => {
+      await removeListItems(listId, listItemIds);
+      clearSelectedIds();
+      showToast(`Removed ${listItemIds.length} from the list`);
+    });
   };
 
   const actionClass = "flex items-center gap-1 rounded-md px-2 py-1 hover:bg-gray-200";
@@ -130,6 +143,11 @@ const Taskbar: Component<{ items: DiddlCardItem[] }> = (props) => {
         <div class="h-[24px] w-0.5 bg-gray-200" />
         <button class={actionClass} onClick={updateSelected("Set as Damaged", { isDamaged: true })}>
           <span>Set as Damaged</span>
+        </button>
+        <div class="h-[24px] w-0.5 bg-gray-200" />
+        <button class={actionClass} onClick={removeSelected}>
+          <Trash2 size={16} />
+          <span>Remove</span>
         </button>
       </Show>
     </div>

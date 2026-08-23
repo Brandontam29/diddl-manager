@@ -8,3 +8,13 @@ import { getRouteApi } from "@tanstack/solid-router";
 const appRoute = getRouteApi("/_authed/app");
 
 export const useAppData = () => appRoute.useLoaderData();
+
+export type AppData = ReturnType<ReturnType<typeof useAppData>>;
+
+/**
+ * A List Section / List as the loader delivers them: the server rows, whose
+ * timestamps arrive as `Date`s (Start's serialiser keeps them), not the ISO strings
+ * of the desktop's zod models.
+ */
+export type AppSection = AppData["sections"][number];
+export type AppList = AppSection["lists"][number];

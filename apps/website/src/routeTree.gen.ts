@@ -17,6 +17,7 @@ import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
 import { Route as AuthedAppIndexRouteImport } from './routes/_authed.app.index'
 import { Route as AuthedAppSettingsRouteImport } from './routes/_authed.app.settings'
 import { Route as AuthedAppListsIndexRouteImport } from './routes/_authed.app.lists.index'
+import { Route as AuthedAppListsListIdRouteImport } from './routes/_authed.app.lists.$listId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -57,6 +58,11 @@ const AuthedAppListsIndexRoute = AuthedAppListsIndexRouteImport.update({
   path: '/lists/',
   getParentRoute: () => AuthedAppRoute,
 } as any)
+const AuthedAppListsListIdRoute = AuthedAppListsListIdRouteImport.update({
+  id: '/lists/$listId',
+  path: '/lists/$listId',
+  getParentRoute: () => AuthedAppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/sign-up/$': typeof SignUpSplatRoute
   '/app/settings': typeof AuthedAppSettingsRoute
   '/app/': typeof AuthedAppIndexRoute
+  '/app/lists/$listId': typeof AuthedAppListsListIdRoute
   '/app/lists/': typeof AuthedAppListsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/sign-up/$': typeof SignUpSplatRoute
   '/app/settings': typeof AuthedAppSettingsRoute
   '/app': typeof AuthedAppIndexRoute
+  '/app/lists/$listId': typeof AuthedAppListsListIdRoute
   '/app/lists': typeof AuthedAppListsIndexRoute
 }
 export interface FileRoutesById {
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/sign-up/$': typeof SignUpSplatRoute
   '/_authed/app/settings': typeof AuthedAppSettingsRoute
   '/_authed/app/': typeof AuthedAppIndexRoute
+  '/_authed/app/lists/$listId': typeof AuthedAppListsListIdRoute
   '/_authed/app/lists/': typeof AuthedAppListsIndexRoute
 }
 export interface FileRouteTypes {
@@ -95,10 +104,17 @@ export interface FileRouteTypes {
     | '/sign-up/$'
     | '/app/settings'
     | '/app/'
+    | '/app/lists/$listId'
     | '/app/lists/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/sign-in/$' | '/sign-up/$' | '/app/settings' | '/app' | '/app/lists'
+    | '/'
+    | '/sign-in/$'
+    | '/sign-up/$'
+    | '/app/settings'
+    | '/app'
+    | '/app/lists/$listId'
+    | '/app/lists'
   id:
     | '__root__'
     | '/'
@@ -108,6 +124,7 @@ export interface FileRouteTypes {
     | '/sign-up/$'
     | '/_authed/app/settings'
     | '/_authed/app/'
+    | '/_authed/app/lists/$listId'
     | '/_authed/app/lists/'
   fileRoutesById: FileRoutesById
 }
@@ -176,18 +193,27 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof AuthedAppListsIndexRouteImport
       parentRoute: typeof AuthedAppRoute
     }
+    '/_authed/app/lists/$listId': {
+      id: '/_authed/app/lists/$listId'
+      path: '/lists/$listId'
+      fullPath: '/app/lists/$listId'
+      preLoaderRoute: typeof AuthedAppListsListIdRouteImport
+      parentRoute: typeof AuthedAppRoute
+    }
   }
 }
 
 interface AuthedAppRouteChildren {
   AuthedAppSettingsRoute: typeof AuthedAppSettingsRoute
   AuthedAppIndexRoute: typeof AuthedAppIndexRoute
+  AuthedAppListsListIdRoute: typeof AuthedAppListsListIdRoute
   AuthedAppListsIndexRoute: typeof AuthedAppListsIndexRoute
 }
 
 const AuthedAppRouteChildren: AuthedAppRouteChildren = {
   AuthedAppSettingsRoute: AuthedAppSettingsRoute,
   AuthedAppIndexRoute: AuthedAppIndexRoute,
+  AuthedAppListsListIdRoute: AuthedAppListsListIdRoute,
   AuthedAppListsIndexRoute: AuthedAppListsIndexRoute,
 }
 

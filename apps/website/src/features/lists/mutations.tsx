@@ -7,8 +7,16 @@ import type { AddListItem } from "@/shared";
 import {
   addListItems,
   createList,
+  createSection,
+  deleteList,
+  deleteSection,
   duplicateListItem,
   removeListItems,
+  renameList,
+  renameSection,
+  reorderLists,
+  reorderSections,
+  updateListColor,
   updateListItems,
 } from "@/server/api";
 
@@ -38,6 +46,58 @@ export const useListMutations = () => {
       const list = await createList({ data: { name, diddlIds } });
       await router.invalidate();
       return list;
+    },
+
+    deleteList: async (listId: number) => {
+      await deleteList({ data: { listId } });
+      await router.invalidate();
+    },
+
+    renameList: async (listId: number, name: string) => {
+      await renameList({ data: { listId, name } });
+      await router.invalidate();
+    },
+
+    updateListColor: async (listId: number, color: string) => {
+      await updateListColor({ data: { listId, color } });
+      await router.invalidate();
+    },
+
+    /**
+     * Full order of the named sections, lists included — a list is placed in whichever
+     * section names it, so a cross-section move is one call with both sections.
+     */
+    reorderLists: async (sections: Array<{ sectionId: number; listIds: number[] }>) => {
+      await reorderLists({ data: { sections } });
+      await router.invalidate();
+    },
+  };
+};
+
+export const useSectionMutations = () => {
+  const router = useRouter();
+
+  return {
+    createSection: async (name: string) => {
+      const section = await createSection({ data: { name } });
+      await router.invalidate();
+      return section;
+    },
+
+    renameSection: async (sectionId: number, name: string) => {
+      await renameSection({ data: { sectionId, name } });
+      await router.invalidate();
+    },
+
+    deleteSection: async (sectionId: number) => {
+      await deleteSection({ data: { sectionId } });
+      await router.invalidate();
+    },
+
+    /** `sectionIds` must be every active section exactly once, in the new order. */
+    reorderSections: async (sectionIds: number[]) => {
+      await reorderSections({ data: { sectionIds } });
+      await router.invalidate();
     },
   };
 };

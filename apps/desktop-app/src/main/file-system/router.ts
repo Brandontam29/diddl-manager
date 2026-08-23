@@ -1,4 +1,4 @@
-import { rename } from "node:fs/promises";
+import { rename, writeFile } from "node:fs/promises";
 import path from "path";
 
 import { TRPCError } from "@trpc/server";
@@ -51,4 +51,65 @@ export const fileSystemRouter = router({
 
       return { success: true as const };
     }),
+
+  exportLists: publicProcedure.mutation(async ({ ctx }) => {
+    const timestamp = new Date().toISOString().replaceAll(":", "-");
+    const result = await dialog.showSaveDialog(ctx.browserWindow, {
+      defaultPath: path.join(downloadsFolder(), `diddl-lists-${timestamp}.json`),
+      filters: [{ name: "JSON", extensions: ["json"] }],
+    });
+
+    if (result.canceled || !result.filePath) return { success: false as const };
+
+    const sections = await ctx.db
+      .selectFrom("listSection")
+      .select(["id", "name", "position", "isDefault", "createdAt", "updatedAt"])
+      .where("deletedAt", "is", null)
+      .orderBy("position", "asc")
+      .orderBy("id", "asc")
+      .execute();
+
+    const lists = await ctx.db
+      .selectFrom("list")
+      .select(["id", "name", "color", "sectionId", "position", "createdAt", "updatedAt"])
+      .where("deletedAt", "is", null)
+      .orderBy("sectionId", "asc")
+      .orderBy("position", "asc")
+      .execute();
+
+    const items = await ctx.db
+      .selectFrom("listItem")
+      .innerJoin("diddl", "diddl.id", "listItem.diddlId")
+      .select([
+        "listItem.id",
+        "listItem.listId",
+        "listItem.diddlId",
+        "listItem.quantity",
+        "listItem.isDamaged",
+        "listItem.isIncomplete",
+        "diddl.name as diddlName",
+        "diddl.type as diddlType",
+      ])
+      .orderBy("listItem.listId", "asc")
+      .orderBy("listItem.diddlId", "asc")
+      .execute();
+
+    const payload = {
+      exportedAt: new Date().toISOString(),
+      sections: sections.map((section) => ({
+        ...section,
+        lists: lists
+          .filter((list) => list.sectionId === section.id)
+          .map((list) => ({
+            ...list,
+            items: items.filter((item) => item.listId === list.id),
+          })),
+      })),
+    };
+
+    await writeFile(result.filePath, JSON.stringify(payload, null, 2), "utf8");
+    logging.info(`exported lists to ${result.filePath}`);
+
+    return { success: true as const, filePath: result.filePath };
+  }),
 });

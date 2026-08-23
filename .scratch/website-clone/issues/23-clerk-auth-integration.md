@@ -116,3 +116,25 @@ against a throwaway `+clerk_test` user since deleted — user count back to 1):
   `no-unassigned-vars`. Use a `createSignal` callback ref instead.
 - `/sign-in` and `/sign-up` render without a trailing splat segment, so plain
   `<Link to="/sign-in">` works for the landing page CTAs (ticket 27).
+
+## Review follow-up (2026-08-22)
+
+A two-axis review (standards + spec) found no hard violations but four fixes, all
+applied in the follow-up commit:
+
+- **Open redirect closed** — `?redirect=` was an unvalidated `z.string()` handed to
+  Clerk's `forceRedirectUrl`. Now `src/lib/auth-redirect.ts` accepts only an in-app path
+  (`/` but not `//`) and silently drops anything else.
+- **Sign-up keeps the return URL** — the Answer above overstated "splat routes … with
+  `validateSearch`": only `/sign-in/$` had it. Both routes now validate the same schema
+  and forward `redirect` to each other (`signUpUrl` / `signInUrl`), so a visitor bounced
+  from `/app/lists/123` lands there whichever form they use.
+- **Error `code` does not cross the wire** — TanStack Start serialises thrown errors to
+  `{ message }`; `src/server/errors.ts` now says so. Client error boundaries (tickets 25/26)
+  must match on message or status, not `instanceof`/`.code`.
+- Naming: `MountProps` → `ClerkMountProps`, `ClerkStore` → `ClerkContextValue`; the
+  redundant initial `setUser` before `addListener` removed; ADR 0001 amended to record
+  `@clerk/ui`.
+
+Still deferred: `authorizedParties` in `authedMiddleware` must be set when the
+production origin exists — see ticket 28.

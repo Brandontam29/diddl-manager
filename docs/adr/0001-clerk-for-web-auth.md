@@ -17,3 +17,11 @@ deliberately not dependencies.
   authenticated request. User data soft-deletes; nothing cascades from Clerk.
 - Swapping providers later means touching the provider layer and re-mapping
   `user_id` values — meaningful cost once real users exist.
+
+## Amendment (2026-08-22)
+
+`@clerk/ui` joins `@clerk/clerk-js` as a direct dependency: from clerk-js 6.29 the
+prebuilt components live in that package and must be passed to `clerk.load({ ui })`,
+otherwise `mountSignIn` no-ops. Both are used via their `/no-rhc` builds so the UI is
+bundled instead of fetched from Clerk's CDN at runtime. Still vanilla Clerk — no
+community Solid wrapper.

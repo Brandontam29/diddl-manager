@@ -3,7 +3,7 @@ import { createEffect, createSignal, onCleanup } from "solid-js";
 
 import { useClerk } from "@/lib/clerk-provider";
 
-type MountProps = {
+type ClerkMountProps = {
   mount: (clerk: Clerk, node: HTMLDivElement) => void;
   unmount: (clerk: Clerk, node: HTMLDivElement) => void;
 };
@@ -15,7 +15,7 @@ type MountProps = {
  * The ref is a signal rather than the usual `let node!: HTMLDivElement` so the effect
  * waits for both the node and ClerkJS, whichever lands second.
  */
-export function ClerkMount(props: MountProps) {
+export function ClerkMount(props: ClerkMountProps) {
   const [node, setNode] = createSignal<HTMLDivElement>();
   const { clerk } = useClerk();
 

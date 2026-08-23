@@ -14,14 +14,14 @@ import { loadClerk } from "./clerk";
 /** `@clerk/types` is only a transitive dependency, so the user type is read off the class. */
 type ClerkUser = NonNullable<Clerk["user"]>;
 
-type ClerkStore = {
+type ClerkContextValue = {
   /** `undefined` until ClerkJS has loaded in the browser. */
   clerk: Accessor<Clerk | undefined>;
   /** `null` when loaded and signed out. */
   user: Accessor<ClerkUser | null | undefined>;
 };
 
-const ClerkContext = createContext<ClerkStore>();
+const ClerkContext = createContext<ClerkContextValue>();
 
 /**
  * The thin hand-rolled provider ADR 0001 calls for: it loads ClerkJS once on the
@@ -42,7 +42,8 @@ export function ClerkProvider(props: { children: JSX.Element }) {
         return;
       }
       setClerk(instance);
-      setUser(() => instance.user ?? null);
+      // addListener fires synchronously with the current resources, so this also
+      // publishes the initial user.
       unsubscribe = instance.addListener((resources) => setUser(() => resources.user ?? null));
     });
 
@@ -55,7 +56,7 @@ export function ClerkProvider(props: { children: JSX.Element }) {
   return <ClerkContext.Provider value={{ clerk, user }}>{props.children}</ClerkContext.Provider>;
 }
 
-export function useClerk(): ClerkStore {
+export function useClerk(): ClerkContextValue {
   const store = useContext(ClerkContext);
   if (!store) {
     throw new Error("useClerk must be used inside <ClerkProvider>");

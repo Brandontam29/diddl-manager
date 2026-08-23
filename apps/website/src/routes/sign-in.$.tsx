@@ -1,30 +1,27 @@
 import { createFileRoute } from "@tanstack/solid-router";
-import * as z from "zod";
 
 import { ClerkMount } from "@/components/ClerkMount";
+import { authRedirectSearchSchema, DEFAULT_AFTER_AUTH_PATH } from "@/lib/auth-redirect";
 
 // Splat route: Clerk's sign-in component owns its own sub-paths (factor-one,
 // sso-callback, …), so every path under /sign-in has to reach this component.
-// `redirect` is where `_authed` sends the visitor back to after signing in.
-const searchSchema = z.object({
-  redirect: z.string().optional(),
-});
-
+// The `redirect` search param travels with the visitor to /sign-up and back.
 export const Route = createFileRoute("/sign-in/$")({
-  validateSearch: searchSchema,
+  validateSearch: authRedirectSearchSchema,
   component: SignIn,
 });
 
 function SignIn() {
   const search = Route.useSearch();
+  const redirect = () => search().redirect ?? DEFAULT_AFTER_AUTH_PATH;
 
   return (
     <main class="flex min-h-screen items-center justify-center p-8">
       <ClerkMount
         mount={(clerk, node) =>
           clerk.mountSignIn(node, {
-            forceRedirectUrl: search().redirect ?? "/app",
-            signUpUrl: "/sign-up",
+            forceRedirectUrl: redirect(),
+            signUpUrl: `/sign-up?redirect=${encodeURIComponent(redirect())}`,
           })
         }
         unmount={(clerk, node) => clerk.unmountSignIn(node)}

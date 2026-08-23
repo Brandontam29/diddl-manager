@@ -3,8 +3,11 @@
  * procedures threw `TRPCError` too, so this is parity, not a new convention —
  * neverthrow appears only in desktop-only file-system utilities.
  *
- * Every error carries a tRPC-style `code` so route error boundaries can branch on
- * it without string-matching messages.
+ * Every error carries a tRPC-style `code` for server-side callers and logs. It does
+ * **not** survive the wire: TanStack Start serialises a thrown error as a plain
+ * `Error` with only its `message`, so client error boundaries cannot use
+ * `instanceof` or `.code` — they must match on the message (or a response status
+ * set before throwing) until the UI tickets settle a client-side convention.
  */
 export type ErrorCode = "UNAUTHORIZED" | "NOT_FOUND" | "BAD_REQUEST" | "CONFLICT";
 

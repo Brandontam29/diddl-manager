@@ -1,5 +1,9 @@
 # Wayfinder map: Diddl Manager web app clone
 
+> **Migrated to GitHub 2026-08-22.** This effort is now tracked at
+> https://github.com/Brandontam29/diddl-manager/issues/7 — the map issue, with one
+> sub-issue per ticket. These files are the historical record; work the issues.
+
 **Status: implementation phase (2026-08-21)** — the spec is locked at
 [`spec.md`](spec.md); the destination was redrawn the same day to carry execution
 into the map (user's choice). Frontier = the open `task` tickets below.

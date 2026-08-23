@@ -44,9 +44,12 @@ Used by `/wayfinder`. The **map** is a single issue with **child** issues as tic
 - **Claim**: `gh issue edit <n> --add-assignee @me` — the session's first write.
 - **Resolve**: `gh issue comment <n> --body "<answer>"`, then `gh issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
 
-### Not yet migrated
+### The website-clone effort
 
-The `website-clone` wayfinder effort predates this setup and still lives as local
-markdown: the map at `.scratch/website-clone/map.md`, tickets at
-`.scratch/website-clone/issues/NN-<slug>.md`. Work that effort in place — or
-migrate it to GitHub issues explicitly — but don't split it across both.
+The `website-clone` wayfinder effort lives on GitHub as
+[#7](https://github.com/Brandontam29/diddl-manager/issues/7) (`wayfinder:map`) with its
+30 tickets as sub-issues, blocking expressed as native issue dependencies. GitHub is
+canonical. The original markdown under `.scratch/website-clone/` is kept as the
+historical record and as the home of `spec.md`; don't work the effort in both places.
+Infrastructure ids (Neon project/branch/endpoint, Clerk instance) are redacted in the
+issues because the repo is public — the real values stay local.

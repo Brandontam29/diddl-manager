@@ -2,7 +2,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import { z } from "zod";
 
 import type { Db } from "../db/client";
-import { type ProfileRow, profiles } from "../db/schema";
+import { listItems, listSections, lists, type ProfileRow, profiles } from "../db/schema";
 import { NotFoundError } from "../errors";
 import { ensureDefaultSection } from "./sections";
 
@@ -47,4 +47,51 @@ export async function updateProfile(
     .returning();
   if (!updated) throw new NotFoundError("Profile not found");
   return updated;
+}
+
+export type DeleteAccountResult = {
+  sections: number;
+  lists: number;
+  items: number;
+  profile: boolean;
+};
+
+/**
+ * Account deletion (spec §3, §4): the user's Sections, Lists and Profile are
+ * soft-deleted (`deleted_at`), consistent with `deleteSection` / `deleteList`.
+ * List Items have no `deleted_at` and are hard-deleted everywhere else (spec §3,
+ * migration 004 parity), so they are hard-deleted here too — nothing could read
+ * them once their Lists are gone. The client deletes the Clerk user afterwards;
+ * nothing cascades from Clerk (ADR 0001). Idempotent: rows already soft-deleted
+ * are left alone and a missing profile is not an error.
+ */
+export async function deleteAccount(db: Db, userId: string): Promise<DeleteAccountResult> {
+  const deletedAt = new Date();
+
+  const items = await db
+    .delete(listItems)
+    .where(eq(listItems.userId, userId))
+    .returning({ id: listItems.id });
+  const deletedLists = await db
+    .update(lists)
+    .set({ deletedAt })
+    .where(and(eq(lists.userId, userId), isNull(lists.deletedAt)))
+    .returning({ id: lists.id });
+  const sections = await db
+    .update(listSections)
+    .set({ deletedAt })
+    .where(and(eq(listSections.userId, userId), isNull(listSections.deletedAt)))
+    .returning({ id: listSections.id });
+  const profile = await db
+    .update(profiles)
+    .set({ deletedAt })
+    .where(and(eq(profiles.userId, userId), isNull(profiles.deletedAt)))
+    .returning({ userId: profiles.userId });
+
+  return {
+    sections: sections.length,
+    lists: deletedLists.length,
+    items: items.length,
+    profile: profile.length === 1,
+  };
 }

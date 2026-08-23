@@ -3,7 +3,7 @@ import { For, createEffect } from "solid-js";
 
 import { buttonVariants } from "@/components/ui/button";
 import { useClerk } from "@/lib/clerk-provider";
-import { cn } from "@/libs/cn";
+
 import { imageUrl } from "@/libs/image-url";
 
 /**
@@ -18,18 +18,16 @@ export const Route = createFileRoute("/")({
 /** Hand-picked Catalog entries (`data/catalog.json`) whose images exist under `/diddls`. */
 const HERO_DIDDLS = [
   {
-    id: 481,
     name: "Pimboli Blatt A6 Auslachen",
     imagePath: "012_Pimboli/Pimboli-Blatt-A6-Auslachen.jpg",
   },
   {
-    id: 474,
     name: "Diddlina Blatt A6 blau",
     imagePath: "011_feuilles-hs-A6/Diddlina-Blatt-A6-blau.jpg",
   },
-  { id: 533, name: "Galupyblatt HDL", imagePath: "013_Galupy/Galupyblatt-HDL.jpg" },
-  { id: 218, name: "NBA7 01", imagePath: "004_1-50/NBA7_01.jpg" },
-  { id: 1049, name: "SB0001", imagePath: "026_1-50/SB0001.jpg" },
+  { name: "Galupyblatt HDL", imagePath: "013_Galupy/Galupyblatt-HDL.jpg" },
+  { name: "NBA7 01", imagePath: "004_1-50/NBA7_01.jpg" },
+  { name: "SB0001", imagePath: "026_1-50/SB0001.jpg" },
 ];
 
 function Landing() {
@@ -67,13 +65,13 @@ function Landing() {
       </ul>
 
       <nav class="flex gap-3" aria-label="Account">
-        <Link to="/sign-in/$" params={{ _splat: "" }} class={cn(buttonVariants({ size: "lg" }))}>
+        <Link to="/sign-in/$" params={{ _splat: "" }} class={buttonVariants({ size: "lg" })}>
           Sign in
         </Link>
         <Link
           to="/sign-up/$"
           params={{ _splat: "" }}
-          class={cn(buttonVariants({ variant: "outline", size: "lg" }))}
+          class={buttonVariants({ variant: "outline", size: "lg" })}
         >
           Sign up
         </Link>

@@ -14,8 +14,22 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { errorMessage, showToast } from "@/features/lists/mutations";
 import { useClerk } from "@/lib/clerk-provider";
 import { deleteAccount } from "@/server/api";
+
+/**
+ * Clerk's UserProfile ships its own "Delete account" control, which would delete
+ * the Clerk user without soft-deleting the app's rows. It is hidden so deletion
+ * always goes through `destroyAccount` below. `profileSection__danger` is Clerk's
+ * element key for that section (rendered as `cl-profileSection__danger` on the
+ * Security page; verified headlessly against the current `@clerk/ui` build).
+ */
+const USER_PROFILE_APPEARANCE = {
+  elements: {
+    profileSection__danger: { display: "none" },
+  },
+};
 
 /**
  * New on the web (spec §6): sign out, Clerk's prebuilt user profile (email,
@@ -24,6 +38,9 @@ import { deleteAccount } from "@/server/api";
  * Deletion is two steps (spec §4): the server function soft-deletes the user's rows
  * while the session is still valid, then the client deletes the Clerk user — which
  * also ends the session — and a full navigation to `/` drops every loader's state.
+ * If step two fails the session is still valid and the next `getProfile` revives
+ * the profile, so the user is told to retry (or sign out and back in) and the
+ * button stays usable.
  */
 const SettingsSectionAccount = () => {
   const { clerk } = useClerk();
@@ -42,12 +59,20 @@ const SettingsSectionAccount = () => {
 
     setDeleting(true);
     setError(undefined);
+    let rowsDeleted = false;
     try {
       await deleteAccount();
+      rowsDeleted = true;
       await instance.user.delete();
       window.location.assign("/");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not delete your account.");
+      if (rowsDeleted) {
+        showToast(
+          "Your data was removed but your sign-in could not be deleted. Retry, or sign out and back in.",
+          "destructive",
+        );
+      }
+      setError(errorMessage(e, "Could not delete your account."));
       setDeleting(false);
     }
   };
@@ -64,7 +89,7 @@ const SettingsSectionAccount = () => {
             Sign out
           </Button>
 
-          <AlertDialog>
+          <AlertDialog onOpenChange={() => setError(undefined)}>
             <AlertDialogTrigger as={Button} variant="destructive" type="button">
               Delete account
             </AlertDialogTrigger>
@@ -96,7 +121,9 @@ const SettingsSectionAccount = () => {
 
         <div class="overflow-x-auto">
           <ClerkMount
-            mount={(instance, node) => instance.mountUserProfile(node)}
+            mount={(instance, node) =>
+              instance.mountUserProfile(node, { appearance: USER_PROFILE_APPEARANCE })
+            }
             unmount={(instance, node) => instance.unmountUserProfile(node)}
           />
         </div>

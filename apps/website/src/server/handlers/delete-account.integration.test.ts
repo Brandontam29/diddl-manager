@@ -72,4 +72,35 @@ describe("deleteAccount", () => {
     const result = await deleteAccount(db, userA);
     expect(result).toEqual({ sections: 0, lists: 0, items: 0, profile: false });
   });
+
+  test("getProfile revives a soft-deleted profile as a fresh sign-up", async () => {
+    // The Clerk deletion failed after the rows were soft-deleted: the still-valid
+    // session must get a working profile + Default Section back, not NOT_FOUND.
+    const revived = await getProfile(db, userA);
+    expect(revived.userId).toBe(userA);
+    expect(revived.deletedAt).toBeNull();
+    expect(revived.name).toBe("Alice");
+
+    const active = await db
+      .select()
+      .from(listSections)
+      .where(and(eq(listSections.userId, userA), isNull(listSections.deletedAt)));
+    expect(active).toHaveLength(1);
+    expect(active[0]!.isDefault).toBe(true);
+
+    // The old Sections and Lists stay soft-deleted.
+    expect(
+      await db
+        .select()
+        .from(listSections)
+        .where(and(eq(listSections.userId, userA), isNotNull(listSections.deletedAt))),
+    ).toHaveLength(1);
+    expect(await getSectionsWithLists(db, userA)).toEqual([{ ...active[0]!, lists: [] }]);
+    expect(await deleteAccount(db, userA)).toEqual({
+      sections: 1,
+      lists: 0,
+      items: 0,
+      profile: true,
+    });
+  });
 });

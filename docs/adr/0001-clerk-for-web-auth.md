@@ -25,3 +25,13 @@ prebuilt components live in that package and must be passed to `clerk.load({ ui 
 otherwise `mountSignIn` no-ops. Both are used via their `/no-rhc` builds so the UI is
 bundled instead of fetched from Clerk's CDN at runtime. Still vanilla Clerk — no
 community Solid wrapper.
+
+## Amendment (2026-09-01)
+
+`@clerk/clerk-js` reverts to its standard build; only `@clerk/ui` stays on `/no-rhc`.
+The "no remotely hosted code" build exists for environments that forbid it (Chrome
+extensions), and it pays for that by stubbing the Cloudflare Turnstile loader out to
+a rejected promise. With Clerk bot protection on — as it is on the production
+instance, `captcha_widget_type: smart` — the client could not produce a captcha
+token, so every sign-up was rejected with `captcha_missing_token`. The UI is what we
+wanted bundled; the captcha has to come off Cloudflare's CDN.

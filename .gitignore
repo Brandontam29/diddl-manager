@@ -9,7 +9,7 @@ build/
 # Environment Variables
 .env
 .env.local
-.env.*.local
+.env.prod
 
 # Logs
 npm-debug.log*

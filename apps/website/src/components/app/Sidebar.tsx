@@ -4,11 +4,12 @@ import { BiRegularHomeHeart } from "solid-icons/bi";
 import { type Component, For, JSXElement, Show, createSignal } from "solid-js";
 
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { useListId } from "@/features/lists/useListId";
 import { createIsMobile } from "@/hooks/createIsMobile";
 import { onLocationChange } from "@/hooks/onLocationChange";
 import { cn } from "@/libs/cn";
 
-import { SIDEBAR_GROUPS } from "./sidebar-links";
+import { SIDEBAR_GROUPS, type SidebarSliceLink } from "./sidebar-links";
 
 const linkClass = cn(
   "gradient-border mx-1 flex items-center gap-2 rounded px-3",
@@ -40,18 +41,7 @@ const SidebarNav: Component<{ class?: string }> = (props) => {
             <div>
               <div class="mb-1 px-4 text-sm font-semibold text-gray-800">{group.title}</div>
               <SubLinkContainer>
-                <For each={group.links}>
-                  {(link) => (
-                    <Link
-                      to="/app"
-                      search={link.search}
-                      activeOptions={{ exact: true, includeSearch: true }}
-                      class={linkClass}
-                    >
-                      {link.label}
-                    </Link>
-                  )}
-                </For>
+                <For each={group.links}>{(link) => <SliceLink link={link} />}</For>
               </SubLinkContainer>
             </div>
           )}
@@ -64,6 +54,42 @@ const SidebarNav: Component<{ class?: string }> = (props) => {
         </Link>
       </div>
     </nav>
+  );
+};
+
+/**
+ * On a List page the slice filters that List (keeping Show all and the List Item
+ * state filters); everywhere else it opens the Library at that slice.
+ */
+const SliceLink: Component<{ link: SidebarSliceLink }> = (props) => {
+  const listId = useListId();
+
+  return (
+    <Show
+      when={listId()}
+      fallback={
+        <Link
+          to="/app"
+          search={props.link.search}
+          activeOptions={{ exact: true, includeSearch: true }}
+          class={linkClass}
+        >
+          {props.link.label}
+        </Link>
+      }
+    >
+      {(listId) => (
+        <Link
+          to="/app/lists/$listId"
+          params={{ listId: listId() }}
+          search={(previous) => ({ ...previous, ...props.link.search })}
+          activeOptions={{ exact: true, includeSearch: true }}
+          class={linkClass}
+        >
+          {props.link.label}
+        </Link>
+      )}
+    </Show>
   );
 };
 

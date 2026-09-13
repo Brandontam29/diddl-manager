@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 import type { Diddl, JoinedListItem } from "@/shared";
 
 import {
+  filterItemsByCatalogSlice,
+  hasCatalogSlice,
   hasListStateFilters,
   isShowAllMode,
   listSearchSchema,
@@ -90,5 +92,34 @@ describe("show-all mode", () => {
       item(10, 3),
       item(11, 3),
     ]);
+  });
+});
+
+describe("catalog slice", () => {
+  it("keeps only the List Items whose Diddl sits in the sidebar's slice", () => {
+    const catalog = [diddl(1), diddl(2), diddl(3), diddl(4)];
+    const items = [item(10, 1), item(11, 3), item(12, 3), item(13, 4)];
+
+    expect(filterItemsByCatalogSlice(catalog, items, {})).toBe(items);
+    expect(filterItemsByCatalogSlice(catalog, items, { type: "A7", from: 1, to: 3 })).toEqual([
+      item(11, 3),
+      item(12, 3),
+    ]);
+  });
+
+  it("matches what Show all renders for the owned Diddls", () => {
+    const catalog = [diddl(1), diddl(2), diddl(3)];
+    const items = [item(10, 1), item(11, 3)];
+    const search = { type: "A7" as const, from: 1 };
+
+    const owned = filterItemsByCatalogSlice(catalog, items, search);
+    expect(mergeCatalogWithItems(catalog, owned, search)).toEqual([diddl(2), item(11, 3)]);
+  });
+
+  it("is set by any of type / from / to", () => {
+    expect(hasCatalogSlice({})).toBe(false);
+    expect(hasCatalogSlice({ showAll: true, isDamaged: true })).toBe(false);
+    expect(hasCatalogSlice({ type: "A6" })).toBe(true);
+    expect(hasCatalogSlice({ to: 99 })).toBe(true);
   });
 });

@@ -52,6 +52,26 @@ export const isShowAllMode = (search: ListSearch) =>
   search.showAll === true && !hasListStateFilters(search);
 
 /**
+ * The List Items whose Diddl sits in the Catalog slice the sidebar picked, the same
+ * `type` / `from` / `to` positions the Library shows. The server already applied
+ * `type`; `from` / `to` are Catalog indices, so they can only be resolved here.
+ */
+export const filterItemsByCatalogSlice = (
+  catalog: Diddl[],
+  items: JoinedListItem[],
+  search: ListSearch,
+): JoinedListItem[] => {
+  if (search.from === undefined && search.to === undefined) return items;
+
+  const sliceDiddlIds = new Set(filterCatalog(catalog, search).map((diddl) => diddl.id));
+  return items.filter((item) => sliceDiddlIds.has(item.diddlId));
+};
+
+/** Whether the sidebar narrowed the page to a Diddl Type or a slice of one. */
+export const hasCatalogSlice = (search: ListSearch) =>
+  search.type !== undefined || search.from !== undefined || search.to !== undefined;
+
+/**
  * Show-all mode: the Catalog narrowed like the Library (`type` / `from` / `to`),
  * where every Diddl the list holds is replaced by its List Items — so owned ones
  * show their quantity and the rest render at zero.

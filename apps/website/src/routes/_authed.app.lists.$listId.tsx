@@ -8,6 +8,8 @@ import { type DiddlCardItem, isSelectMode } from "@/features/diddl";
 import DiddlCardListLimiter from "@/features/diddl/components/DiddlCardListLimiter";
 import DiddlCards from "@/features/lists/components/DiddlCards";
 import {
+  filterItemsByCatalogSlice,
+  hasCatalogSlice,
   hasListStateFilters,
   isShowAllMode,
   listSearchSchema,
@@ -60,16 +62,27 @@ function ListPage() {
   const showAll = createMemo(() => isShowAllMode(search()));
   const hasStateFilters = createMemo(() => hasListStateFilters(search()));
   const list = createMemo(() => findList(appData(), params().listId));
-  const distinctDiddlCount = createMemo(() => new Set(items().map((item) => item.diddlId)).size);
+  const ownedItems = createMemo(() =>
+    filterItemsByCatalogSlice(appData().catalog, items(), search()),
+  );
+  const distinctDiddlCount = createMemo(
+    () => new Set(ownedItems().map((item) => item.diddlId)).size,
+  );
 
   // The 3,900-row Catalog walk only happens in Show-all mode.
   const displayedItems = createMemo<DiddlCardItem[]>(() =>
-    showAll() ? mergeCatalogWithItems(appData().catalog, items(), search()) : items(),
+    showAll() ? mergeCatalogWithItems(appData().catalog, ownedItems(), search()) : ownedItems(),
   );
 
   const toggleShowAll = () => {
     void navigate({
       search: (previous) => ({ ...previous, showAll: showAll() ? undefined : true }),
+    });
+  };
+
+  const clearCatalogSlice = () => {
+    void navigate({
+      search: (previous) => ({ ...previous, type: undefined, from: undefined, to: undefined }),
     });
   };
 
@@ -83,19 +96,30 @@ function ListPage() {
           <h1 class="px-4 pt-8 text-2xl font-bold text-muted-foreground">
             {distinctDiddlCount()} diddls
           </h1>
-          <button
-            type="button"
-            disabled={hasStateFilters()}
-            aria-pressed={showAll()}
-            class={cn(
-              "mt-8 mr-4 ml-auto rounded-md border border-gray-300 px-3 py-1 text-sm",
-              showAll() && "bg-gray-200",
-              hasStateFilters() && "cursor-not-allowed opacity-50",
-            )}
-            onClick={toggleShowAll}
-          >
-            Show all
-          </button>
+          <div class="mt-8 mr-4 ml-auto flex gap-2">
+            <Show when={hasCatalogSlice(search())}>
+              <button
+                type="button"
+                class="rounded-md border border-gray-300 px-3 py-1 text-sm"
+                onClick={clearCatalogSlice}
+              >
+                Clear filter
+              </button>
+            </Show>
+            <button
+              type="button"
+              disabled={hasStateFilters()}
+              aria-pressed={showAll()}
+              class={cn(
+                "rounded-md border border-gray-300 px-3 py-1 text-sm",
+                showAll() && "bg-gray-200",
+                hasStateFilters() && "cursor-not-allowed opacity-50",
+              )}
+              onClick={toggleShowAll}
+            >
+              Show all
+            </button>
+          </div>
         </div>
         {/* The fixed Taskbar would otherwise cover the first row's select circles. */}
         <div

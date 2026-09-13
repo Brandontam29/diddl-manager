@@ -4,8 +4,8 @@ import { type Diddl, diddlTypeSchema } from "@/shared";
 
 /**
  * The Library's URL search params, verbatim from the desktop (spec §6): `type`
- * narrows to one Diddl Type, `from` / `to` slice the narrowed array (the sidebar's
- * `100-199` link is `from=99&to=199` — a desktop quirk kept on purpose).
+ * narrows to one Diddl Type, `from` / `to` slice the narrowed array. The sidebar
+ * only sets `type`; `from` / `to` still parse so old desktop-style URLs keep working.
  */
 const index = z.coerce.number().int().nonnegative().optional();
 

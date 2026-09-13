@@ -9,7 +9,7 @@ import { createIsMobile } from "@/hooks/createIsMobile";
 import { onLocationChange } from "@/hooks/onLocationChange";
 import { cn } from "@/libs/cn";
 
-import { SIDEBAR_GROUPS, type SidebarSliceLink } from "./sidebar-links";
+import { SIDEBAR_LINKS, type SidebarTypeLink } from "./sidebar-links";
 
 const linkClass = cn(
   "gradient-border mx-1 flex items-center gap-2 rounded px-3",
@@ -36,16 +36,7 @@ const SidebarNav: Component<{ class?: string }> = (props) => {
           "scrollbar-thin scrollbar-thumb-purple-200 scrollbar-track-transparent",
         )}
       >
-        <For each={SIDEBAR_GROUPS}>
-          {(group) => (
-            <div>
-              <div class="mb-1 px-4 text-sm font-semibold text-gray-800">{group.title}</div>
-              <SubLinkContainer>
-                <For each={group.links}>{(link) => <SliceLink link={link} />}</For>
-              </SubLinkContainer>
-            </div>
-          )}
-        </For>
+        <For each={SIDEBAR_LINKS}>{(link) => <TypeLink link={link} />}</For>
       </TopLinkContainer>
       <div class="border-t py-4">
         <Link to="/app/settings" class={linkClass}>
@@ -58,10 +49,10 @@ const SidebarNav: Component<{ class?: string }> = (props) => {
 };
 
 /**
- * On a List page the slice filters that List (keeping Show all and the List Item
- * state filters); everywhere else it opens the Library at that slice.
+ * On a List page the Diddl Type filters that List (keeping Show all and the List Item
+ * state filters); everywhere else it opens the Library at that type.
  */
-const SliceLink: Component<{ link: SidebarSliceLink }> = (props) => {
+const TypeLink: Component<{ link: SidebarTypeLink }> = (props) => {
   const listId = useListId();
 
   return (
@@ -82,7 +73,12 @@ const SliceLink: Component<{ link: SidebarSliceLink }> = (props) => {
         <Link
           to="/app/lists/$listId"
           params={{ listId: listId() }}
-          search={(previous) => ({ ...previous, ...props.link.search })}
+          search={(previous) => ({
+            ...previous,
+            from: undefined,
+            to: undefined,
+            ...props.link.search,
+          })}
           activeOptions={{ exact: true, includeSearch: true }}
           class={linkClass}
         >
@@ -127,10 +123,6 @@ const Sidebar: Component = () => {
 
 const TopLinkContainer: Component<{ class?: string; children: JSXElement }> = (props) => {
   return <div class={cn("space-y-2", props.class)}>{props.children}</div>;
-};
-
-const SubLinkContainer: Component<{ children: JSXElement }> = (props) => {
-  return <div class={cn("ml-5 space-y-0.5 border-l-2 border-gray-400/20")}>{props.children}</div>;
 };
 
 export default Sidebar;
